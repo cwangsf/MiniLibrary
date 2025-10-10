@@ -88,6 +88,42 @@ class DataSeeder {
         try data.write(to: fileURL)
         print("Exported \(books.count) books to \(fileURL.path)")
     }
+
+    // MARK: - Debug Seeding
+    #if DEBUG
+    /// Seed debug data: clear all data, create sample users and students
+    static func seedDebugData(modelContext: ModelContext) {
+        do {
+            // Clear all data
+            try modelContext.delete(model: Book.self)
+            try modelContext.delete(model: Student.self)
+            try modelContext.delete(model: CheckoutRecord.self)
+            try modelContext.delete(model: User.self)
+            try modelContext.save()
+            print("Debug: Cleared all SwiftData")
+
+            // Create sample librarians
+            let librarian1 = User(email: "librarian1@school.com", role: .librarian)
+            let librarian2 = User(email: "librarian2@school.com", role: .librarian)
+            modelContext.insert(librarian1)
+            modelContext.insert(librarian2)
+            print("Debug: Created 2 librarians")
+
+            // Create sample students
+            for i in 1...5 {
+                let student = Student(
+                    libraryId: String(format: "LIB-%03d", i),
+                    gradeLevel: (i % 6) + 1  // Grades 1-6
+                )
+                modelContext.insert(student)
+            }
+            try modelContext.save()
+            print("Debug: Created 5 students")
+        } catch {
+            print("Debug: Error seeding debug data: \(error)")
+        }
+    }
+    #endif
 }
 
 enum DataSeederError: Error {
