@@ -11,11 +11,15 @@ import Observation
 
 @Observable
 class ScanBookViewModel {
-    var scannedISBN: String?
-    var isScanning = true
-    var bookInfo: BookInfo?
-    var isLoading = false
-    var errorMessage: String?
+    enum ScanState {
+        case scanning
+        case loading(isbn: String)
+        case editing(book: Book?)
+        case error(message: String)
+    }
+
+    var state: ScanState = .scanning
+    var scannedBook: Book?
 
     var title = ""
     var author = ""
@@ -23,8 +27,8 @@ class ScanBookViewModel {
     var totalCopies = 1
 
     func handleScannedCode(_ code: String) {
-        scannedISBN = code
         isbn = code
+        state = .loading(isbn: code)
         Task {
             await fetchBookInfo(isbn: code)
         }
@@ -32,34 +36,36 @@ class ScanBookViewModel {
 
     @MainActor
     func fetchBookInfo(isbn: String) async {
-        isLoading = true
-        errorMessage = nil
-
         do {
             // Try Google Books API first (more reliable)
-            let info = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
-            bookInfo = info
-            title = info.title
-            author = info.author
-            self.isbn = info.isbn ?? isbn
-        } catch {
-            // Fallback to manual entry
-            errorMessage = "Could not fetch book info: \(error.localizedDescription)"
-        }
+            let book = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
+            scannedBook = book
+            title = book.title
+            author = book.author
+            self.isbn = book.isbn ?? isbn
 
-        isLoading = false
+            print("Debug: Fetched book - Title: \(book.title), Author: \(book.author), ISBN: \(book.isbn ?? "nil")")
+            print("Debug: ViewModel - Title: \(title), Author: \(author), ISBN: \(self.isbn)")
+
+            state = .editing(book: book)
+        } catch {
+            let errorMsg = "Could not fetch book info: \(error.localizedDescription)"
+            print("Debug: API Error - \(error)")
+            state = .error(message: errorMsg)
+        }
     }
 
     func reset() {
-        scannedISBN = nil
-        isScanning = true
-        bookInfo = nil
-        isLoading = false
-        errorMessage = nil
+        state = .scanning
+        scannedBook = nil
         title = ""
         author = ""
         isbn = ""
         totalCopies = 1
+    }
+
+    func enterManualMode() {
+        state = .editing(book: nil)
     }
 }
 
@@ -72,11 +78,12 @@ struct ScanBookView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                if viewModel.isScanning {
+                switch viewModel.state {
+                case .scanning:
                     scannerView
-                } else if viewModel.isLoading {
-                    loadingView
-                } else {
+                case .loading(let isbn):
+                    loadingView(isbn: isbn)
+                case .editing, .error:
                     bookFormView
                 }
             }
@@ -96,8 +103,11 @@ struct ScanBookView: View {
     private var scannerView: some View {
         ZStack {
             BarcodeScannerView(
-                scannedCode: Bindable(viewModel).scannedISBN,
-                isScanning: Bindable(viewModel).isScanning
+                scannedCode: Binding(
+                    get: { nil },
+                    set: { if let code = $0 { viewModel.handleScannedCode(code) } }
+                ),
+                isScanning: .constant(true)
             )
             .ignoresSafeArea()
 
@@ -125,21 +135,16 @@ struct ScanBookView: View {
                 Spacer()
 
                 Button("Enter ISBN Manually") {
-                    viewModel.isScanning = false
+                    viewModel.enterManualMode()
                 }
                 .buttonStyle(.borderedProminent)
                 .padding()
             }
         }
-        .onChange(of: viewModel.scannedISBN) { _, newValue in
-            if let isbn = newValue {
-                viewModel.handleScannedCode(isbn)
-            }
-        }
     }
 
     // MARK: - Loading View
-    private var loadingView: some View {
+    private func loadingView(isbn: String) -> some View {
         VStack(spacing: 20) {
             ProgressView()
                 .scaleEffect(1.5)
@@ -147,23 +152,21 @@ struct ScanBookView: View {
             Text("Fetching book information...")
                 .font(.headline)
 
-            if let isbn = viewModel.scannedISBN {
-                Text("ISBN: \(isbn)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+            Text("ISBN: \(isbn)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 
     // MARK: - Book Form View
     private var bookFormView: some View {
         Form {
-            if let error = viewModel.errorMessage {
+            if case .error(let message) = viewModel.state {
                 Section {
                     HStack {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundStyle(.orange)
-                        Text(error)
+                        Text(message)
                             .font(.caption)
                     }
                 }
@@ -195,13 +198,27 @@ struct ScanBookView: View {
 
     // MARK: - Actions
     private func addBook() {
-        let book = Book(
-            isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
-            title: viewModel.title,
-            author: viewModel.author,
-            totalCopies: viewModel.totalCopies,
-            availableCopies: viewModel.totalCopies
-        )
+        // If we have scanned book with metadata, use it; otherwise create new
+        let book: Book
+        if let scannedBook = viewModel.scannedBook {
+            // Update copies from form
+            scannedBook.totalCopies = viewModel.totalCopies
+            scannedBook.availableCopies = viewModel.totalCopies
+            // Update in case user edited the fields
+            scannedBook.title = viewModel.title
+            scannedBook.author = viewModel.author
+            scannedBook.isbn = viewModel.isbn.isEmpty ? nil : viewModel.isbn
+            book = scannedBook
+        } else {
+            // Manual entry
+            book = Book(
+                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
+                title: viewModel.title,
+                author: viewModel.author,
+                totalCopies: viewModel.totalCopies,
+                availableCopies: viewModel.totalCopies
+            )
+        }
 
         modelContext.insert(book)
 

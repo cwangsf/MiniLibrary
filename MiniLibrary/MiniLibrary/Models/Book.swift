@@ -18,6 +18,13 @@ final class Book: Codable {
     var availableCopies: Int
     var createdAt: Date
 
+    // Optional metadata from API
+    var bookDescription: String?
+    var pageCount: Int?
+    var publishedDate: String?
+    var publisher: String?
+    var coverImageURL: String?
+
     @Relationship(deleteRule: .nullify, inverse: \CheckoutRecord.book)
     var checkouts: [CheckoutRecord]?
 
@@ -28,7 +35,12 @@ final class Book: Codable {
         author: String,
         totalCopies: Int,
         availableCopies: Int? = nil,
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        bookDescription: String? = nil,
+        pageCount: Int? = nil,
+        publishedDate: String? = nil,
+        publisher: String? = nil,
+        coverImageURL: String? = nil
     ) {
         self.id = id
         self.isbn = isbn
@@ -37,6 +49,11 @@ final class Book: Codable {
         self.totalCopies = totalCopies
         self.availableCopies = availableCopies ?? totalCopies
         self.createdAt = createdAt
+        self.bookDescription = bookDescription
+        self.pageCount = pageCount
+        self.publishedDate = publishedDate
+        self.publisher = publisher
+        self.coverImageURL = coverImageURL
     }
 
     // MARK: - Codable
@@ -48,6 +65,11 @@ final class Book: Codable {
         case totalCopies = "total_copies"
         case availableCopies = "available_copies"
         case createdAt = "created_at"
+        case bookDescription = "description"
+        case pageCount = "page_count"
+        case publishedDate = "published_date"
+        case publisher
+        case coverImageURL = "cover_image_url"
     }
 
     required init(from decoder: Decoder) throws {
@@ -59,6 +81,11 @@ final class Book: Codable {
         self.totalCopies = try container.decode(Int.self, forKey: .totalCopies)
         self.availableCopies = try container.decode(Int.self, forKey: .availableCopies)
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+        self.bookDescription = try container.decodeIfPresent(String.self, forKey: .bookDescription)
+        self.pageCount = try container.decodeIfPresent(Int.self, forKey: .pageCount)
+        self.publishedDate = try container.decodeIfPresent(String.self, forKey: .publishedDate)
+        self.publisher = try container.decodeIfPresent(String.self, forKey: .publisher)
+        self.coverImageURL = try container.decodeIfPresent(String.self, forKey: .coverImageURL)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -70,5 +97,10 @@ final class Book: Codable {
         try container.encode(totalCopies, forKey: .totalCopies)
         try container.encode(availableCopies, forKey: .availableCopies)
         try container.encode(createdAt, forKey: .createdAt)
+        try container.encodeIfPresent(bookDescription, forKey: .bookDescription)
+        try container.encodeIfPresent(pageCount, forKey: .pageCount)
+        try container.encodeIfPresent(publishedDate, forKey: .publishedDate)
+        try container.encodeIfPresent(publisher, forKey: .publisher)
+        try container.encodeIfPresent(coverImageURL, forKey: .coverImageURL)
     }
 }

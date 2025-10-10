@@ -7,18 +7,6 @@
 
 import Foundation
 
-// MARK: - Book Info Response Models
-struct BookInfo: Codable {
-    let title: String
-    let author: String
-    let isbn: String?
-    let description: String?
-    let pageCount: Int?
-    let publishedDate: String?
-    let publisher: String?
-    let coverImageURL: String?
-}
-
 // MARK: - API Service Actor (Thread-safe)
 actor BookAPIService {
     static let shared = BookAPIService()
@@ -35,7 +23,7 @@ actor BookAPIService {
     }
 
     /// Fetch book information by ISBN from Open Library API
-    func fetchBookInfo(isbn: String) async throws -> BookInfo {
+    func fetchBookInfo(isbn: String) async throws -> Book {
         let urlString = "https://openlibrary.org/api/books?bibkeys=ISBN:\(isbn)&format=json&jscmd=data"
 
         guard let url = URL(string: urlString) else {
@@ -62,7 +50,7 @@ actor BookAPIService {
     }
 
     /// Alternative: Fetch from Google Books API
-    func fetchBookInfoFromGoogle(isbn: String) async throws -> BookInfo {
+    func fetchBookInfoFromGoogle(isbn: String) async throws -> Book {
         let urlString = "https://www.googleapis.com/books/v1/volumes?q=isbn:\(isbn)"
 
         guard let url = URL(string: urlString) else {
@@ -89,7 +77,7 @@ actor BookAPIService {
     }
 
     // MARK: - Private Helpers
-    private func parseOpenLibraryData(_ data: [String: Any], isbn: String) throws -> BookInfo {
+    private func parseOpenLibraryData(_ data: [String: Any], isbn: String) throws -> Book {
         guard let title = data["title"] as? String else {
             throw BookAPIError.invalidData
         }
@@ -109,11 +97,13 @@ actor BookAPIService {
         let cover = data["cover"] as? [String: String]
         let coverImageURL = cover?["large"] ?? cover?["medium"] ?? cover?["small"]
 
-        return BookInfo(
+        return Book(
+            isbn: isbn,
             title: title,
             author: author,
-            isbn: isbn,
-            description: description,
+            totalCopies: 1,
+            availableCopies: 1,
+            bookDescription: description,
             pageCount: pageCount,
             publishedDate: publishedDate,
             publisher: publisher,
@@ -121,14 +111,16 @@ actor BookAPIService {
         )
     }
 
-    private func parseGoogleBookData(_ item: GoogleBookItem, isbn: String) -> BookInfo {
+    private func parseGoogleBookData(_ item: GoogleBookItem, isbn: String) -> Book {
         let volumeInfo = item.volumeInfo
 
-        return BookInfo(
+        return Book(
+            isbn: isbn,
             title: volumeInfo.title,
             author: volumeInfo.authors?.joined(separator: ", ") ?? "Unknown Author",
-            isbn: isbn,
-            description: volumeInfo.description,
+            totalCopies: 1,
+            availableCopies: 1,
+            bookDescription: volumeInfo.description,
             pageCount: volumeInfo.pageCount,
             publishedDate: volumeInfo.publishedDate,
             publisher: volumeInfo.publisher,
