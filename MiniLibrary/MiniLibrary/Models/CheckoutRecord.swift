@@ -1,5 +1,5 @@
 //
-//  CheckedOutBook.swift
+//  CheckoutRecord.swift
 //  MiniLibrary
 //
 //  Created by Cynthia Wang on 10/10/25.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class CheckedOutBook: Codable {
+final class CheckoutRecord: Codable {
     @Attribute(.unique) var id: UUID
     var checkoutDate: Date
     var dueDate: Date

@@ -18,8 +18,8 @@ final class Book: Codable {
     var availableCopies: Int
     var createdAt: Date
 
-    @Relationship(deleteRule: .nullify, inverse: \CheckedOutBook.book)
-    var checkouts: [CheckedOutBook]?
+    @Relationship(deleteRule: .nullify, inverse: \CheckoutRecord.book)
+    var checkouts: [CheckoutRecord]?
 
     init(
         id: UUID = UUID(),

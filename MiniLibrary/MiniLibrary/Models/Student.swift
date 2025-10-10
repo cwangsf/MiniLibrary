@@ -14,8 +14,8 @@ final class Student: Codable {
     var gradeLevel: Int?
     var createdAt: Date
 
-    @Relationship(deleteRule: .cascade, inverse: \CheckedOutBook.student)
-    var checkouts: [CheckedOutBook]?
+    @Relationship(deleteRule: .cascade, inverse: \CheckoutRecord.student)
+    var checkouts: [CheckoutRecord]?
 
     init(libraryId: String, gradeLevel: Int? = nil, createdAt: Date = Date()) {
         self.libraryId = libraryId
