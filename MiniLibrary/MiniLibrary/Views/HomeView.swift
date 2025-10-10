@@ -26,12 +26,15 @@ struct HomeView: View {
                             color: .blue
                         )
 
-                        StatCard(
-                            title: "Checked Out",
-                            value: "\(activeCheckouts.filter { $0.isActive }.count)",
-                            icon: "book.fill",
-                            color: .orange
-                        )
+                        NavigationLink(destination: CheckedOutBooksListView()) {
+                            StatCard(
+                                title: "Checked Out",
+                                value: "\(activeCheckouts.filter { $0.isActive }.count)",
+                                icon: "book.fill",
+                                color: .orange
+                            )
+                        }
+                        .buttonStyle(.plain)
                     }
                     .padding(.horizontal)
 
@@ -68,25 +71,32 @@ struct StatCard: View {
     let value: String
     let icon: String
     let color: Color
+    var action: (() -> Void)? = nil
 
     var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.title)
-                .foregroundStyle(color)
+        Button {
+            action?()
+        } label: {
+            VStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.title)
+                    .foregroundStyle(color)
 
-            Text(value)
-                .font(.title2)
-                .fontWeight(.bold)
+                Text(value)
+                    .font(.title2)
+                    .fontWeight(.bold)
 
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(color.opacity(0.1))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(color.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .buttonStyle(.plain)
+        .disabled(action == nil)
     }
 }
 
