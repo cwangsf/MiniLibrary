@@ -43,32 +43,40 @@ struct BookRowView: View {
     let book: Book
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(book.title)
-                .font(.headline)
+        HStack(spacing: 12) {
+            // Book Cover
+            BookCoverImage(book: book, width: 60, height: 90)
 
-            Text(book.author)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+            // Book Info
+            VStack(alignment: .leading, spacing: 6) {
+                Text(book.title)
+                    .font(.headline)
+                    .lineLimit(2)
 
-            HStack {
-                if let isbn = book.isbn {
-                    Text("ISBN: \(isbn)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                Text(book.author)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+
+                HStack {
+                    if let isbn = book.isbn {
+                        Text("ISBN: \(isbn)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+
+                    Spacer()
+
+                    HStack(spacing: 4) {
+                        Image(systemName: "book.fill")
+                            .font(.caption)
+
+                        Text("\(book.availableCopies)/\(book.totalCopies)")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                    .foregroundStyle(book.availableCopies > 0 ? .green : .red)
                 }
-
-                Spacer()
-
-                HStack(spacing: 4) {
-                    Image(systemName: "book.fill")
-                        .font(.caption)
-
-                    Text("\(book.availableCopies)/\(book.totalCopies)")
-                        .font(.caption)
-                        .fontWeight(.medium)
-                }
-                .foregroundStyle(book.availableCopies > 0 ? .green : .red)
             }
         }
         .padding(.vertical, 4)
@@ -82,24 +90,40 @@ struct BookDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // Book Info
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(book.title)
-                        .font(.title)
-                        .fontWeight(.bold)
+                // Book Cover and Info
+                HStack(alignment: .top, spacing: 16) {
+                    BookCoverImage(book: book, width: 120, height: 180)
 
-                    Text(book.author)
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(book.title)
+                            .font(.title2)
+                            .fontWeight(.bold)
 
-                    if let isbn = book.isbn {
-                        Text("ISBN: \(isbn)")
-                            .font(.subheadline)
+                        Text(book.author)
+                            .font(.title3)
                             .foregroundStyle(.secondary)
+
+                        if let isbn = book.isbn {
+                            Text("ISBN: \(isbn)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        if let publisher = book.publisher {
+                            Text(publisher)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        if let publishedDate = book.publishedDate {
+                            Text("Published: \(publishedDate)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .background(.background)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
