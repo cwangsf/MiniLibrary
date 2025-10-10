@@ -12,12 +12,25 @@ import SwiftData
 struct MiniLibraryApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Book.self,
+            Student.self,
+            CheckedOutBook.self,
+            User.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+
+            // Seed data on first launch
+            let context = ModelContext(container)
+            do {
+                try DataSeeder.seedBooksFromCSV(fileName: "sample_books", modelContext: context)
+            } catch {
+                print("Error seeding data: \(error)")
+            }
+
+            return container
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
