@@ -9,6 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct AddView: View {
+    @Query(sort: \Book.title) private var books: [Book]
+    @State private var showingShareSheet = false
+    @State private var shareItems: [Any] = []
+
     var body: some View {
         NavigationStack {
             List {
@@ -38,10 +42,42 @@ struct AddView: View {
                             .foregroundStyle(.green)
                     }
                 }
+
+                Section("Export") {
+                    Button {
+                        exportCatalog()
+                    } label: {
+                        Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
+                    }
+                }
             }
             .navigationTitle("Add")
+            .sheet(isPresented: $showingShareSheet) {
+                ShareSheet(items: shareItems)
+                    .presentationDetents([.medium, .large])
+            }
         }
     }
+
+    private func exportCatalog() {
+        let csvContent = CSVExporter.exportBooks(books)
+        if let url = CSVExporter.saveToTemporaryFile(csvContent) {
+            shareItems = [url]
+            showingShareSheet = true
+        }
+    }
+}
+
+// MARK: - ShareSheet
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - Add Book View
