@@ -154,6 +154,9 @@ struct AddStudentView: View {
 
 // MARK: - Checkout Book View
 struct CheckoutBookView: View {
+    let book: Book?
+    var onCheckoutComplete: (() -> Void)? = nil
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
@@ -163,45 +166,99 @@ struct CheckoutBookView: View {
     @State private var selectedBook: Book?
     @State private var selectedStudent: Student?
     @State private var dueDate = Date().addingTimeInterval(14 * 24 * 60 * 60) // 2 weeks default
-    @State private var staffId = "ADMIN" // Placeholder
+    @State private var showingConfirmation = false
 
     var availableBooks: [Book] {
         books.filter { $0.availableCopies > 0 }
     }
 
+    var isBookPreselected: Bool {
+        book != nil
+    }
+
+    init(book: Book? = nil, onCheckoutComplete: (() -> Void)? = nil) {
+        self.book = book
+        self.onCheckoutComplete = onCheckoutComplete
+        if let book = book {
+            _selectedBook = State(initialValue: book)
+        }
+    }
+
     var body: some View {
-        Form {
-            Section("Select Student") {
-                Picker("Student", selection: $selectedStudent) {
-                    Text("Select a student").tag(nil as Student?)
-                    ForEach(students) { student in
-                        Text(student.libraryId).tag(student as Student?)
+        NavigationStack {
+            Form {
+                if isBookPreselected {
+                    Section("Book") {
+                        Text(selectedBook?.title ?? "")
+                            .font(.headline)
+                    }
+                } else {
+                    Section("Select Book") {
+                        Picker("Book", selection: $selectedBook) {
+                            Text("Select a book").tag(nil as Book?)
+                            ForEach(availableBooks) { book in
+                                Text("\(book.title) - \(book.availableCopies) available").tag(book as Book?)
+                            }
+                        }
                     }
                 }
-            }
 
-            Section("Select Book") {
-                Picker("Book", selection: $selectedBook) {
-                    Text("Select a book").tag(nil as Book?)
-                    ForEach(availableBooks) { book in
-                        Text("\(book.title) - \(book.availableCopies) available").tag(book as Book?)
+                Section("Select Student") {
+                    Picker("Student", selection: $selectedStudent) {
+                        Text("Select a student").tag(nil as Student?)
+                        ForEach(students) { student in
+                            Text(student.libraryId).tag(student as Student?)
+                        }
                     }
                 }
-            }
 
-            Section("Due Date") {
-                DatePicker("Due Date", selection: $dueDate, displayedComponents: .date)
+                Section("Due Date") {
+                    DatePicker("Due Date", selection: $dueDate, displayedComponents: .date)
+                }
             }
-
-            Section {
-                Button("Check Out") {
-                    checkoutBook()
+            .safeAreaInset(edge: .bottom) {
+                Button {
+                    showingConfirmation = true
+                } label: {
+                    HStack {
+                        Image(systemName: "arrow.right.circle.fill")
+                        Text("Check Out Book")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background((selectedBook == nil || selectedStudent == nil) ? .gray : .blue)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .disabled(selectedBook == nil || selectedStudent == nil)
+                .padding()
+                .background(.ultraThinMaterial)
+            }
+            .navigationTitle("Check Out Book")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if isBookPreselected {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            dismiss()
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $showingConfirmation) {
+                if let book = selectedBook, let student = selectedStudent {
+                    CheckoutConfirmationView(
+                        book: book,
+                        student: student,
+                        dueDate: dueDate,
+                        onConfirm: {
+                            checkoutBook()
+                        }
+                    )
+                }
             }
         }
-        .navigationTitle("Check Out Book")
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     private func checkoutBook() {
@@ -211,12 +268,128 @@ struct CheckoutBookView: View {
             student: student,
             book: book,
             dueDate: dueDate,
-            checkedOutByStaffId: staffId
+            checkedOutByStaffId: "ADMIN" // TODO: Get actual staff ID
         )
 
         book.availableCopies -= 1
         modelContext.insert(checkout)
         dismiss()
+        onCheckoutComplete?()
+    }
+}
+
+// MARK: - Checkout Confirmation Sheet
+struct CheckoutConfirmationView: View {
+    let book: Book
+    let student: Student
+    let dueDate: Date
+    let onConfirm: () -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Book Cover
+                    BookCoverImage(book: book, width: 120, height: 180)
+                        .padding(.top, 40)
+
+                    // Confirmation Message
+                    VStack(spacing: 16) {
+                        Text("Confirm Checkout")
+                            .font(.title2)
+                            .fontWeight(.bold)
+
+                        VStack(spacing: 12) {
+                        // Book Info
+                        VStack(spacing: 4) {
+                            Text("Book")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Text(book.title)
+                                .font(.headline)
+                                .multilineTextAlignment(.center)
+                            Text(book.author)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Divider()
+                            .padding(.horizontal, 40)
+
+                        // Student Info
+                        VStack(spacing: 4) {
+                            Text("Student")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            HStack {
+                                Image(systemName: "person.fill")
+                                    .foregroundStyle(.blue)
+                                Text(student.libraryId)
+                                    .font(.headline)
+                            }
+                        }
+
+                        Divider()
+                            .padding(.horizontal, 40)
+
+                        // Due Date
+                        VStack(spacing: 4) {
+                            Text("Due Date")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            HStack {
+                                Image(systemName: "calendar")
+                                    .foregroundStyle(.orange)
+                                Text(dueDate.formatted(date: .long, time: .omitted))
+                                    .font(.headline)
+                            }
+                        }
+                        }
+                        .padding()
+                        .background(.background)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                    }
+                    .padding(.horizontal)
+
+                    // Action Buttons
+                    VStack(spacing: 12) {
+                        Button {
+                            onConfirm()
+                            dismiss()
+                        } label: {
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill")
+                                Text("Confirm Checkout")
+                            }
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.blue)
+                            .foregroundStyle(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+
+                        Button {
+                            dismiss()
+                        } label: {
+                            Text("Cancel")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(.gray.opacity(0.2))
+                                .foregroundStyle(.primary)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 20)
+                    .padding(.bottom, 40)
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .presentationDetents([.medium, .large])
     }
 }
 

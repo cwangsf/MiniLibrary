@@ -19,12 +19,15 @@ struct HomeView: View {
                 VStack(spacing: 20) {
                     // Statistics Cards
                     HStack(spacing: 15) {
-                        StatCard(
-                            title: "Total Copies",
-                            value: "\(books.reduce(0) { $0 + $1.totalCopies })",
-                            icon: "books.vertical.fill",
-                            color: .blue
-                        )
+                        NavigationLink(destination: CatalogView()) {
+                            StatCard(
+                                title: "Total Copies",
+                                value: "\(books.reduce(0) { $0 + $1.totalCopies })",
+                                icon: "books.vertical.fill",
+                                color: .blue
+                            )
+                        }
+                        .buttonStyle(.plain)
 
                         NavigationLink(destination: CheckedOutBooksListView()) {
                             StatCard(

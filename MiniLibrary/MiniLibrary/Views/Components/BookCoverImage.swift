@@ -53,7 +53,7 @@ struct BookCoverImage: View {
             Rectangle()
                 .fill(
                     LinearGradient(
-                        colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.3)],
+                        colors: [.blue.opacity(0.3), .purple.opacity(0.3)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
