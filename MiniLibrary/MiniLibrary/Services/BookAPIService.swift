@@ -22,33 +22,6 @@ actor BookAPIService {
         self.decoder.keyDecodingStrategy = .convertFromSnakeCase
     }
 
-    /// Fetch book information by ISBN from Open Library API
-    func fetchBookInfo(isbn: String) async throws -> Book {
-        let urlString = "https://openlibrary.org/api/books?bibkeys=ISBN:\(isbn)&format=json&jscmd=data"
-
-        guard let url = URL(string: urlString) else {
-            throw BookAPIError.invalidURL
-        }
-
-        let (data, response) = try await session.data(from: url)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw BookAPIError.invalidResponse
-        }
-
-        guard httpResponse.statusCode == 200 else {
-            throw BookAPIError.httpError(statusCode: httpResponse.statusCode)
-        }
-
-        // Parse Open Library response
-        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        guard let bookData = json?["ISBN:\(isbn)"] as? [String: Any] else {
-            throw BookAPIError.bookNotFound
-        }
-
-        return try parseOpenLibraryData(bookData, isbn: isbn)
-    }
-
     /// Alternative: Fetch from Google Books API
     func fetchBookInfoFromGoogle(isbn: String) async throws -> Book {
         let urlString = "https://www.googleapis.com/books/v1/volumes?q=isbn:\(isbn)"
@@ -77,40 +50,6 @@ actor BookAPIService {
     }
 
     // MARK: - Private Helpers
-    private func parseOpenLibraryData(_ data: [String: Any], isbn: String) throws -> Book {
-        guard let title = data["title"] as? String else {
-            throw BookAPIError.invalidData
-        }
-
-        let authors = data["authors"] as? [[String: Any]]
-        let author = authors?.first?["name"] as? String ?? "Unknown Author"
-
-        let description = data["notes"] as? String
-
-        let pageCount = data["number_of_pages"] as? Int
-
-        let publishedDate = data["publish_date"] as? String
-
-        let publishers = data["publishers"] as? [[String: String]]
-        let publisher = publishers?.first?["name"]
-
-        let cover = data["cover"] as? [String: String]
-        let coverImageURL = cover?["large"] ?? cover?["medium"] ?? cover?["small"]
-
-        return Book(
-            isbn: isbn,
-            title: title,
-            author: author,
-            totalCopies: 1,
-            availableCopies: 1,
-            bookDescription: description,
-            pageCount: pageCount,
-            publishedDate: publishedDate,
-            publisher: publisher,
-            coverImageURL: coverImageURL
-        )
-    }
-
     private func parseGoogleBookData(_ item: GoogleBookItem, isbn: String) -> Book {
         let volumeInfo = item.volumeInfo
 
