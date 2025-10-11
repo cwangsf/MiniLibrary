@@ -14,10 +14,12 @@ struct CatalogView: View {
     @State private var searchText = ""
 
     var filteredBooks: [Book] {
+        let catalogBooks = books.filter { !$0.isWishlistItem }
+
         if searchText.isEmpty {
-            return books
+            return catalogBooks
         } else {
-            return books.filter { book in
+            return catalogBooks.filter { book in
                 book.title.localizedCaseInsensitiveContains(searchText) ||
                 book.author.localizedCaseInsensitiveContains(searchText)
             }

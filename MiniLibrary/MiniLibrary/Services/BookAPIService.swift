@@ -22,7 +22,7 @@ actor BookAPIService {
         self.decoder.keyDecodingStrategy = .convertFromSnakeCase
     }
 
-    /// Alternative: Fetch from Google Books API
+    /// Fetch book info from Google Books API by ISBN
     func fetchBookInfoFromGoogle(isbn: String) async throws -> Book {
         let urlString = "https://www.googleapis.com/books/v1/volumes?q=isbn:\(isbn)"
 
@@ -49,8 +49,52 @@ actor BookAPIService {
         return parseGoogleBookData(firstItem, isbn: isbn)
     }
 
+    /// Search for books by title and author
+    func searchBooksByTitleAndAuthor(title: String, author: String) async throws -> [GoogleBookItem] {
+        var queryComponents: [String] = []
+
+        if !title.isEmpty {
+            let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? title
+            queryComponents.append("intitle:\(encodedTitle)")
+        }
+
+        if !author.isEmpty {
+            let encodedAuthor = author.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? author
+            queryComponents.append("inauthor:\(encodedAuthor)")
+        }
+
+        guard !queryComponents.isEmpty else {
+            throw BookAPIError.invalidURL
+        }
+
+        let query = queryComponents.joined(separator: "+")
+        let urlString = "https://www.googleapis.com/books/v1/volumes?q=\(query)&maxResults=5"
+
+        guard let url = URL(string: urlString) else {
+            throw BookAPIError.invalidURL
+        }
+
+        let (data, response) = try await session.data(from: url)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw BookAPIError.invalidResponse
+        }
+
+        guard httpResponse.statusCode == 200 else {
+            throw BookAPIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let googleResponse = try decoder.decode(GoogleBooksResponse.self, from: data)
+
+        guard let items = googleResponse.items, !items.isEmpty else {
+            throw BookAPIError.bookNotFound
+        }
+
+        return items
+    }
+
     // MARK: - Private Helpers
-    private func parseGoogleBookData(_ item: GoogleBookItem, isbn: String) -> Book {
+    private func parseGoogleBookData(_ item: GoogleBookItem, isbn: String?) -> Book {
         let volumeInfo = item.volumeInfo
 
         return Book(
@@ -65,6 +109,27 @@ actor BookAPIService {
             publisher: volumeInfo.publisher,
             languageCode: volumeInfo.language,
             coverImageURL: volumeInfo.imageLinks?.thumbnail
+        )
+    }
+
+    /// Convert GoogleBookItem to Book for wishlist
+    func createBookFromSearchResult(_ item: GoogleBookItem, isWishlistItem: Bool = false) -> Book {
+        let volumeInfo = item.volumeInfo
+        let isbn = volumeInfo.industryIdentifiers?.first(where: { $0.type == "ISBN_13" || $0.type == "ISBN_10" })?.identifier
+
+        return Book(
+            isbn: isbn,
+            title: volumeInfo.title,
+            author: volumeInfo.authors?.joined(separator: ", ") ?? "Unknown Author",
+            totalCopies: isWishlistItem ? 0 : 1,
+            availableCopies: isWishlistItem ? 0 : 1,
+            bookDescription: volumeInfo.description,
+            pageCount: volumeInfo.pageCount,
+            publishedDate: volumeInfo.publishedDate,
+            publisher: volumeInfo.publisher,
+            languageCode: volumeInfo.language,
+            coverImageURL: volumeInfo.imageLinks?.thumbnail,
+            isWishlistItem: isWishlistItem
         )
     }
 }
@@ -87,6 +152,12 @@ struct VolumeInfo: Codable {
     let publisher: String?
     let language: String?
     let imageLinks: ImageLinks?
+    let industryIdentifiers: [IndustryIdentifier]?
+}
+
+struct IndustryIdentifier: Codable {
+    let type: String
+    let identifier: String
 }
 
 struct ImageLinks: Codable {

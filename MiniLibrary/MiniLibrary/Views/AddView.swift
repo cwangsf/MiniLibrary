@@ -26,6 +26,11 @@ struct AddView: View {
                         Label("Add New Book Manually", systemImage: "book.fill")
                     }
 
+                    NavigationLink(destination: AddWishlistItemView()) {
+                        Label("Add to Wishlist", systemImage: "heart.fill")
+                            .foregroundStyle(.pink)
+                    }
+
                     NavigationLink(destination: AddStudentView()) {
                         Label("Add New Student", systemImage: "person.fill")
                     }
@@ -514,6 +519,218 @@ struct ReturnBookView: View {
             book.availableCopies += 1
         }
         dismiss()
+    }
+}
+
+// MARK: - Add Wishlist Item View
+struct AddWishlistItemView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var title = ""
+    @State private var author = ""
+    @State private var isbn = ""
+    @State private var notes = ""
+    @State private var searchResults: [GoogleBookItem] = []
+    @State private var isSearching = false
+    @State private var searchError: String?
+    @State private var hasSearched = false
+
+    var body: some View {
+        Form {
+            Section("Book Information") {
+                TextField("ISBN (optional)", text: $isbn)
+                    .keyboardType(.numberPad)
+                TextField("Title", text: $title)
+                TextField("Author (optional)", text: $author)
+            }
+
+            Section {
+                Button {
+                    Task {
+                        await searchGoogle()
+                    }
+                } label: {
+                    HStack {
+                        if isSearching {
+                            ProgressView()
+                                .padding(.trailing, 8)
+                        }
+                        Image(systemName: "magnifyingglass")
+                        Text(isSearching ? "Searching..." : "Search Google Books")
+                    }
+                }
+                .disabled(title.isEmpty || isSearching)
+            }
+
+            if let error = searchError {
+                Section {
+                    Text(error)
+                        .foregroundStyle(.red)
+                        .font(.caption)
+                }
+            }
+
+            if !searchResults.isEmpty {
+                Section("Search Results") {
+                    ForEach(Array(searchResults.enumerated()), id: \.offset) { index, item in
+                        Button {
+                            addBookFromResult(item)
+                        } label: {
+                            BookSearchResultRow(item: item)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+            } else if hasSearched && !isSearching {
+                Section {
+                    ContentUnavailableView(
+                        "No Results",
+                        systemImage: "magnifyingglass",
+                        description: Text("Try searching with different keywords")
+                    )
+                }
+            }
+
+            Section("Notes (Optional)") {
+                TextEditor(text: $notes)
+                    .frame(minHeight: 80)
+            }
+        }
+        .navigationTitle("Add to Wishlist")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func searchGoogle() async {
+        isSearching = true
+        searchError = nil
+        hasSearched = false
+
+        do {
+            var results: [GoogleBookItem] = []
+
+            // If ISBN is provided, search by ISBN first
+            if !isbn.isEmpty {
+                do {
+                    results = try await searchByISBN(isbn)
+                } catch {
+                    // ISBN search failed, fall back to title/author search if title is provided
+                    print("ISBN search failed, falling back to title/author search: \(error.localizedDescription)")
+                    if !title.isEmpty {
+                        results = try await BookAPIService.shared.searchBooksByTitleAndAuthor(
+                            title: title,
+                            author: author
+                        )
+                    } else {
+                        throw error
+                    }
+                }
+            } else {
+                // No ISBN, search by title and author
+                results = try await BookAPIService.shared.searchBooksByTitleAndAuthor(
+                    title: title,
+                    author: author
+                )
+            }
+
+            searchResults = results
+            hasSearched = true
+        } catch {
+            searchError = error.localizedDescription
+            searchResults = []
+        }
+
+        isSearching = false
+    }
+
+    private func searchByISBN(_ isbn: String) async throws -> [GoogleBookItem] {
+        // Use the existing ISBN search and wrap result in array
+        let urlString = "https://www.googleapis.com/books/v1/volumes?q=isbn:\(isbn)"
+
+        guard let url = URL(string: urlString) else {
+            throw BookAPIError.invalidURL
+        }
+
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let googleResponse = try decoder.decode(GoogleBooksResponse.self, from: data)
+
+        guard let items = googleResponse.items, !items.isEmpty else {
+            throw BookAPIError.bookNotFound
+        }
+
+        return items
+    }
+
+    private func addBookFromResult(_ item: GoogleBookItem) {
+        let book = BookAPIService.shared.createBookFromSearchResult(item, isWishlistItem: true)
+
+        if !notes.isEmpty {
+            book.notes = notes
+        }
+
+        modelContext.insert(book)
+        dismiss()
+    }
+}
+
+// MARK: - Book Search Result Row
+struct BookSearchResultRow: View {
+    let item: GoogleBookItem
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            // Book Cover
+            if let thumbnailURL = item.volumeInfo.imageLinks?.thumbnail,
+               let url = URL(string: thumbnailURL.replacingOccurrences(of: "http://", with: "https://")) {
+                AsyncImage(url: url) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } placeholder: {
+                    Rectangle()
+                        .fill(.gray.opacity(0.2))
+                }
+                .frame(width: 40, height: 60)
+                .clipShape(RoundedRectangle(cornerRadius: 4))
+            } else {
+                Rectangle()
+                    .fill(.gray.opacity(0.2))
+                    .frame(width: 40, height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 4))
+                    .overlay(
+                        Image(systemName: "book.fill")
+                            .foregroundStyle(.gray)
+                    )
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(item.volumeInfo.title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.primary)
+                    .lineLimit(2)
+
+                if let authors = item.volumeInfo.authors {
+                    Text(authors.joined(separator: ", "))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+
+                if let publishedDate = item.volumeInfo.publishedDate {
+                    Text(publishedDate)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Spacer()
+
+            Image(systemName: "plus.circle.fill")
+                .foregroundStyle(.pink)
+        }
     }
 }
 

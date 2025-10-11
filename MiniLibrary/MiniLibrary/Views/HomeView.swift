@@ -13,6 +13,14 @@ struct HomeView: View {
     @Query private var books: [Book]
     @Query private var activeCheckouts: [CheckoutRecord]
 
+    var wishlistCount: Int {
+        books.filter { $0.isWishlistItem }.count
+    }
+
+    var totalCopies: Int {
+        books.filter { !$0.isWishlistItem }.reduce(0) { $0 + $1.totalCopies }
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -22,7 +30,7 @@ struct HomeView: View {
                         NavigationLink(destination: CatalogView()) {
                             StatCard(
                                 title: "Total Copies",
-                                value: "\(books.reduce(0) { $0 + $1.totalCopies })",
+                                value: "\(totalCopies)",
                                 icon: "books.vertical.fill",
                                 color: .blue
                             )
@@ -38,6 +46,22 @@ struct HomeView: View {
                             )
                         }
                         .buttonStyle(.plain)
+                    }
+                    .padding(.horizontal)
+
+                    // Wishlist Card
+                    HStack(spacing: 15) {
+                        NavigationLink(destination: WishlistView()) {
+                            StatCard(
+                                title: "Wish List",
+                                value: "\(wishlistCount)",
+                                icon: "heart.fill",
+                                color: .pink
+                            )
+                        }
+                        .buttonStyle(.plain)
+
+                        Spacer()
                     }
                     .padding(.horizontal)
 
