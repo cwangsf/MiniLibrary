@@ -20,8 +20,8 @@ struct HomeView: View {
                     // Statistics Cards
                     HStack(spacing: 15) {
                         StatCard(
-                            title: "Total Books",
-                            value: "\(books.count)",
+                            title: "Total Copies",
+                            value: "\(books.reduce(0) { $0 + $1.totalCopies })",
                             icon: "books.vertical.fill",
                             color: .blue
                         )
