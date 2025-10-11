@@ -10,8 +10,8 @@ import SwiftData
 
 struct AddView: View {
     @Query(sort: \Book.title) private var books: [Book]
-    @State private var showingShareSheet = false
-    @State private var shareItems: [Any] = []
+    @State private var exportFileURL: URL?
+    @State private var isExporting = false
 
     var body: some View {
         NavigationStack {
@@ -44,40 +44,52 @@ struct AddView: View {
                 }
 
                 Section("Export") {
-                    Button {
-                        exportCatalog()
-                    } label: {
-                        Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
+                    if isExporting {
+                        HStack {
+                            Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
+                            Spacer()
+                            ProgressView()
+                        }
+                    } else if let url = exportFileURL {
+                        ShareLink(item: url) {
+                            Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
+                        }
+                    } else {
+                        Button {
+                            Task {
+                                await exportCatalog()
+                            }
+                        } label: {
+                            Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
+                        }
                     }
                 }
             }
             .navigationTitle("Add")
-            .sheet(isPresented: $showingShareSheet) {
-                ShareSheet(items: shareItems)
-                    .presentationDetents([.medium, .large])
+            .task {
+                // Pre-generate the export file in background
+                await exportCatalog()
             }
         }
     }
 
-    private func exportCatalog() {
-        let csvContent = CSVExporter.exportBooks(books)
-        if let url = CSVExporter.saveToTemporaryFile(csvContent) {
-            shareItems = [url]
-            showingShareSheet = true
+    private func exportCatalog() async {
+        isExporting = true
+
+        // Capture books array to avoid cross-context issues
+        let booksSnapshot = books
+
+        // Run export in background
+        let url = await Task.detached {
+            let csvContent = CSVExporter.exportBooks(booksSnapshot)
+            return CSVExporter.saveToTemporaryFile(csvContent)
+        }.value
+
+        await MainActor.run {
+            exportFileURL = url
+            isExporting = false
         }
     }
-}
-
-// MARK: - ShareSheet
-struct ShareSheet: UIViewControllerRepresentable {
-    let items: [Any]
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        return controller
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - Add Book View
@@ -89,6 +101,7 @@ struct AddBookView: View {
     @State private var author = ""
     @State private var isbn = ""
     @State private var totalCopies = 1
+    @State private var notes = ""
 
     var body: some View {
         Form {
@@ -102,15 +115,32 @@ struct AddBookView: View {
                 Stepper("Total Copies: \(totalCopies)", value: $totalCopies, in: 1...99)
             }
 
-            Section {
-                Button("Add Book") {
-                    addBook()
-                }
-                .disabled(title.isEmpty || author.isEmpty)
+            Section("Notes") {
+                TextEditor(text: $notes)
+                    .frame(minHeight: 100)
             }
         }
         .navigationTitle("Add New Book")
         .navigationBarTitleDisplayMode(.inline)
+        .safeAreaInset(edge: .bottom) {
+            Button {
+                addBook()
+            } label: {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Add Book")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background((title.isEmpty || author.isEmpty) ? .gray : .blue)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .disabled(title.isEmpty || author.isEmpty)
+            .padding()
+            .background(.ultraThinMaterial)
+        }
     }
 
     private func addBook() {
@@ -119,7 +149,8 @@ struct AddBookView: View {
             title: title,
             author: author,
             totalCopies: totalCopies,
-            availableCopies: totalCopies
+            availableCopies: totalCopies,
+            notes: notes.isEmpty ? nil : notes
         )
 
         modelContext.insert(book)
