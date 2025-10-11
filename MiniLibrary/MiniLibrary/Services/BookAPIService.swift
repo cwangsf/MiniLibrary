@@ -124,6 +124,7 @@ actor BookAPIService {
             pageCount: volumeInfo.pageCount,
             publishedDate: volumeInfo.publishedDate,
             publisher: volumeInfo.publisher,
+            languageCode: volumeInfo.language,
             coverImageURL: volumeInfo.imageLinks?.thumbnail
         )
     }
@@ -145,6 +146,7 @@ struct VolumeInfo: Codable {
     let pageCount: Int?
     let publishedDate: String?
     let publisher: String?
+    let language: String?
     let imageLinks: ImageLinks?
 }
 

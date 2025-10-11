@@ -23,7 +23,14 @@ final class Book: Codable {
     var pageCount: Int?
     var publishedDate: String?
     var publisher: String?
+    var languageCode: String? // Store as String for flexibility, can be converted to Language enum
     var coverImageURL: String?
+
+    // Computed property for Language enum
+    var language: Language? {
+        guard let code = languageCode else { return nil }
+        return Language(code: code)
+    }
 
     @Relationship(deleteRule: .nullify, inverse: \CheckoutRecord.book)
     var checkouts: [CheckoutRecord]?
@@ -40,6 +47,7 @@ final class Book: Codable {
         pageCount: Int? = nil,
         publishedDate: String? = nil,
         publisher: String? = nil,
+        languageCode: String? = nil,
         coverImageURL: String? = nil
     ) {
         self.id = id
@@ -53,6 +61,7 @@ final class Book: Codable {
         self.pageCount = pageCount
         self.publishedDate = publishedDate
         self.publisher = publisher
+        self.languageCode = languageCode
         self.coverImageURL = coverImageURL
     }
 
@@ -69,6 +78,7 @@ final class Book: Codable {
         case pageCount = "page_count"
         case publishedDate = "published_date"
         case publisher
+        case languageCode = "language"
         case coverImageURL = "cover_image_url"
     }
 
@@ -85,6 +95,7 @@ final class Book: Codable {
         self.pageCount = try container.decodeIfPresent(Int.self, forKey: .pageCount)
         self.publishedDate = try container.decodeIfPresent(String.self, forKey: .publishedDate)
         self.publisher = try container.decodeIfPresent(String.self, forKey: .publisher)
+        self.languageCode = try container.decodeIfPresent(String.self, forKey: .languageCode)
         self.coverImageURL = try container.decodeIfPresent(String.self, forKey: .coverImageURL)
     }
 
@@ -101,6 +112,7 @@ final class Book: Codable {
         try container.encodeIfPresent(pageCount, forKey: .pageCount)
         try container.encodeIfPresent(publishedDate, forKey: .publishedDate)
         try container.encodeIfPresent(publisher, forKey: .publisher)
+        try container.encodeIfPresent(languageCode, forKey: .languageCode)
         try container.encodeIfPresent(coverImageURL, forKey: .coverImageURL)
     }
 }
