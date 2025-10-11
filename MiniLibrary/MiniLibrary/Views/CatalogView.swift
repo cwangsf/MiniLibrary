@@ -88,6 +88,8 @@ struct BookDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @State private var showingCheckoutSheet = false
+    @State private var isEditingNotes = false
+    @State private var notesText = ""
 
     var body: some View {
         ScrollView {
@@ -221,6 +223,50 @@ struct BookDetailView: View {
                     .padding(.horizontal)
                 }
 
+                // Notes Section
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Notes")
+                            .font(.headline)
+                        Spacer()
+                        Button(isEditingNotes ? "Done" : "Edit") {
+                            if isEditingNotes {
+                                saveNotes()
+                            }
+                            isEditingNotes.toggle()
+                        }
+                        .font(.subheadline)
+                    }
+
+                    if isEditingNotes {
+                        TextEditor(text: $notesText)
+                            .frame(minHeight: 100)
+                            .padding(8)
+                            .background(.background)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(.secondary.opacity(0.3), lineWidth: 1)
+                            )
+                    } else {
+                        if let notes = book.notes, !notes.isEmpty {
+                            Text(notes)
+                                .font(.body)
+                                .foregroundStyle(.primary)
+                        } else {
+                            Text("No notes yet. Tap Edit to add notes.")
+                                .font(.body)
+                                .foregroundStyle(.secondary)
+                                .italic()
+                        }
+                    }
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(.background)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal)
+
                 Spacer()
             }
         }
@@ -232,6 +278,9 @@ struct BookDetailView: View {
                 dismiss()
             })
         }
+        .onAppear {
+            notesText = book.notes ?? ""
+        }
     }
 
     private func returnBook(_ checkout: CheckoutRecord) {
@@ -239,6 +288,10 @@ struct BookDetailView: View {
         if let book = checkout.book {
             book.availableCopies += 1
         }
+    }
+
+    private func saveNotes() {
+        book.notes = notesText.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
 

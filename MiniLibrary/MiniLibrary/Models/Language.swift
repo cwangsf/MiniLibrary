@@ -38,6 +38,7 @@ enum Language: String, Codable, CaseIterable {
     case romanian = "ro"
     case hungarian = "hu"
     case ukrainian = "uk"
+    case irish = "ga"
 
     /// Display name for the language
     var displayName: String {
@@ -71,6 +72,7 @@ enum Language: String, Codable, CaseIterable {
         case .romanian: return "Romanian"
         case .hungarian: return "Hungarian"
         case .ukrainian: return "Ukrainian"
+        case .irish: return "Irish"
         }
     }
 
@@ -106,6 +108,7 @@ enum Language: String, Codable, CaseIterable {
         case .romanian: return "Română"
         case .hungarian: return "Magyar"
         case .ukrainian: return "Українська"
+        case .irish: return "Gaeilge"
         }
     }
 

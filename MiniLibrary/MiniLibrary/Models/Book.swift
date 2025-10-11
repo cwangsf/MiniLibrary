@@ -26,6 +26,9 @@ final class Book: Codable {
     var languageCode: String? // Store as String for flexibility, can be converted to Language enum
     var coverImageURL: String?
 
+    // User-editable field
+    var notes: String?
+
     // Computed property for Language enum
     var language: Language? {
         guard let code = languageCode else { return nil }
@@ -48,7 +51,8 @@ final class Book: Codable {
         publishedDate: String? = nil,
         publisher: String? = nil,
         languageCode: String? = nil,
-        coverImageURL: String? = nil
+        coverImageURL: String? = nil,
+        notes: String? = nil
     ) {
         self.id = id
         self.isbn = isbn
@@ -63,6 +67,7 @@ final class Book: Codable {
         self.publisher = publisher
         self.languageCode = languageCode
         self.coverImageURL = coverImageURL
+        self.notes = notes
     }
 
     // MARK: - Codable
@@ -80,6 +85,7 @@ final class Book: Codable {
         case publisher
         case languageCode = "language"
         case coverImageURL = "cover_image_url"
+        case notes
     }
 
     required init(from decoder: Decoder) throws {
@@ -97,6 +103,7 @@ final class Book: Codable {
         self.publisher = try container.decodeIfPresent(String.self, forKey: .publisher)
         self.languageCode = try container.decodeIfPresent(String.self, forKey: .languageCode)
         self.coverImageURL = try container.decodeIfPresent(String.self, forKey: .coverImageURL)
+        self.notes = try container.decodeIfPresent(String.self, forKey: .notes)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -114,5 +121,6 @@ final class Book: Codable {
         try container.encodeIfPresent(publisher, forKey: .publisher)
         try container.encodeIfPresent(languageCode, forKey: .languageCode)
         try container.encodeIfPresent(coverImageURL, forKey: .coverImageURL)
+        try container.encodeIfPresent(notes, forKey: .notes)
     }
 }
