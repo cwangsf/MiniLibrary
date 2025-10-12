@@ -1,6 +1,35 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ - %lld available" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ - %2$lld available"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "%lld available" : {
+
+    },
+    "%lld total copies" : {
+
+    },
+    "%lld/%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld"
+          }
+        }
+      }
+    },
     "Add" : {
       "localizations" : {
         "de" : {
@@ -19,6 +48,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "添加"
+          }
+        }
+      }
+    },
+    "Add %lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Add %1$lld %2$@"
           }
         }
       }
@@ -44,6 +83,12 @@
           }
         }
       }
+    },
+    "Add Copies" : {
+
+    },
+    "Add New Book" : {
+
     },
     "Add New Book Manually" : {
       "localizations" : {
@@ -617,6 +662,9 @@
         }
       }
     },
+    "Due: %@" : {
+
+    },
     "Edit" : {
       "localizations" : {
         "de" : {
@@ -749,6 +797,9 @@
         }
       }
     },
+    "Grade %lld" : {
+
+    },
     "Grade Level (optional)" : {
       "localizations" : {
         "de" : {
@@ -793,6 +844,9 @@
         }
       }
     },
+    "ISBN" : {
+
+    },
     "ISBN (optional)" : {
       "localizations" : {
         "de" : {
@@ -814,6 +868,12 @@
           }
         }
       }
+    },
+    "ISBN: %@" : {
+
+    },
+    "Library ID (e.g., LIB-001)" : {
+
     },
     "No Active Checkouts" : {
       "localizations" : {
@@ -925,6 +985,9 @@
         }
       }
     },
+    "Not specified" : {
+
+    },
     "Notes" : {
       "localizations" : {
         "de" : {
@@ -969,6 +1032,9 @@
         }
       }
     },
+    "of %lld total" : {
+
+    },
     "OVERDUE" : {
       "localizations" : {
         "de" : {
@@ -1012,6 +1078,9 @@
           }
         }
       }
+    },
+    "Published: %@" : {
+
     },
     "Recent Checkouts" : {
       "localizations" : {
@@ -1211,6 +1280,12 @@
         }
       }
     },
+    "Select a book" : {
+
+    },
+    "Select a student" : {
+
+    },
     "Select Book" : {
       "localizations" : {
         "de" : {
@@ -1321,6 +1396,9 @@
         }
       }
     },
+    "Student: %@" : {
+
+    },
     "There are no books currently checked out" : {
       "localizations" : {
         "de" : {
@@ -1386,6 +1464,9 @@
           }
         }
       }
+    },
+    "Total Copies: %lld" : {
+
     },
     "Try searching with different keywords" : {
       "localizations" : {
