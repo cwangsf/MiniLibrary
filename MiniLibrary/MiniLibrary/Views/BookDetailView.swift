@@ -20,6 +20,7 @@ struct BookDetailView: View {
     @State private var availableCopiesText = ""
     @State private var showingReturnConfirmation = false
     @State private var checkoutToReturn: CheckoutRecord?
+    @State private var isFetchingBookInfo = false
 
     var body: some View {
         ScrollView {
@@ -56,6 +57,61 @@ struct BookDetailView: View {
                         Text("Published: \(publishedDate)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.horizontal)
+
+                // Book Description
+                if let description = book.bookDescription, !description.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Description")
+                            .font(.headline)
+
+                        Text(description)
+                            .font(.body)
+                            .foregroundStyle(.primary)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.background)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal)
+                }
+
+                // External Links
+                VStack(spacing: 12) {
+                    if book.isWishlistItem {
+                        // For wishlist items - link to Amazon
+                        if let amazonURL = generateAmazonURL() {
+                            Link(destination: amazonURL) {
+                                HStack {
+                                    Image(systemName: "cart.fill")
+                                    Text("Find on Amazon")
+                                }
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(.orange)
+                                .foregroundStyle(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                        }
+                    } else {
+                        // For catalog items - link to Google Books
+                        if let googleBooksURL = generateGoogleBooksURL() {
+                            Link(destination: googleBooksURL) {
+                                HStack {
+                                    Image(systemName: "book.fill")
+                                    Text("View on Google Books")
+                                }
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(.blue.opacity(0.8))
+                                .foregroundStyle(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                        }
                     }
                 }
                 .padding(.horizontal)
@@ -260,6 +316,9 @@ struct BookDetailView: View {
             notesText = book.notes ?? ""
             totalCopiesText = "\(book.totalCopies)"
             availableCopiesText = "\(book.availableCopies)"
+
+            // Fetch book info in background if missing metadata
+            fetchBookInfoIfNeeded()
         }
     }
 
@@ -303,5 +362,112 @@ struct BookDetailView: View {
 
         book.totalCopies = totalCopies
         book.availableCopies = availableCopies
+    }
+
+    private func generateGoogleBooksURL() -> URL? {
+        if let isbn = book.isbn {
+            // Use ISBN for most accurate results
+            return URL(string: "https://books.google.com/books?isbn=\(isbn)")
+        } else {
+            // Fallback to title and author search
+            let query = "\(book.title) \(book.author)"
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            return URL(string: "https://books.google.com/books?q=\(query)")
+        }
+    }
+
+    private func generateAmazonURL() -> URL? {
+        if let isbn = book.isbn {
+            // Use ISBN for most accurate results
+            return URL(string: "https://www.amazon.com/s?k=\(isbn)")
+        } else {
+            // Fallback to title and author search
+            let query = "\(book.title) \(book.author)"
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            return URL(string: "https://www.amazon.com/s?k=\(query)")
+        }
+    }
+
+    private func fetchBookInfoIfNeeded() {
+        // Only fetch if we're missing key metadata and not already fetching
+        guard !isFetchingBookInfo else { return }
+
+        // Check if we need to fetch (missing description or other metadata)
+        let needsFetch = book.bookDescription == nil ||
+                        book.bookDescription?.isEmpty == true ||
+                        book.coverImageURL == nil
+
+        guard needsFetch else { return }
+
+        // We need an ISBN or at least title to search
+        guard book.isbn != nil || !book.title.isEmpty else { return }
+
+        isFetchingBookInfo = true
+
+        Task {
+            do {
+                let fetchedBook: Book
+
+                if let isbn = book.isbn {
+                    // Fetch by ISBN for most accurate results
+                    fetchedBook = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
+                } else {
+                    // Fallback to title/author search
+                    let items = try await BookAPIService.shared.searchBooksByTitleAndAuthor(
+                        title: book.title,
+                        author: book.author
+                    )
+
+                    guard let firstItem = items.first else {
+                        isFetchingBookInfo = false
+                        return
+                    }
+
+                    fetchedBook = await BookAPIService.shared.createBookFromSearchResult(firstItem)
+                }
+
+                // Update the existing book with fetched metadata
+                await MainActor.run {
+                    updateBookMetadata(from: fetchedBook)
+                    isFetchingBookInfo = false
+                }
+            } catch {
+                // Silently fail - this is a background enhancement
+                print("Failed to fetch book info: \(error.localizedDescription)")
+                await MainActor.run {
+                    isFetchingBookInfo = false
+                }
+            }
+        }
+    }
+
+    private func updateBookMetadata(from fetchedBook: Book) {
+        // Update metadata fields, but preserve user data and inventory
+        if book.bookDescription == nil || book.bookDescription?.isEmpty == true {
+            book.bookDescription = fetchedBook.bookDescription
+        }
+
+        if book.coverImageURL == nil {
+            book.coverImageURL = fetchedBook.coverImageURL
+        }
+
+        if book.pageCount == nil {
+            book.pageCount = fetchedBook.pageCount
+        }
+
+        if book.publishedDate == nil {
+            book.publishedDate = fetchedBook.publishedDate
+        }
+
+        if book.publisher == nil {
+            book.publisher = fetchedBook.publisher
+        }
+
+        if book.languageCode == nil {
+            book.languageCode = fetchedBook.languageCode
+        }
+
+        // Don't update: title, author, ISBN, totalCopies, availableCopies, notes, checkouts
+        // These are user-managed or critical data
     }
 }
