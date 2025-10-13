@@ -75,9 +75,8 @@ struct ScanBookView: View {
             )
             .ignoresSafeArea()
 
-            VStack {
-                Spacer()
-
+            VStack(spacing: 0) {
+                // Top instructions
                 VStack(spacing: 12) {
                     Image(systemName: "barcode.viewfinder")
                         .font(.system(size: 60))
@@ -92,17 +91,19 @@ struct ScanBookView: View {
                         .foregroundStyle(.white.opacity(0.8))
                 }
                 .padding()
-                .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .padding()
+                .frame(maxWidth: .infinity)
+                .background(.black.opacity(0.6))
 
                 Spacer()
 
+                // Bottom button
                 Button("Enter ISBN Manually") {
                     viewModel.enterManualMode()
                 }
                 .buttonStyle(.borderedProminent)
                 .padding()
+                .frame(maxWidth: .infinity)
+                .background(.black.opacity(0.6))
             }
         }
     }
@@ -147,16 +148,30 @@ struct ScanBookView: View {
             }
 
             Section {
-                Button("Add Book") {
-                    addBook()
-                }
-                .disabled(viewModel.title.isEmpty || viewModel.author.isEmpty)
-
                 Button("Scan Another Book") {
                     viewModel.reset()
                 }
                 .foregroundStyle(.secondary)
             }
+        }
+        .safeAreaInset(edge: .bottom) {
+            Button {
+                addBook()
+            } label: {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Add Book")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background((viewModel.title.isEmpty || viewModel.author.isEmpty) ? .gray : .blue)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .disabled(viewModel.title.isEmpty || viewModel.author.isEmpty)
+            .padding()
+            .background(.ultraThinMaterial)
         }
     }
 

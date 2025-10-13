@@ -15,6 +15,9 @@ struct BookDetailView: View {
     @State private var showingCheckoutSheet = false
     @State private var isEditingNotes = false
     @State private var notesText = ""
+    @State private var isEditingCopies = false
+    @State private var totalCopiesText = ""
+    @State private var availableCopiesText = ""
 
     var body: some View {
         ScrollView {
@@ -102,17 +105,53 @@ struct BookDetailView: View {
 
                 // Availability
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Availability")
-                        .font(.headline)
-
                     HStack {
-                        Label("\(book.availableCopies) available", systemImage: "checkmark.circle.fill")
-                            .foregroundStyle(book.availableCopies > 0 ? .green : .red)
-
+                        Text("Availability")
+                            .font(.headline)
                         Spacer()
+                        Button(isEditingCopies ? "Done" : "Edit") {
+                            if isEditingCopies {
+                                saveCopies()
+                            } else {
+                                startEditingCopies()
+                            }
+                            isEditingCopies.toggle()
+                        }
+                        .font(.subheadline)
+                    }
 
-                        Text("of \(book.totalCopies) total")
-                            .foregroundStyle(.secondary)
+                    if isEditingCopies {
+                        VStack(spacing: 12) {
+                            HStack {
+                                Text("Total Copies:")
+                                    .frame(width: 120, alignment: .leading)
+                                TextField("Total", text: $totalCopiesText)
+                                    .keyboardType(.numberPad)
+                                    .textFieldStyle(.roundedBorder)
+                            }
+
+                            HStack {
+                                Text("Available:")
+                                    .frame(width: 120, alignment: .leading)
+                                TextField("Available", text: $availableCopiesText)
+                                    .keyboardType(.numberPad)
+                                    .textFieldStyle(.roundedBorder)
+                            }
+
+                            Text("Note: Available copies cannot exceed total copies")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    } else {
+                        HStack {
+                            Label("\(book.availableCopies) available", systemImage: "checkmark.circle.fill")
+                                .foregroundStyle(book.availableCopies > 0 ? .green : .red)
+
+                            Spacer()
+
+                            Text("of \(book.totalCopies) total")
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
                 .padding()
@@ -205,6 +244,8 @@ struct BookDetailView: View {
         }
         .onAppear {
             notesText = book.notes ?? ""
+            totalCopiesText = "\(book.totalCopies)"
+            availableCopiesText = "\(book.availableCopies)"
         }
     }
 
@@ -217,5 +258,26 @@ struct BookDetailView: View {
 
     private func saveNotes() {
         book.notes = notesText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func startEditingCopies() {
+        totalCopiesText = "\(book.totalCopies)"
+        availableCopiesText = "\(book.availableCopies)"
+    }
+
+    private func saveCopies() {
+        guard let totalCopies = Int(totalCopiesText),
+              let availableCopies = Int(availableCopiesText),
+              totalCopies > 0,
+              availableCopies >= 0,
+              availableCopies <= totalCopies else {
+            // Invalid input, reset to current values
+            totalCopiesText = "\(book.totalCopies)"
+            availableCopiesText = "\(book.availableCopies)"
+            return
+        }
+
+        book.totalCopies = totalCopies
+        book.availableCopies = availableCopies
     }
 }

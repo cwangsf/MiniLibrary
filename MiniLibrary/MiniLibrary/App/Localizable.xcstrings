@@ -291,6 +291,12 @@
         }
       }
     },
+    "Available" : {
+
+    },
+    "Available:" : {
+
+    },
     "Book" : {
       "localizations" : {
         "de" : {
@@ -997,6 +1003,9 @@
     "Not specified" : {
 
     },
+    "Note: Available copies cannot exceed total copies" : {
+
+    },
     "Notes" : {
       "localizations" : {
         "de" : {
@@ -1457,6 +1466,9 @@
         }
       }
     },
+    "Total" : {
+
+    },
     "Total Copies" : {
       "localizations" : {
         "de" : {
@@ -1478,6 +1490,9 @@
           }
         }
       }
+    },
+    "Total Copies:" : {
+
     },
     "Total Copies: %lld" : {
 
