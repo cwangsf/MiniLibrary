@@ -95,10 +95,20 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
 
 - **Wishlist View**
   - Separate view from catalog
-  - List wishlist items
-  - Tap to acquire (convert to catalog item)
-  - Delete wishlist items (swipe to delete)
+  - List wishlist items with book cover images
+  - **Tap book** → Opens Amazon to purchase
+  - **Tap share icon** → Share book via Messages, WhatsApp, Email, etc.
+  - **Swipe left** → Delete or Acquire options
+  - Acquire converts wishlist item to catalog item
   - Add button in toolbar to add new wishlist items
+  - No notes field (simplified workflow)
+
+- **Wishlist Interaction**
+  - Main tap: Opens Amazon search page for book
+  - Share button: iOS native share sheet with formatted message and Amazon link
+  - Swipe actions:
+    - **Delete** (red) - Remove from wishlist
+    - **Acquire** (green) - Add to catalog with copy count selection
 
 - **Acquire Wishlist Item**
   - Confirmation sheet showing book details
@@ -128,18 +138,39 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - Icon and color coding by type
   - Formatted display with context
 
-### 6. External Links
+### 6. External Links & Sharing
 - **For Catalog Books**
-  - "View on Google Books" button
+  - "View on Google Books" button (in BookDetailView)
   - Links to Google Books preview page
   - Uses ISBN if available, else title+author search
   - Shows reviews, ratings, preview pages
 
 - **For Wishlist Books**
-  - "Find on Amazon" button (orange)
-  - Links to Amazon search results
+  - "Find on Amazon" button (orange, in BookDetailView)
+  - Tap wishlist item → Opens Amazon directly
+  - Share button (square.and.arrow.up icon) → iOS share sheet
+  - Share text format: "Check out this book: "[Title]" by [Author]" + Amazon URL
+  - Can share via Messages, WhatsApp, Email, Copy Link, etc.
   - Uses ISBN if available, else title+author search
-  - Helps users purchase books
+
+### 7. Data Export
+- **Export Catalog to CSV**
+  - Available in Add tab, Export section
+  - Filters catalog books (excludes wishlist)
+  - Exports to `library_catalog.csv`
+  - Pre-generated on view load for instant sharing
+
+- **Export Wishlist to CSV**
+  - Available in Add tab, Export section (pink text)
+  - Filters wishlist books only
+  - Exports to `library_wishlist.csv`
+  - Pre-generated on view load for instant sharing
+
+- **CSV Format** (both exports)
+  - Columns: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes
+  - Proper CSV escaping (handles commas, quotes, newlines)
+  - Opens in Excel, Numbers, Google Sheets
+  - Can email, save to Files, or share via any method
 
 ---
 
@@ -293,6 +324,12 @@ enum ActivityType: String {
 - Visual highlight on selected letter
 - Background capsule with material effect
 
+### ShareSheet
+- UIViewControllerRepresentable wrapper for UIActivityViewController
+- iOS native share functionality
+- Used for sharing wishlist book links
+- Shares text + URL together
+
 ### Confirmation Views
 - **CheckoutConfirmationView**: Confirm before checkout
 - **ReturnConfirmationView**: Confirm before return
@@ -438,6 +475,10 @@ enum ActivityType: String {
 **Problem:** When to fetch missing metadata?
 **Solution:** On `onAppear` of BookDetailView, check if metadata missing, fetch only if needed, never overwrite existing data.
 
+### 8. Wishlist Workflow Simplification
+**Problem:** Notes field in AddWishlistItemView was unused and cluttered the UI.
+**Solution:** Removed notes from wishlist add flow. Users can add notes after adding to wishlist if needed.
+
 ---
 
 ## File Structure
@@ -479,7 +520,8 @@ MiniLibrary/
 │
 ├── Services/
 │   ├── BookAPIService.swift
-│   └── BookCoverService.swift
+│   ├── BookCoverService.swift
+│   └── CSVExporter.swift
 │
 └── MiniLibraryApp.swift (main entry point)
 ```
@@ -562,10 +604,14 @@ MiniLibrary/
 
 ### Wishlist
 - [ ] Search and add to wishlist
-- [ ] Wishlist items show with 0 copies
+- [ ] Wishlist items show with 0 copies and book covers
+- [ ] Tap wishlist item opens Amazon
+- [ ] Share button opens iOS share sheet
+- [ ] Share text includes formatted message and Amazon URL
+- [ ] Swipe left shows Delete and Acquire actions
 - [ ] Acquire converts to catalog item
-- [ ] Amazon link works for wishlist items
-- [ ] Delete wishlist items
+- [ ] Delete removes from wishlist
+- [ ] Add button in toolbar works
 
 ### Catalog
 - [ ] A-Z sections display correctly
@@ -581,6 +627,16 @@ MiniLibrary/
 - [ ] Icons and colors correct
 - [ ] Detailed info displayed
 
+### Export
+- [ ] Export Catalog to CSV works
+- [ ] Export Wishlist to CSV works
+- [ ] CSV files have correct filenames
+- [ ] CSV format is valid (opens in Excel/Numbers)
+- [ ] Pre-generation completes on view load
+- [ ] Share sheet works for both exports
+- [ ] Catalog export excludes wishlist items
+- [ ] Wishlist export only includes wishlist items
+
 ---
 
 ## Future Enhancement Ideas
@@ -590,17 +646,20 @@ MiniLibrary/
 2. **Email notifications** - Overdue book reminders
 3. **Barcode generation** - Print library ID cards
 4. **Statistics** - Most popular books, checkout trends
-5. **Export data** - CSV/PDF reports
+5. **Import CSV** - Bulk import books from CSV files
 6. **Photo attachments** - Damage documentation
 7. **Fine tracking** - Overdue fines calculation
 8. **Reservation system** - Reserve checked-out books
 9. **Categories/genres** - Organize books by type
 10. **Reading level** - Lexile/AR level tracking
 11. **Series tracking** - Group books in series
-12. **Bulk operations** - Import book lists
+12. **Bulk operations** - Batch edit, bulk delete
 13. **Offline mode** - Queue actions when offline
 14. **Dark mode** - Explicit theme toggle
 15. **Localization** - Multiple language support
+16. **QR codes** - Alternative to barcodes for custom items
+17. **Book recommendations** - Suggest similar books
+18. **Notes with rich text** - Formatting support in notes
 
 ---
 
@@ -635,15 +694,27 @@ MiniLibrary/
 ## Summary
 
 MiniLibrary is a complete library management solution with:
-- ✅ Book catalog with barcode scanning
-- ✅ Student checkout/return system
-- ✅ Wishlist management
-- ✅ Activity logging
+- ✅ Book catalog with barcode scanning and A-Z index
+- ✅ Student checkout/return system with confirmations
+- ✅ Wishlist management with Amazon integration
+- ✅ Activity logging for all operations
 - ✅ External links (Google Books, Amazon)
+- ✅ Social sharing for wishlist books
+- ✅ CSV export (catalog and wishlist separately)
 - ✅ Rich metadata from Google Books API
-- ✅ Intuitive iOS-native UI
+- ✅ Background metadata enhancement
+- ✅ Intuitive iOS-native UI with haptic feedback
 - ✅ Offline-capable with background enhancements
 - ✅ No external dependencies
+
+**Recent Updates (Post-Initial Release):**
+- Added A-Z section index scroller in catalog (like iOS Contacts)
+- Added book cover images to wishlist view
+- Wishlist tap now opens Amazon directly
+- Added share button for wishlist items (iOS share sheet)
+- Added CSV export for both catalog and wishlist
+- Removed unused notes field from wishlist add screen
+- Improved external links in BookDetailView
 
 The app follows iOS design patterns, uses modern SwiftUI/SwiftData, and provides a complete workflow for managing a personal or classroom library. All core features are implemented and tested.
 
