@@ -26,12 +26,67 @@ struct CatalogView: View {
         }
     }
 
+    // Group books by first letter of title
+    var groupedBooks: [String: [Book]] {
+        let catalogBooks = filteredBooks
+        return Dictionary(grouping: catalogBooks) { book in
+            let firstChar = book.title.prefix(1).uppercased()
+            // Check if it's a letter
+            if firstChar.rangeOfCharacter(from: .letters) != nil {
+                return firstChar
+            } else {
+                return "#"
+            }
+        }
+    }
+
+    var sortedSectionTitles: [String] {
+        let titles = groupedBooks.keys.sorted()
+        // Move "#" to the end if it exists
+        if let hashIndex = titles.firstIndex(of: "#") {
+            var sorted = titles
+            sorted.remove(at: hashIndex)
+            sorted.append("#")
+            return sorted
+        }
+        return titles
+    }
+
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(filteredBooks) { book in
-                    NavigationLink(destination: BookDetailView(book: book)) {
-                        BookRowView(book: book)
+            ScrollViewReader { proxy in
+                ZStack(alignment: .trailing) {
+                    List {
+                        if searchText.isEmpty {
+                            // Grouped view with section index when not searching
+                            ForEach(sortedSectionTitles, id: \.self) { letter in
+                                Section(header: Text(letter).id(letter)) {
+                                    ForEach(groupedBooks[letter] ?? []) { book in
+                                        NavigationLink(destination: BookDetailView(book: book)) {
+                                            BookRowView(book: book)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            // Flat list when searching
+                            ForEach(filteredBooks) { book in
+                                NavigationLink(destination: BookDetailView(book: book)) {
+                                    BookRowView(book: book)
+                                }
+                            }
+                        }
+                    }
+                    .listStyle(.plain)
+
+                    // Section Index Titles (A-Z) on the right side
+                    if searchText.isEmpty && !sortedSectionTitles.isEmpty {
+                        SectionIndexTitles(titles: sortedSectionTitles) { letter in
+                            withAnimation {
+                                proxy.scrollTo(letter, anchor: .top)
+                            }
+                        }
+                        .padding(.trailing, 5)
                     }
                 }
             }
