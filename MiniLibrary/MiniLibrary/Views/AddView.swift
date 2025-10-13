@@ -493,6 +493,9 @@ struct ReturnBookView: View {
 
     @Query private var checkouts: [CheckoutRecord]
 
+    @State private var showingReturnConfirmation = false
+    @State private var checkoutToReturn: CheckoutRecord?
+
     var activeCheckouts: [CheckoutRecord] {
         checkouts.filter { $0.isActive }
     }
@@ -508,7 +511,8 @@ struct ReturnBookView: View {
             } else {
                 ForEach(activeCheckouts) { checkout in
                     Button {
-                        returnBook(checkout)
+                        checkoutToReturn = checkout
+                        showingReturnConfirmation = true
                     } label: {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
@@ -532,6 +536,17 @@ struct ReturnBookView: View {
         }
         .navigationTitle("Return Book")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingReturnConfirmation) {
+            if let checkout = checkoutToReturn, let book = checkout.book {
+                ReturnConfirmationView(
+                    book: book,
+                    checkout: checkout,
+                    onConfirm: {
+                        returnBook(checkout)
+                    }
+                )
+            }
+        }
     }
 
     private func returnBook(_ checkout: CheckoutRecord) {

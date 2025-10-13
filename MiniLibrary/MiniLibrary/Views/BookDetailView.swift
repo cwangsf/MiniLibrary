@@ -18,6 +18,8 @@ struct BookDetailView: View {
     @State private var isEditingCopies = false
     @State private var totalCopiesText = ""
     @State private var availableCopiesText = ""
+    @State private var showingReturnConfirmation = false
+    @State private var checkoutToReturn: CheckoutRecord?
 
     var body: some View {
         ScrollView {
@@ -81,7 +83,8 @@ struct BookDetailView: View {
                     VStack(spacing: 12) {
                         ForEach(checkouts) { checkout in
                             Button {
-                                returnBook(checkout)
+                                checkoutToReturn = checkout
+                                showingReturnConfirmation = true
                             } label: {
                                 HStack {
                                     Image(systemName: "arrow.uturn.left.circle.fill")
@@ -242,6 +245,17 @@ struct BookDetailView: View {
                 dismiss()
             })
         }
+        .sheet(isPresented: $showingReturnConfirmation) {
+            if let checkout = checkoutToReturn {
+                ReturnConfirmationView(
+                    book: book,
+                    checkout: checkout,
+                    onConfirm: {
+                        returnBook(checkout)
+                    }
+                )
+            }
+        }
         .onAppear {
             notesText = book.notes ?? ""
             totalCopiesText = "\(book.totalCopies)"
@@ -253,6 +267,16 @@ struct BookDetailView: View {
         checkout.returnDate = Date()
         if let book = checkout.book {
             book.availableCopies += 1
+
+            // Log activity
+            let activity = Activity(
+                type: .return,
+                bookTitle: book.title,
+                bookAuthor: book.author,
+                studentLibraryId: checkout.student?.libraryId,
+                additionalInfo: nil
+            )
+            modelContext.insert(activity)
         }
     }
 
