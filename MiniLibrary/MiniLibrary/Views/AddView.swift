@@ -159,6 +159,16 @@ struct AddBookView: View {
         )
 
         modelContext.insert(book)
+
+        // Log activity
+        let activity = Activity(
+            type: .addBook,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+            additionalInfo: "\(totalCopies) \(totalCopies == 1 ? "copy" : "copies")"
+        )
+        modelContext.insert(activity)
+
         dismiss()
     }
 }
@@ -345,6 +355,17 @@ struct CheckoutBookView: View {
 
         book.availableCopies -= 1
         modelContext.insert(checkout)
+
+        // Log activity
+        let activity = Activity(
+            type: .checkout,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+            studentLibraryId: student.libraryId,
+            additionalInfo: "Due \(dueDate.formatted(date: .abbreviated, time: .omitted))"
+        )
+        modelContext.insert(activity)
+
         dismiss()
         onCheckoutComplete?()
     }
@@ -517,6 +538,16 @@ struct ReturnBookView: View {
         checkout.returnDate = Date()
         if let book = checkout.book {
             book.availableCopies += 1
+
+            // Log activity
+            let activity = Activity(
+                type: .return,
+                bookTitle: book.title,
+                bookAuthor: book.author,
+                studentLibraryId: checkout.student?.libraryId,
+                additionalInfo: nil
+            )
+            modelContext.insert(activity)
         }
         dismiss()
     }
@@ -671,6 +702,16 @@ struct AddWishlistItemView: View {
         }
 
         modelContext.insert(book)
+
+        // Log activity
+        let activity = Activity(
+            type: .addWishlist,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+            additionalInfo: nil
+        )
+        modelContext.insert(activity)
+
         dismiss()
     }
 }

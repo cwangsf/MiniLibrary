@@ -16,6 +16,7 @@ struct MiniLibraryApp: App {
             Student.self,
             CheckoutRecord.self,
             User.self,
+            Activity.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

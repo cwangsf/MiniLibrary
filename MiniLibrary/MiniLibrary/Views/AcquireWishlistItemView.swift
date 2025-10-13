@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AcquireWishlistItemView: View {
     let book: Book
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
 
     @State private var copiesToAdd = 1
 
@@ -122,6 +124,16 @@ struct AcquireWishlistItemView: View {
         book.isWishlistItem = false
         book.totalCopies = copiesToAdd
         book.availableCopies = copiesToAdd
+
+        // Log activity
+        let activity = Activity(
+            type: .fulfillWishlist,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+            additionalInfo: "\(copiesToAdd) \(copiesToAdd == 1 ? "copy" : "copies")"
+        )
+        modelContext.insert(activity)
+
         dismiss()
     }
 }

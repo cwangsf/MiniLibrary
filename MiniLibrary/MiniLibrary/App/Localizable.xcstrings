@@ -30,6 +30,9 @@
         }
       }
     },
+    "Activity will appear here as you use the library" : {
+
+    },
     "Add" : {
       "localizations" : {
         "de" : {
@@ -397,6 +400,9 @@
           }
         }
       }
+    },
+    "by %@" : {
+
     },
     "Cancel" : {
       "localizations" : {
@@ -941,6 +947,9 @@
         }
       }
     },
+    "No Recent Activity" : {
+
+    },
     "No Results" : {
       "localizations" : {
         "de" : {
@@ -1082,7 +1091,11 @@
     "Published: %@" : {
 
     },
+    "Recent Activity" : {
+
+    },
     "Recent Checkouts" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1331,6 +1344,7 @@
       }
     },
     "Start checking out books to see them here" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

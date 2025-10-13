@@ -186,6 +186,15 @@ struct ScanBookView: View {
 
         modelContext.insert(book)
 
+        // Log activity
+        let activity = Activity(
+            type: .addBook,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+            additionalInfo: "\(viewModel.totalCopies) \(viewModel.totalCopies == 1 ? "copy" : "copies")"
+        )
+        modelContext.insert(activity)
+
         // Show success and reset for next book
         viewModel.reset()
     }
@@ -193,6 +202,16 @@ struct ScanBookView: View {
     private func addCopyToExistingBook(_ book: Book, copies: Int) {
         book.totalCopies += copies
         book.availableCopies += copies
+
+        // Log activity
+        let activity = Activity(
+            type: .addBook,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+            additionalInfo: "Added \(copies) more \(copies == 1 ? "copy" : "copies")"
+        )
+        modelContext.insert(activity)
+
         showingAddCopyConfirmation = false
         viewModel.reset()
     }

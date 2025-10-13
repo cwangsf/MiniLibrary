@@ -12,6 +12,7 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var books: [Book]
     @Query private var activeCheckouts: [CheckoutRecord]
+    @Query(sort: \Activity.timestamp, order: .reverse) private var activities: [Activity]
 
     var wishlistCount: Int {
         books.filter { $0.isWishlistItem }.count
@@ -66,21 +67,21 @@ struct HomeView: View {
                     .padding(.horizontal)
 
                     // Recent Activity Section
-                    if !activeCheckouts.isEmpty {
+                    if !activities.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Recent Checkouts")
+                            Text("Recent Activity")
                                 .font(.headline)
                                 .padding(.horizontal)
 
-                            ForEach(activeCheckouts.filter { $0.isActive }.prefix(5)) { checkout in
-                                CheckoutRowView(checkout: checkout)
+                            ForEach(activities.prefix(10)) { activity in
+                                ActivityRowView(activity: activity)
                             }
                         }
                     } else {
                         ContentUnavailableView(
-                            "No Active Checkouts",
-                            systemImage: "book.closed",
-                            description: Text("Start checking out books to see them here")
+                            "No Recent Activity",
+                            systemImage: "clock",
+                            description: Text("Activity will appear here as you use the library")
                         )
                     }
 
@@ -127,49 +128,7 @@ struct StatCard: View {
     }
 }
 
-struct CheckoutRowView: View {
-    let checkout: CheckoutRecord
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(checkout.book?.title ?? "Unknown Book")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-
-                Text("Student: \(checkout.student?.libraryId ?? "Unknown")")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-
-            VStack(alignment: .trailing, spacing: 4) {
-                Text("Due: \(checkout.dueDate, format: .dateTime.month().day())")
-                    .font(.caption)
-                    .foregroundStyle(checkout.isOverdue ? .red : .secondary)
-
-                if checkout.isOverdue {
-                    Text("OVERDUE")
-                        .font(.caption2)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 2)
-                        .background(.red)
-                        .clipShape(Capsule())
-                }
-            }
-        }
-        .padding()
-        .background(.background)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-        .padding(.horizontal)
-    }
-}
-
 #Preview {
     HomeView()
-        .modelContainer(for: [Book.self, CheckoutRecord.self, Student.self])
+        .modelContainer(for: [Book.self, CheckoutRecord.self, Student.self, Activity.self])
 }
