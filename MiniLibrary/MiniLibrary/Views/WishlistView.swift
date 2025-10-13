@@ -15,6 +15,7 @@ struct WishlistView: View {
 
     @State private var selectedBook: Book?
     @State private var showingAcquireSheet = false
+    @State private var showingAddWishlistSheet = false
 
     var body: some View {
         List {
@@ -63,10 +64,22 @@ struct WishlistView: View {
         }
         .navigationTitle("Wish List")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showingAddWishlistSheet = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+        }
         .sheet(isPresented: $showingAcquireSheet) {
             if let book = selectedBook {
                 AcquireWishlistItemView(book: book)
             }
+        }
+        .sheet(isPresented: $showingAddWishlistSheet) {
+            AddWishlistItemView()
         }
     }
 
