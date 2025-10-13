@@ -12,6 +12,8 @@ struct AddView: View {
     @Query(sort: \Book.title) private var books: [Book]
     @State private var exportFileURL: URL?
     @State private var isExporting = false
+    @State private var exportWishlistFileURL: URL?
+    @State private var isExportingWishlist = false
 
     var body: some View {
         NavigationStack {
@@ -49,6 +51,7 @@ struct AddView: View {
                 }
 
                 Section("Export") {
+                    // Export Catalog
                     if isExporting {
                         HStack {
                             Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
@@ -68,12 +71,36 @@ struct AddView: View {
                             Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
                         }
                     }
+
+                    // Export Wishlist
+                    if isExportingWishlist {
+                        HStack {
+                            Label("Export Wishlist to CSV", systemImage: "square.and.arrow.up")
+                            Spacer()
+                            ProgressView()
+                        }
+                    } else if let url = exportWishlistFileURL {
+                        ShareLink(item: url) {
+                            Label("Export Wishlist to CSV", systemImage: "square.and.arrow.up")
+                                .foregroundStyle(.pink)
+                        }
+                    } else {
+                        Button {
+                            Task {
+                                await exportWishlist()
+                            }
+                        } label: {
+                            Label("Export Wishlist to CSV", systemImage: "square.and.arrow.up")
+                                .foregroundStyle(.pink)
+                        }
+                    }
                 }
             }
             .navigationTitle("Add")
             .task {
-                // Pre-generate the export file in background
+                // Pre-generate the export files in background
                 await exportCatalog()
+                await exportWishlist()
             }
         }
     }
@@ -82,17 +109,35 @@ struct AddView: View {
         isExporting = true
 
         // Capture books array to avoid cross-context issues
-        let booksSnapshot = books
+        let catalogBooks = books.filter { !$0.isWishlistItem }
 
         // Run export in background
         let url = await Task.detached {
-            let csvContent = CSVExporter.exportBooks(booksSnapshot)
-            return CSVExporter.saveToTemporaryFile(csvContent)
+            let csvContent = CSVExporter.exportBooks(catalogBooks)
+            return CSVExporter.saveToTemporaryFile(csvContent, filename: "library_catalog.csv")
         }.value
 
         await MainActor.run {
             exportFileURL = url
             isExporting = false
+        }
+    }
+
+    private func exportWishlist() async {
+        isExportingWishlist = true
+
+        // Capture wishlist books to avoid cross-context issues
+        let wishlistBooks = books.filter { $0.isWishlistItem }
+
+        // Run export in background
+        let url = await Task.detached {
+            let csvContent = CSVExporter.exportBooks(wishlistBooks)
+            return CSVExporter.saveToTemporaryFile(csvContent, filename: "library_wishlist.csv")
+        }.value
+
+        await MainActor.run {
+            exportWishlistFileURL = url
+            isExportingWishlist = false
         }
     }
 }
@@ -576,7 +621,6 @@ struct AddWishlistItemView: View {
     @State private var title = ""
     @State private var author = ""
     @State private var isbn = ""
-    @State private var notes = ""
     @State private var searchResults: [GoogleBookItem] = []
     @State private var isSearching = false
     @State private var searchError: String?
@@ -636,11 +680,6 @@ struct AddWishlistItemView: View {
                         description: Text("Try searching with different keywords")
                     )
                 }
-            }
-
-            Section("Notes (Optional)") {
-                TextEditor(text: $notes)
-                    .frame(minHeight: 80)
             }
         }
         .navigationTitle("Add to Wishlist")
@@ -711,10 +750,6 @@ struct AddWishlistItemView: View {
 
     private func addBookFromResult(_ item: GoogleBookItem) {
         let book = BookAPIService.shared.createBookFromSearchResult(item, isWishlistItem: true)
-
-        if !notes.isEmpty {
-            book.notes = notes
-        }
 
         modelContext.insert(book)
 

@@ -30,6 +30,9 @@
         }
       }
     },
+    "Acquire" : {
+
+    },
     "Activity will appear here as you use the library" : {
 
     },
@@ -639,6 +642,9 @@
         }
       }
     },
+    "Delete" : {
+
+    },
     "Description" : {
 
     },
@@ -801,6 +807,9 @@
           }
         }
       }
+    },
+    "Export Wishlist to CSV" : {
+
     },
     "Fetching book information..." : {
       "localizations" : {
