@@ -13,6 +13,7 @@ class ScanBookViewModel {
     enum ScanState: Equatable {
         case scanning
         case loading(isbn: String)
+        case confirming(book: Book)
         case editing(book: Book?)
         case existingBook(book: Book)
         case error(message: String)
@@ -23,6 +24,8 @@ class ScanBookViewModel {
                 return true
             case (.loading(let lhsISBN), .loading(let rhsISBN)):
                 return lhsISBN == rhsISBN
+            case (.confirming(let lhsBook), .confirming(let rhsBook)):
+                return lhsBook.id == rhsBook.id
             case (.editing(let lhsBook), .editing(let rhsBook)):
                 return lhsBook?.id == rhsBook?.id
             case (.existingBook(let lhsBook), .existingBook(let rhsBook)):
@@ -73,11 +76,17 @@ class ScanBookViewModel {
             print("Debug: Fetched book - Title: \(book.title), Author: \(book.author), ISBN: \(book.isbn ?? "nil")")
             print("Debug: ViewModel - Title: \(title), Author: \(author), ISBN: \(self.isbn)")
 
-            state = .editing(book: book)
+            state = .confirming(book: book)
         } catch {
             let errorMsg = "Could not fetch book info: \(error.localizedDescription)"
             print("Debug: API Error - \(error)")
             state = .error(message: errorMsg)
+        }
+    }
+
+    func confirmBook() {
+        if let book = scannedBook {
+            state = .editing(book: book)
         }
     }
 

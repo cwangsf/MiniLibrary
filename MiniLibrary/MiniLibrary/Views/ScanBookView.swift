@@ -16,6 +16,17 @@ struct ScanBookView: View {
     @State private var viewModel = ScanBookViewModel()
     @State private var showingAddCopyConfirmation = false
 
+    var navigationTitle: String {
+        switch viewModel.state {
+        case .confirming:
+            return "Confirm Book"
+        case .editing:
+            return "Edit Book Details"
+        default:
+            return "Scan Book"
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -24,18 +35,31 @@ struct ScanBookView: View {
                     scannerView
                 case .loading(let isbn):
                     loadingView(isbn: isbn)
+                case .confirming(let book):
+                    bookConfirmationView(book: book)
                 case .editing, .error:
                     bookFormView
                 case .existingBook:
                     Color.clear
                 }
             }
-            .navigationTitle("Scan Book")
+            .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
+                    if case .confirming = viewModel.state {
+                        Button {
+                            viewModel.reset()
+                        } label: {
+                            HStack {
+                                Image(systemName: "chevron.left")
+                                Text("Back")
+                            }
+                        }
+                    } else {
+                        Button("Cancel") {
+                            dismiss()
+                        }
                     }
                 }
             }
@@ -123,6 +147,100 @@ struct ScanBookView: View {
         }
     }
 
+    // MARK: - Book Confirmation View
+    private func bookConfirmationView(book: Book) -> some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                // Book Cover
+                BookCoverImage(book: book, width: 180, height: 270)
+                    .padding(.top, 20)
+
+                // Book Info
+                VStack(alignment: .center, spacing: 8) {
+                    Text(book.title)
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+
+                    Text(book.author)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+
+                    if let isbn = book.isbn {
+                        Text("ISBN: \(isbn)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    if let publisher = book.publisher {
+                        Text(publisher)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    if let publishedDate = book.publishedDate {
+                        Text("Published: \(publishedDate)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.horizontal)
+
+                // Book Description
+                if let description = book.bookDescription, !description.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Description")
+                            .font(.headline)
+
+                        Text(description)
+                            .font(.body)
+                            .foregroundStyle(.primary)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.background)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal)
+                }
+
+                Spacer()
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 12) {
+                Button {
+                    addBook()
+                } label: {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Confirm & Add Book")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.green)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+
+                Button {
+                    viewModel.confirmBook()
+                } label: {
+                    Text("Edit Details")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(.gray.opacity(0.2))
+                        .foregroundStyle(.primary)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            }
+            .padding()
+            .background(.ultraThinMaterial)
+        }
+    }
+
     // MARK: - Book Form View
     private var bookFormView: some View {
         Form {
@@ -145,13 +263,6 @@ struct ScanBookView: View {
 
             Section("Copies") {
                 Stepper("Total Copies: \(viewModel.totalCopies)", value: $viewModel.totalCopies, in: 1...99)
-            }
-
-            Section {
-                Button("Scan Another Book") {
-                    viewModel.reset()
-                }
-                .foregroundStyle(.secondary)
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -177,19 +288,42 @@ struct ScanBookView: View {
 
     // MARK: - Actions
     private func addBook() {
-        // If we have scanned book with metadata, use it; otherwise create new
+        // Create a new book with proper values
         let book: Book
-        if let scannedBook = viewModel.scannedBook {
-            // Update copies from form
-            scannedBook.totalCopies = viewModel.totalCopies
-            scannedBook.availableCopies = viewModel.totalCopies
-            // Update in case user edited the fields
-            scannedBook.title = viewModel.title
-            scannedBook.author = viewModel.author
-            scannedBook.isbn = viewModel.isbn.isEmpty ? nil : viewModel.isbn
-            book = scannedBook
+
+        // Check if we're in confirmation mode (direct from scan) or edit mode
+        if case .confirming = viewModel.state, let scannedBook = viewModel.scannedBook {
+            // In confirmation mode: use the scanned book's data directly
+            book = Book(
+                isbn: scannedBook.isbn,
+                title: scannedBook.title,
+                author: scannedBook.author,
+                totalCopies: 1,
+                availableCopies: 1,
+                bookDescription: scannedBook.bookDescription,
+                pageCount: scannedBook.pageCount,
+                publishedDate: scannedBook.publishedDate,
+                publisher: scannedBook.publisher,
+                languageCode: scannedBook.languageCode,
+                coverImageURL: scannedBook.coverImageURL
+            )
+        } else if let scannedBook = viewModel.scannedBook {
+            // In edit mode: use the edited values from viewModel
+            book = Book(
+                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
+                title: viewModel.title,
+                author: viewModel.author,
+                totalCopies: viewModel.totalCopies,
+                availableCopies: viewModel.totalCopies,
+                bookDescription: scannedBook.bookDescription,
+                pageCount: scannedBook.pageCount,
+                publishedDate: scannedBook.publishedDate,
+                publisher: scannedBook.publisher,
+                languageCode: scannedBook.languageCode,
+                coverImageURL: scannedBook.coverImageURL
+            )
         } else {
-            // Manual entry
+            // Manual entry: create book from form fields only
             book = Book(
                 isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
                 title: viewModel.title,
@@ -206,12 +340,12 @@ struct ScanBookView: View {
             type: .addBook,
             bookTitle: book.title,
             bookAuthor: book.author,
-            additionalInfo: "\(viewModel.totalCopies) \(viewModel.totalCopies == 1 ? "copy" : "copies")"
+            additionalInfo: "\(book.totalCopies) \(book.totalCopies == 1 ? "copy" : "copies")"
         )
         modelContext.insert(activity)
 
-        // Show success and reset for next book
-        viewModel.reset()
+        // Dismiss the view to go back to Add tab
+        dismiss()
     }
 
     private func addCopyToExistingBook(_ book: Book, copies: Int) {

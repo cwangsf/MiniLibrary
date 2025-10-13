@@ -297,6 +297,9 @@
     "Available:" : {
 
     },
+    "Back" : {
+
+    },
     "Book" : {
       "localizations" : {
         "de" : {
@@ -520,6 +523,9 @@
         }
       }
     },
+    "Confirm & Add Book" : {
+
+    },
     "Confirm Checkout" : {
       "localizations" : {
         "de" : {
@@ -630,6 +636,9 @@
         }
       }
     },
+    "Description" : {
+
+    },
     "Done" : {
       "localizations" : {
         "de" : {
@@ -698,6 +707,9 @@
           }
         }
       }
+    },
+    "Edit Details" : {
+
     },
     "Enter ISBN Manually" : {
       "localizations" : {
@@ -1149,6 +1161,7 @@
       }
     },
     "Scan Another Book" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
