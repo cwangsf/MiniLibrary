@@ -53,7 +53,7 @@ enum ActivityType: String, Codable {
         case .addBook:
             return "plus.circle.fill"
         case .addWishlist:
-            return "heart.fill"
+            return "list.star"
         case .fulfillWishlist:
             return "checkmark.circle.fill"
         }

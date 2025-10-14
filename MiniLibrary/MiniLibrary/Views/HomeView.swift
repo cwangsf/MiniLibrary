@@ -56,7 +56,7 @@ struct HomeView: View {
                             StatCard(
                                 title: "Wish List",
                                 value: "\(wishlistCount)",
-                                icon: "heart.fill",
+                                icon: "list.star",
                                 color: .pink
                             )
                         }

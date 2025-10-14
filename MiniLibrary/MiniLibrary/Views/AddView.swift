@@ -29,7 +29,7 @@ struct AddView: View {
                     }
 
                     NavigationLink(destination: AddWishlistItemView()) {
-                        Label("Add to Wishlist", systemImage: "heart.fill")
+                        Label("Add to Wishlist", systemImage: "list.star")
                             .foregroundStyle(.pink)
                     }
 
@@ -82,7 +82,7 @@ struct AddView: View {
                     } else if let url = exportWishlistFileURL {
                         ShareLink(item: url) {
                             Label("Export Wishlist to CSV", systemImage: "square.and.arrow.up")
-                                .foregroundStyle(.pink)
+                                
                         }
                     } else {
                         Button {
@@ -91,7 +91,6 @@ struct AddView: View {
                             }
                         } label: {
                             Label("Export Wishlist to CSV", systemImage: "square.and.arrow.up")
-                                .foregroundStyle(.pink)
                         }
                     }
                 }
