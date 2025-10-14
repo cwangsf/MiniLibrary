@@ -18,6 +18,10 @@ struct HomeView: View {
         books.filter { $0.isWishlistItem }.count
     }
 
+    var favoritesCount: Int {
+        books.filter { $0.isFavorite && !$0.isWishlistItem }.count
+    }
+
     var totalCopies: Int {
         books.filter { !$0.isWishlistItem }.reduce(0) { $0 + $1.totalCopies }
     }
@@ -50,19 +54,27 @@ struct HomeView: View {
                     }
                     .padding(.horizontal)
 
-                    // Wishlist Card
+                    // Second Row
                     HStack(spacing: 15) {
                         NavigationLink(destination: WishlistView()) {
                             StatCard(
                                 title: "Wish List",
                                 value: "\(wishlistCount)",
                                 icon: "list.star",
-                                color: .pink
+                                color: .green
                             )
                         }
                         .buttonStyle(.plain)
 
-                        Spacer()
+                        NavigationLink(destination: FavoritesView()) {
+                            StatCard(
+                                title: "Favorites",
+                                value: "\(favoritesCount)",
+                                icon: "heart.fill",
+                                color: .pink
+                            )
+                        }
+                        .buttonStyle(.plain)
                     }
                     .padding(.horizontal)
 

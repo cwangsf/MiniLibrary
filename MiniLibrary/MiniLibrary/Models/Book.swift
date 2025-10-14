@@ -29,6 +29,7 @@ final class Book: Codable {
     // User-editable field
     var notes: String?
     var isWishlistItem: Bool
+    var isFavorite: Bool
 
     // Computed property for Language enum
     var language: Language? {
@@ -54,7 +55,8 @@ final class Book: Codable {
         languageCode: String? = nil,
         coverImageURL: String? = nil,
         notes: String? = nil,
-        isWishlistItem: Bool = false
+        isWishlistItem: Bool = false,
+        isFavorite: Bool = false
     ) {
         self.id = id
         self.isbn = isbn
@@ -71,6 +73,7 @@ final class Book: Codable {
         self.coverImageURL = coverImageURL
         self.notes = notes
         self.isWishlistItem = isWishlistItem
+        self.isFavorite = isFavorite
     }
 
     // MARK: - Codable
@@ -90,6 +93,7 @@ final class Book: Codable {
         case coverImageURL = "cover_image_url"
         case notes
         case isWishlistItem = "is_wishlist_item"
+        case isFavorite = "is_favorite"
     }
 
     required init(from decoder: Decoder) throws {
@@ -109,6 +113,7 @@ final class Book: Codable {
         self.coverImageURL = try container.decodeIfPresent(String.self, forKey: .coverImageURL)
         self.notes = try container.decodeIfPresent(String.self, forKey: .notes)
         self.isWishlistItem = try container.decodeIfPresent(Bool.self, forKey: .isWishlistItem) ?? false
+        self.isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
     }
 
     func encode(to encoder: Encoder) throws {
@@ -128,5 +133,6 @@ final class Book: Codable {
         try container.encodeIfPresent(coverImageURL, forKey: .coverImageURL)
         try container.encodeIfPresent(notes, forKey: .notes)
         try container.encode(isWishlistItem, forKey: .isWishlistItem)
+        try container.encode(isFavorite, forKey: .isFavorite)
     }
 }

@@ -295,6 +295,16 @@ struct BookDetailView: View {
         }
         .navigationTitle("Book Details")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    book.isFavorite.toggle()
+                } label: {
+                    Image(systemName: book.isFavorite ? "heart.fill" : "heart")
+                        .foregroundStyle(book.isFavorite ? .red : .gray)
+                }
+            }
+        }
         .sheet(isPresented: $showingCheckoutSheet) {
             CheckoutBookView(book: book, onCheckoutComplete: {
                 // Dismiss the detail view after checkout

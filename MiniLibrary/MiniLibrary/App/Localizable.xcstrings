@@ -391,6 +391,9 @@
         }
       }
     },
+    "Books you mark as favorites will appear here" : {
+
+    },
     "Books you want to add to your library will appear here" : {
       "localizations" : {
         "de" : {
@@ -811,6 +814,9 @@
     "Export Wishlist to CSV" : {
 
     },
+    "Favorites" : {
+
+    },
     "Fetching book information..." : {
       "localizations" : {
         "de" : {
@@ -957,6 +963,9 @@
           }
         }
       }
+    },
+    "No Favorite Books" : {
+
     },
     "No notes yet. Tap Edit to add notes." : {
       "localizations" : {
