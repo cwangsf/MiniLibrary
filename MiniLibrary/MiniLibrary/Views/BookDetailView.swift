@@ -49,43 +49,7 @@ struct BookDetailView: View {
                     .padding(.horizontal)
                 }
 
-                // External Links
-                VStack(spacing: 12) {
-                    if book.isWishlistItem {
-                        // For wishlist items - link to Amazon
-                        if let amazonURL = generateAmazonURL() {
-                            Link(destination: amazonURL) {
-                                HStack {
-                                    Image(systemName: "cart.fill")
-                                    Text("Find on Amazon")
-                                }
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.orange)
-                                .foregroundStyle(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                            }
-                        }
-                    } else {
-                        // For catalog items - link to Google Books
-                        if let googleBooksURL = generateGoogleBooksURL() {
-                            Link(destination: googleBooksURL) {
-                                HStack {
-                                    Image(systemName: "book.fill")
-                                    Text("View on Google Books")
-                                }
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.blue.opacity(0.8))
-                                .foregroundStyle(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                            }
-                        }
-                    }
-                }
-                .padding(.horizontal)
+                
 
                 // Checkout Button
                 if book.availableCopies >= 1 {
@@ -217,6 +181,43 @@ struct BookDetailView: View {
                     .padding(.horizontal)
                 }
 
+                // External Links
+                VStack(spacing: 12) {
+                    if book.isWishlistItem {
+                        // For wishlist items - link to Amazon
+                        if let amazonURL = generateAmazonURL() {
+                            Link(destination: amazonURL) {
+                                HStack {
+                                    Image(systemName: "cart.fill")
+                                    Text("Find on Amazon")
+                                }
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(.orange)
+                                .foregroundStyle(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                        }
+                    } else {
+                        // For catalog items - link to Google Books
+                        if let googleBooksURL = generateGoogleBooksURL() {
+                            Link(destination: googleBooksURL) {
+                                HStack {
+                                    Image(systemName: "book.fill")
+                                    Text("View on Google Books")
+                                }
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(.blue.opacity(0.8))
+                                .foregroundStyle(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal)
                 // Notes Section
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
@@ -451,4 +452,15 @@ struct BookDetailView: View {
         // Don't update: title, author, ISBN, totalCopies, availableCopies, notes, checkouts
         // These are user-managed or critical data
     }
+}
+
+#Preview {
+    BookDetailView(book: Book(
+        isbn: "9780439708180",
+        title: "Harry Potter and the Sorcerer's Stone",
+        author: "J.K. Rowling",
+        totalCopies: 3,
+        publishedDate: "1998-09-01",
+        publisher: "Scholastic"
+    ))
 }

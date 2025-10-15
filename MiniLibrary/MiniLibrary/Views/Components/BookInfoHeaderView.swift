@@ -50,7 +50,7 @@ struct BookInfoHeaderView: View {
         title: "Harry Potter and the Sorcerer's Stone",
         author: "J.K. Rowling",
         totalCopies: 3,
-        publisher: "Scholastic",
-        publishedDate: "1998-09-01"
+        publishedDate: "1998-09-01",
+        publisher: "Scholastic"
     ))
 }

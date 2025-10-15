@@ -20,33 +20,59 @@ struct AddView: View {
             List {
                 Section {
                     NavigationLink(destination: ScanBookView()) {
-                        Label("Scan Book Barcode", systemImage: "barcode.viewfinder")
-                            .foregroundStyle(.blue)
+                        HStack {
+                            Image(systemName: "barcode.viewfinder")
+                                .foregroundStyle(.blue)
+                            Text("Scan Book Barcode")
+                                .foregroundStyle(.tint)
+                        }
                     }
 
                     NavigationLink(destination: AddBookView()) {
-                        Label("Add New Book Manually", systemImage: "book.fill")
+                        HStack {
+                            Image(systemName: "book.fill")
+                                .foregroundStyle(.gray)
+                            Text("Add New Book Manually")
+                                .foregroundStyle(.tint)
+                        }
                     }
 
                     NavigationLink(destination: AddWishlistItemView()) {
-                        Label("Add to Wishlist", systemImage: "list.star")
-                            .foregroundStyle(.pink)
+                        HStack {
+                            Image(systemName: "list.star")
+                                .foregroundStyle(.green)
+                            Text("Add to Wishlist")
+                                .foregroundStyle(.tint)
+                        }
                     }
 
                     NavigationLink(destination: AddStudentView()) {
-                        Label("Add New Student", systemImage: "person.fill")
+                        HStack {
+                            Image(systemName: "person.fill")
+                                .foregroundStyle(.orange)
+                            Text("Add New Student")
+                                .foregroundStyle(.tint)
+                        }
                     }
                 }
 
                 Section {
                     NavigationLink(destination: CheckoutBookView()) {
-                        Label("Check Out Book", systemImage: "arrow.right.circle.fill")
-                            .foregroundStyle(.blue)
+                        HStack {
+                            Image(systemName: "arrow.right.circle.fill")
+                                .foregroundStyle(.blue)
+                            Text("Check Out Book")
+                                .foregroundStyle(.tint)
+                        }
                     }
 
                     NavigationLink(destination: ReturnBookView()) {
-                        Label("Return Book", systemImage: "arrow.left.circle.fill")
-                            .foregroundStyle(.green)
+                        HStack {
+                            Image(systemName: "arrow.left.circle.fill")
+                                .foregroundStyle(.green)
+                            Text("Return Book")
+                                .foregroundStyle(.tint)
+                        }
                     }
                 }
 
@@ -54,13 +80,23 @@ struct AddView: View {
                     // Export Catalog
                     if isExporting {
                         HStack {
-                            Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.purple)
+                                Text("Export Catalog to CSV")
+                                    .foregroundStyle(.tint)
+                            }
                             Spacer()
                             ProgressView()
                         }
                     } else if let url = exportFileURL {
                         ShareLink(item: url) {
-                            Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.purple)
+                                Text("Export Catalog to CSV")
+                                    .foregroundStyle(.tint)
+                            }
                         }
                     } else {
                         Button {
@@ -68,21 +104,35 @@ struct AddView: View {
                                 await exportCatalog()
                             }
                         } label: {
-                            Label("Export Catalog to CSV", systemImage: "square.and.arrow.up")
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.purple)
+                                Text("Export Catalog to CSV")
+                                    .foregroundStyle(.tint)
+                            }
                         }
                     }
 
                     // Export Wishlist
                     if isExportingWishlist {
                         HStack {
-                            Label("Export Wishlist to CSV", systemImage: "square.and.arrow.up")
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.purple)
+                                Text("Export Wishlist to CSV")
+                                    .foregroundStyle(.tint)
+                            }
                             Spacer()
                             ProgressView()
                         }
                     } else if let url = exportWishlistFileURL {
                         ShareLink(item: url) {
-                            Label("Export Wishlist to CSV", systemImage: "square.and.arrow.up")
-                                
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.purple)
+                                Text("Export Wishlist to CSV")
+                                    .foregroundStyle(.tint)
+                            }
                         }
                     } else {
                         Button {
@@ -90,7 +140,12 @@ struct AddView: View {
                                 await exportWishlist()
                             }
                         } label: {
-                            Label("Export Wishlist to CSV", systemImage: "square.and.arrow.up")
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                    .foregroundStyle(.purple)
+                                Text("Export Wishlist to CSV")
+                                    .foregroundStyle(.tint)
+                            }
                         }
                     }
                 }
