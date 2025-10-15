@@ -898,6 +898,9 @@
         }
       }
     },
+    "Import Catalog from CSV" : {
+
+    },
     "ISBN" : {
 
     },
@@ -1097,6 +1100,9 @@
       }
     },
     "of %lld total" : {
+
+    },
+    "OK" : {
 
     },
     "OVERDUE" : {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+internal import UniformTypeIdentifiers
 
 struct AddView: View {
     @Environment(\.modelContext) private var modelContext
@@ -19,6 +20,9 @@ struct AddView: View {
     @State private var exportWishlistFileURL: URL?
     @State private var isExportingWishlist = false
     @State private var showingDeleteConfirmation = false
+    @State private var showingImportPicker = false
+    @State private var importResult: ImportResult?
+    @State private var showingImportResult = false
 
     var body: some View {
         NavigationStack {
@@ -154,6 +158,31 @@ struct AddView: View {
                         }
                     }
 
+                    // Import Catalog
+                    VStack(alignment: .leading, spacing: 8) {
+                        Button {
+                            showingImportPicker = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "square.and.arrow.down")
+                                    .foregroundStyle(.blue)
+                                Text("Import Catalog from CSV")
+                                    .foregroundStyle(.tint)
+                            }
+                        }
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("CSV format: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+
+                            Text("Required: Title, Author, Total Copies, Available Copies. All other fields are optional.")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.leading, 28)
+                    }
+
                     // Delete All Data
                     Button {
                         showingDeleteConfirmation = true
@@ -175,6 +204,20 @@ struct AddView: View {
                 }
             } message: {
                 Text("This will permanently delete all books, students, checkouts, and activities. This action cannot be undone.")
+            }
+            .fileImporter(
+                isPresented: $showingImportPicker,
+                allowedContentTypes: [.commaSeparatedText, .text],
+                allowsMultipleSelection: false
+            ) { result in
+                handleImportResult(result)
+            }
+            .alert(importResult?.title ?? "Import Result", isPresented: $showingImportResult) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                if let result = importResult {
+                    Text(result.message)
+                }
             }
             .task {
                 // Pre-generate the export files in background
@@ -245,6 +288,79 @@ struct AddView: View {
         exportFileURL = nil
         exportWishlistFileURL = nil
     }
+
+    private func handleImportResult(_ result: Result<[URL], Error>) {
+        switch result {
+        case .success(let urls):
+            guard let fileURL = urls.first else {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: "No file selected",
+                    isSuccess: false
+                )
+                showingImportResult = true
+                return
+            }
+
+            // Start accessing security-scoped resource
+            guard fileURL.startAccessingSecurityScopedResource() else {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: "Unable to access the selected file",
+                    isSuccess: false
+                )
+                showingImportResult = true
+                return
+            }
+
+            defer {
+                fileURL.stopAccessingSecurityScopedResource()
+            }
+
+            do {
+                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                let importedCount = try CSVImporter.importBooks(from: csvContent, modelContext: modelContext)
+
+                importResult = ImportResult(
+                    title: "Import Successful",
+                    message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") from the CSV file.",
+                    isSuccess: true
+                )
+
+                // Log activity
+                let activity = Activity(
+                    type: .addBook,
+                    bookTitle: "Import",
+                    bookAuthor: "CSV Import",
+                    additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
+                )
+                modelContext.insert(activity)
+
+            } catch {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: error.localizedDescription,
+                    isSuccess: false
+                )
+            }
+
+            showingImportResult = true
+
+        case .failure(let error):
+            importResult = ImportResult(
+                title: "Import Failed",
+                message: error.localizedDescription,
+                isSuccess: false
+            )
+            showingImportResult = true
+        }
+    }
+}
+
+struct ImportResult {
+    let title: String
+    let message: String
+    let isSuccess: Bool
 }
 
 // MARK: - Add Book View
