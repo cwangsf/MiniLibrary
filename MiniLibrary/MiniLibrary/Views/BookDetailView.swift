@@ -30,36 +30,7 @@ struct BookDetailView: View {
                     .padding(.top, 20)
 
                 // Book Info
-                VStack(alignment: .center, spacing: 8) {
-                    Text(book.title)
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-
-                    Text(book.author)
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-
-                    if let isbn = book.isbn {
-                        Text("ISBN: \(isbn)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    if let publisher = book.publisher {
-                        Text(publisher)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    if let publishedDate = book.publishedDate {
-                        Text("Published: \(publishedDate)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .padding(.horizontal)
+                BookInfoHeaderView(book: book)
 
                 // Book Description
                 if let description = book.bookDescription, !description.isEmpty {
