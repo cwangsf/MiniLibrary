@@ -11,7 +11,7 @@ import SwiftData
 struct CSVImporter {
     /// Import books from CSV format
     /// Expected format: ISBN,Title,Author,Total Copies,Available Copies,Language,Publisher,Published Date,Page Count,Notes
-    static func importBooks(from csvContent: String, modelContext: ModelContext) async throws -> Int {
+    static func importBooks(from csvContent: String, modelContext: ModelContext) throws -> Int {
         let lines = csvContent.components(separatedBy: .newlines)
 
         // Skip header and empty lines
@@ -50,55 +50,27 @@ struct CSVImporter {
                 let totalCopies = Int(fields[3]) ?? 1
                 let availableCopies = Int(fields[4]) ?? totalCopies
 
-                // Optional fields
+                // Optional fields from CSV
                 let language = fields.count > 5 && !fields[5].isEmpty ? fields[5] : nil
                 let publisher = fields.count > 6 && !fields[6].isEmpty ? fields[6] : nil
                 let publishedDate = fields.count > 7 && !fields[7].isEmpty ? fields[7] : nil
                 let pageCount = fields.count > 8 ? Int(fields[8]) : nil
                 let notes = fields.count > 9 && !fields[9].isEmpty ? fields[9] : nil
 
-                // Try to fetch book metadata from Google Books if we have ISBN
-                var bookDescription: String? = nil
-                var coverImageURL: String? = nil
-                var fetchedPageCount: Int? = pageCount
-                var fetchedPublishedDate: String? = publishedDate
-                var fetchedPublisher: String? = publisher
-                var languageCode: String? = nil
-
-                if let isbn = isbn {
-                    do {
-                        let fetchedBook = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
-                        bookDescription = fetchedBook.bookDescription
-                        coverImageURL = fetchedBook.coverImageURL
-                        if fetchedPageCount == nil {
-                            fetchedPageCount = fetchedBook.pageCount
-                        }
-                        if fetchedPublishedDate == nil {
-                            fetchedPublishedDate = fetchedBook.publishedDate
-                        }
-                        if fetchedPublisher == nil {
-                            fetchedPublisher = fetchedBook.publisher
-                        }
-                        languageCode = fetchedBook.languageCode
-                    } catch {
-                        print("Could not fetch metadata for ISBN \(isbn): \(error.localizedDescription)")
-                        // Continue with CSV data only
-                    }
-                }
-
-                // Create book
+                // Create book with CSV data only
+                // Cover images will be fetched in background after import
                 let book = Book(
                     isbn: isbn,
                     title: title,
                     author: author,
                     totalCopies: totalCopies,
                     availableCopies: availableCopies,
-                    bookDescription: bookDescription,
-                    pageCount: fetchedPageCount,
-                    publishedDate: fetchedPublishedDate,
-                    publisher: fetchedPublisher,
-                    languageCode: languageCode,
-                    coverImageURL: coverImageURL,
+                    bookDescription: nil,
+                    pageCount: pageCount,
+                    publishedDate: publishedDate,
+                    publisher: publisher,
+                    languageCode: language,
+                    coverImageURL: nil,
                     notes: notes,
                     isWishlistItem: false
                 )

@@ -162,15 +162,15 @@ actor BookAPIService {
 }
 
 // MARK: - Google Books Response Models
-struct GoogleBooksResponse: Codable {
+struct GoogleBooksResponse: Codable, Sendable {
     let items: [GoogleBookItem]?
 }
 
-struct GoogleBookItem: Codable {
+struct GoogleBookItem: Codable, Sendable {
     let volumeInfo: VolumeInfo
 }
 
-struct VolumeInfo: Codable {
+struct VolumeInfo: Codable, Sendable {
     let title: String
     let authors: [String]?
     let description: String?
@@ -182,12 +182,12 @@ struct VolumeInfo: Codable {
     let industryIdentifiers: [IndustryIdentifier]?
 }
 
-struct IndustryIdentifier: Codable {
+struct IndustryIdentifier: Codable, Sendable {
     let type: String
     let identifier: String
 }
 
-struct ImageLinks: Codable {
+struct ImageLinks: Codable, Sendable {
     let thumbnail: String?
 }
 

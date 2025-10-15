@@ -321,6 +321,52 @@ struct AddView: View {
         exportWishlistFileURL = nil
     }
 
+    private func fetchCoverImagesForImportedBooks() async {
+        // Find all books with ISBN but no cover image
+        let booksNeedingCovers = books.filter { book in
+            book.isbn != nil && book.coverImageURL == nil && !book.isWishlistItem
+        }
+
+        print("Fetching cover images for \(booksNeedingCovers.count) books in background...")
+
+        // Fetch covers for each book
+        for book in booksNeedingCovers {
+            guard let isbn = book.isbn else { continue }
+
+            do {
+                let fetchedBook = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
+
+                // Update the book with fetched metadata on main actor
+                await MainActor.run {
+                    if book.coverImageURL == nil {
+                        book.coverImageURL = fetchedBook.coverImageURL
+                    }
+                    if book.bookDescription == nil {
+                        book.bookDescription = fetchedBook.bookDescription
+                    }
+                    if book.pageCount == nil {
+                        book.pageCount = fetchedBook.pageCount
+                    }
+                    if book.publishedDate == nil {
+                        book.publishedDate = fetchedBook.publishedDate
+                    }
+                    if book.publisher == nil {
+                        book.publisher = fetchedBook.publisher
+                    }
+                    if book.languageCode == nil {
+                        book.languageCode = fetchedBook.languageCode
+                    }
+                }
+
+                print("✓ Fetched cover for: \(book.title)")
+            } catch {
+                print("✗ Failed to fetch cover for \(book.title): \(error.localizedDescription)")
+            }
+        }
+
+        print("Finished fetching cover images")
+    }
+
     private func handleImportResult(_ result: Result<[URL], Error>) {
         switch result {
         case .success(let urls):
@@ -345,44 +391,41 @@ struct AddView: View {
                 return
             }
 
-            Task {
-                defer {
-                    fileURL.stopAccessingSecurityScopedResource()
+            do {
+                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                let importedCount = try CSVImporter.importBooks(from: csvContent, modelContext: modelContext)
+
+                importResult = ImportResult(
+                    title: "Import Successful",
+                    message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") from the CSV file. Cover images will load in the background.",
+                    isSuccess: true
+                )
+
+                // Log activity
+                let activity = Activity(
+                    type: .addBook,
+                    bookTitle: "Import",
+                    bookAuthor: "CSV Import",
+                    additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
+                )
+                modelContext.insert(activity)
+
+                showingImportResult = true
+
+                // Fetch cover images in background
+                Task {
+                    await fetchCoverImagesForImportedBooks()
                 }
-
-                do {
-                    let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
-                    let importedCount = try await CSVImporter.importBooks(from: csvContent, modelContext: modelContext)
-
-                    await MainActor.run {
-                        importResult = ImportResult(
-                            title: "Import Successful",
-                            message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") from the CSV file.",
-                            isSuccess: true
-                        )
-
-                        // Log activity
-                        let activity = Activity(
-                            type: .addBook,
-                            bookTitle: "Import",
-                            bookAuthor: "CSV Import",
-                            additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
-                        )
-                        modelContext.insert(activity)
-
-                        showingImportResult = true
-                    }
-                } catch {
-                    await MainActor.run {
-                        importResult = ImportResult(
-                            title: "Import Failed",
-                            message: error.localizedDescription,
-                            isSuccess: false
-                        )
-                        showingImportResult = true
-                    }
-                }
+            } catch {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: error.localizedDescription,
+                    isSuccess: false
+                )
+                showingImportResult = true
             }
+
+            fileURL.stopAccessingSecurityScopedResource()
 
         case .failure(let error):
             importResult = ImportResult(

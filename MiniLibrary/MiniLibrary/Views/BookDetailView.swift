@@ -32,25 +32,6 @@ struct BookDetailView: View {
                 // Book Info
                 BookInfoHeaderView(book: book)
 
-                // Book Description
-                if let description = book.bookDescription, !description.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Description")
-                            .font(.headline)
-
-                        Text(description)
-                            .font(.body)
-                            .foregroundStyle(.primary)
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.background)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding(.horizontal)
-                }
-
-                
-
                 // Checkout Button
                 if book.availableCopies >= 1 {
                     Button {
@@ -79,9 +60,10 @@ struct BookDetailView: View {
                             } label: {
                                 HStack {
                                     Image(systemName: "arrow.uturn.left.circle.fill")
-                                    VStack(alignment: .leading, spacing: 2) {
+                                    HStack {
                                         Text("Return Book")
                                             .fontWeight(.medium)
+                                        Spacer()
                                         Text("Student: \(checkout.student?.libraryId ?? "Unknown")")
                                             .font(.caption)
                                     }
@@ -181,6 +163,22 @@ struct BookDetailView: View {
                     .padding(.horizontal)
                 }
 
+                // Book Description
+                if let description = book.bookDescription, !description.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Description")
+                            .font(.headline)
+
+                        Text(description)
+                            .font(.body)
+                            .foregroundStyle(.primary)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.background)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal)
+                }
                 // External Links
                 VStack(spacing: 12) {
                     if book.isWishlistItem {
