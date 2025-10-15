@@ -9,11 +9,16 @@ import SwiftUI
 import SwiftData
 
 struct AddView: View {
+    @Environment(\.modelContext) private var modelContext
     @Query(sort: \Book.title) private var books: [Book]
+    @Query private var students: [Student]
+    @Query private var checkouts: [CheckoutRecord]
+    @Query private var activities: [Activity]
     @State private var exportFileURL: URL?
     @State private var isExporting = false
     @State private var exportWishlistFileURL: URL?
     @State private var isExportingWishlist = false
+    @State private var showingDeleteConfirmation = false
 
     var body: some View {
         NavigationStack {
@@ -148,9 +153,29 @@ struct AddView: View {
                             }
                         }
                     }
+
+                    // Delete All Data
+                    Button {
+                        showingDeleteConfirmation = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash.fill")
+                                .foregroundStyle(.red)
+                            Text("Delete All Data")
+                                .foregroundStyle(.tint)
+                        }
+                    }
                 }
             }
             .navigationTitle("Add")
+            .alert("Delete All Data?", isPresented: $showingDeleteConfirmation) {
+                Button("Cancel", role: .cancel) { }
+                Button("Delete All", role: .destructive) {
+                    deleteAllData()
+                }
+            } message: {
+                Text("This will permanently delete all books, students, checkouts, and activities. This action cannot be undone.")
+            }
             .task {
                 // Pre-generate the export files in background
                 await exportCatalog()
@@ -193,6 +218,32 @@ struct AddView: View {
             exportWishlistFileURL = url
             isExportingWishlist = false
         }
+    }
+
+    private func deleteAllData() {
+        // Delete all activities
+        for activity in activities {
+            modelContext.delete(activity)
+        }
+
+        // Delete all checkout records
+        for checkout in checkouts {
+            modelContext.delete(checkout)
+        }
+
+        // Delete all books (catalog and wishlist)
+        for book in books {
+            modelContext.delete(book)
+        }
+
+        // Delete all students
+        for student in students {
+            modelContext.delete(student)
+        }
+
+        // Reset export URLs
+        exportFileURL = nil
+        exportWishlistFileURL = nil
     }
 }
 

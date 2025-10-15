@@ -648,6 +648,15 @@
     "Delete" : {
 
     },
+    "Delete All" : {
+
+    },
+    "Delete All Data" : {
+
+    },
+    "Delete All Data?" : {
+
+    },
     "Description" : {
 
     },
@@ -1481,6 +1490,9 @@
           }
         }
       }
+    },
+    "This will permanently delete all books, students, checkouts, and activities. This action cannot be undone." : {
+
     },
     "Title" : {
       "localizations" : {
