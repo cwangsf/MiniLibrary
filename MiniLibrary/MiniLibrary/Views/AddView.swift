@@ -285,7 +285,6 @@ struct AddStudentView: View {
         Form {
             Section("Student Information") {
                 TextField("Library ID (e.g., LIB-001)", text: $libraryId)
-                    .textInputAutocapitalization(.characters)
 
                 Picker("Grade Level (optional)", selection: $gradeLevel) {
                     Text("Not specified").tag(nil as Int?)
@@ -293,13 +292,6 @@ struct AddStudentView: View {
                         Text("Grade \(grade)").tag(grade as Int?)
                     }
                 }
-            }
-
-            Section {
-                Button("Add Student") {
-                    addStudent()
-                }
-                .disabled(libraryId.isEmpty)
             }
 
             if !students.isEmpty {
@@ -315,11 +307,31 @@ struct AddStudentView: View {
                             }
                         }
                     }
+                    .onDelete(perform: deleteStudents)
                 }
             }
         }
         .navigationTitle("Add New Student")
         .navigationBarTitleDisplayMode(.inline)
+        .safeAreaInset(edge: .bottom) {
+            Button {
+                addStudent()
+            } label: {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Add Student")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(libraryId.isEmpty ? .gray : .orange)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .disabled(libraryId.isEmpty)
+            .padding()
+            .background(.ultraThinMaterial)
+        }
     }
 
     private func addStudent() {
@@ -330,6 +342,13 @@ struct AddStudentView: View {
 
         modelContext.insert(student)
         dismiss()
+    }
+
+    private func deleteStudents(at offsets: IndexSet) {
+        for index in offsets {
+            let student = students[index]
+            modelContext.delete(student)
+        }
     }
 }
 

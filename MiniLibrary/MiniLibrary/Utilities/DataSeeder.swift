@@ -110,15 +110,14 @@ class DataSeeder {
             print("Debug: Created 2 librarians")
 
             // Create sample students
-            for i in 1...5 {
+            for i in 1...6 {
                 let student = Student(
-                    libraryId: String(format: "LIB-%03d", i),
-                    gradeLevel: (i % 6) + 1  // Grades 1-6
+                    libraryId: String(format: "Student-%03d", i),
+                    gradeLevel: i
                 )
                 modelContext.insert(student)
             }
             try modelContext.save()
-            print("Debug: Created 5 students")
         } catch {
             print("Debug: Error seeding debug data: \(error)")
         }
