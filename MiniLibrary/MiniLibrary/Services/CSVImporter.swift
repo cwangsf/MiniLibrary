@@ -11,7 +11,7 @@ import SwiftData
 struct CSVImporter {
     /// Import books from CSV format
     /// Expected format: ISBN,Title,Author,Total Copies,Available Copies,Language,Publisher,Published Date,Page Count,Notes
-    static func importBooks(from csvContent: String, modelContext: ModelContext) throws -> Int {
+    static func importBooks(from csvContent: String, modelContext: ModelContext) async throws -> Int {
         let lines = csvContent.components(separatedBy: .newlines)
 
         // Skip header and empty lines
@@ -57,6 +57,35 @@ struct CSVImporter {
                 let pageCount = fields.count > 8 ? Int(fields[8]) : nil
                 let notes = fields.count > 9 && !fields[9].isEmpty ? fields[9] : nil
 
+                // Try to fetch book metadata from Google Books if we have ISBN
+                var bookDescription: String? = nil
+                var coverImageURL: String? = nil
+                var fetchedPageCount: Int? = pageCount
+                var fetchedPublishedDate: String? = publishedDate
+                var fetchedPublisher: String? = publisher
+                var languageCode: String? = nil
+
+                if let isbn = isbn {
+                    do {
+                        let fetchedBook = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
+                        bookDescription = fetchedBook.bookDescription
+                        coverImageURL = fetchedBook.coverImageURL
+                        if fetchedPageCount == nil {
+                            fetchedPageCount = fetchedBook.pageCount
+                        }
+                        if fetchedPublishedDate == nil {
+                            fetchedPublishedDate = fetchedBook.publishedDate
+                        }
+                        if fetchedPublisher == nil {
+                            fetchedPublisher = fetchedBook.publisher
+                        }
+                        languageCode = fetchedBook.languageCode
+                    } catch {
+                        print("Could not fetch metadata for ISBN \(isbn): \(error.localizedDescription)")
+                        // Continue with CSV data only
+                    }
+                }
+
                 // Create book
                 let book = Book(
                     isbn: isbn,
@@ -64,18 +93,96 @@ struct CSVImporter {
                     author: author,
                     totalCopies: totalCopies,
                     availableCopies: availableCopies,
-                    bookDescription: nil,
-                    pageCount: pageCount,
-                    publishedDate: publishedDate,
-                    publisher: publisher,
-                    languageCode: nil, // We don't store language code in CSV
-                    coverImageURL: nil,
+                    bookDescription: bookDescription,
+                    pageCount: fetchedPageCount,
+                    publishedDate: fetchedPublishedDate,
+                    publisher: fetchedPublisher,
+                    languageCode: languageCode,
+                    coverImageURL: coverImageURL,
                     notes: notes,
                     isWishlistItem: false
                 )
 
                 modelContext.insert(book)
                 importedCount += 1
+
+            } catch {
+                print("Error parsing line \(index + 1): \(error)")
+                continue
+            }
+        }
+
+        return importedCount
+    }
+
+    /// Import wishlist books from CSV format
+    /// Expected format: Title,Author,ISBN
+    /// Only Title is required, Author and ISBN are optional
+    static func importWishlist(from csvContent: String, modelContext: ModelContext) async throws -> Int {
+        let lines = csvContent.components(separatedBy: .newlines)
+
+        // Skip header and empty lines
+        guard lines.count > 1 else {
+            throw CSVImportError.emptyFile
+        }
+
+        var importedCount = 0
+
+        // Start from line 1 (skip header at line 0)
+        for (index, line) in lines.enumerated() where index > 0 {
+            // Skip empty lines
+            guard !line.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                continue
+            }
+
+            do {
+                let fields = try parseCSVLine(line)
+
+                // Validate minimum required fields (Title)
+                guard fields.count >= 1 else {
+                    print("Skipping line \(index + 1): insufficient fields")
+                    continue
+                }
+
+                let title = fields[0]
+
+                // Skip if title is empty
+                guard !title.isEmpty else {
+                    print("Skipping line \(index + 1): missing title")
+                    continue
+                }
+
+                let author = fields.count > 1 && !fields[1].isEmpty ? fields[1] : ""
+                let isbn = fields.count > 2 && !fields[2].isEmpty ? fields[2] : nil
+
+                // Search for book on Google Books
+                do {
+                    let items: [GoogleBookItem]
+
+                    if let isbn = isbn {
+                        // Try ISBN search first
+                        items = try await BookAPIService.shared.searchBooksByISBN(isbn)
+                    } else {
+                        // Search by title and author
+                        items = try await BookAPIService.shared.searchBooksByTitleAndAuthor(
+                            title: title,
+                            author: author
+                        )
+                    }
+
+                    // Use first result
+                    if let firstItem = items.first {
+                        let book = await BookAPIService.shared.createBookFromSearchResult(firstItem, isWishlistItem: true)
+                        modelContext.insert(book)
+                        importedCount += 1
+                    } else {
+                        let searchInfo = author.isEmpty ? title : "\(title) by \(author)"
+                        print("Skipping line \(index + 1): no results found for \(searchInfo)")
+                    }
+                } catch {
+                    print("Error searching for book on line \(index + 1): \(error)")
+                    continue
+                }
 
             } catch {
                 print("Error parsing line \(index + 1): \(error)")

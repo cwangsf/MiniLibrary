@@ -49,6 +49,33 @@ actor BookAPIService {
         return parseGoogleBookData(firstItem, isbn: isbn)
     }
 
+    /// Search for books by ISBN
+    func searchBooksByISBN(_ isbn: String) async throws -> [GoogleBookItem] {
+        let urlString = "https://www.googleapis.com/books/v1/volumes?q=isbn:\(isbn)"
+
+        guard let url = URL(string: urlString) else {
+            throw BookAPIError.invalidURL
+        }
+
+        let (data, response) = try await session.data(from: url)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw BookAPIError.invalidResponse
+        }
+
+        guard httpResponse.statusCode == 200 else {
+            throw BookAPIError.httpError(statusCode: httpResponse.statusCode)
+        }
+
+        let googleResponse = try decoder.decode(GoogleBooksResponse.self, from: data)
+
+        guard let items = googleResponse.items, !items.isEmpty else {
+            throw BookAPIError.bookNotFound
+        }
+
+        return items
+    }
+
     /// Search for books by title and author
     func searchBooksByTitleAndAuthor(title: String, author: String) async throws -> [GoogleBookItem] {
         var queryComponents: [String] = []

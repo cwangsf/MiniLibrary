@@ -23,6 +23,7 @@ struct AddView: View {
     @State private var showingImportPicker = false
     @State private var importResult: ImportResult?
     @State private var showingImportResult = false
+    @State private var importType: ImportType?
 
     var body: some View {
         NavigationStack {
@@ -161,6 +162,7 @@ struct AddView: View {
                     // Import Catalog
                     VStack(alignment: .leading, spacing: 8) {
                         Button {
+                            importType = .catalog
                             showingImportPicker = true
                         } label: {
                             HStack {
@@ -177,6 +179,32 @@ struct AddView: View {
                                 .foregroundStyle(.secondary)
 
                             Text("Required: Title, Author, Total Copies, Available Copies. All other fields are optional.")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.leading, 28)
+                    }
+
+                    // Import Wishlist
+                    VStack(alignment: .leading, spacing: 8) {
+                        Button {
+                            importType = .wishlist
+                            showingImportPicker = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "square.and.arrow.down")
+                                    .foregroundStyle(.green)
+                                Text("Import Wishlist from CSV")
+                                    .foregroundStyle(.tint)
+                            }
+                        }
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("CSV format: Title, Author, ISBN")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+
+                            Text("Required: Title. Author and ISBN are optional but improve search accuracy.")
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
                         }
@@ -210,7 +238,11 @@ struct AddView: View {
                 allowedContentTypes: [.commaSeparatedText, .text],
                 allowsMultipleSelection: false
             ) { result in
-                handleImportResult(result)
+                if importType == .catalog {
+                    handleImportResult(result)
+                } else if importType == .wishlist {
+                    handleImportWishlistResult(result)
+                }
             }
             .alert(importResult?.title ?? "Import Result", isPresented: $showingImportResult) {
                 Button("OK", role: .cancel) { }
@@ -313,38 +345,117 @@ struct AddView: View {
                 return
             }
 
+            Task {
+                defer {
+                    fileURL.stopAccessingSecurityScopedResource()
+                }
+
+                do {
+                    let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                    let importedCount = try await CSVImporter.importBooks(from: csvContent, modelContext: modelContext)
+
+                    await MainActor.run {
+                        importResult = ImportResult(
+                            title: "Import Successful",
+                            message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") from the CSV file.",
+                            isSuccess: true
+                        )
+
+                        // Log activity
+                        let activity = Activity(
+                            type: .addBook,
+                            bookTitle: "Import",
+                            bookAuthor: "CSV Import",
+                            additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
+                        )
+                        modelContext.insert(activity)
+
+                        showingImportResult = true
+                    }
+                } catch {
+                    await MainActor.run {
+                        importResult = ImportResult(
+                            title: "Import Failed",
+                            message: error.localizedDescription,
+                            isSuccess: false
+                        )
+                        showingImportResult = true
+                    }
+                }
+            }
+
+        case .failure(let error):
+            importResult = ImportResult(
+                title: "Import Failed",
+                message: error.localizedDescription,
+                isSuccess: false
+            )
+            showingImportResult = true
+        }
+    }
+
+    private func handleImportWishlistResult(_ result: Result<[URL], Error>) {
+        switch result {
+        case .success(let urls):
+            guard let fileURL = urls.first else {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: "No file selected",
+                    isSuccess: false
+                )
+                showingImportResult = true
+                return
+            }
+
+            // Start accessing security-scoped resource
+            guard fileURL.startAccessingSecurityScopedResource() else {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: "Unable to access the selected file",
+                    isSuccess: false
+                )
+                showingImportResult = true
+                return
+            }
+
             defer {
                 fileURL.stopAccessingSecurityScopedResource()
             }
 
-            do {
-                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
-                let importedCount = try CSVImporter.importBooks(from: csvContent, modelContext: modelContext)
+            Task {
+                do {
+                    let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                    let importedCount = try await CSVImporter.importWishlist(from: csvContent, modelContext: modelContext)
 
-                importResult = ImportResult(
-                    title: "Import Successful",
-                    message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") from the CSV file.",
-                    isSuccess: true
-                )
+                    await MainActor.run {
+                        importResult = ImportResult(
+                            title: "Import Successful",
+                            message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") to wishlist from the CSV file.",
+                            isSuccess: true
+                        )
 
-                // Log activity
-                let activity = Activity(
-                    type: .addBook,
-                    bookTitle: "Import",
-                    bookAuthor: "CSV Import",
-                    additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
-                )
-                modelContext.insert(activity)
+                        // Log activity
+                        let activity = Activity(
+                            type: .addWishlist,
+                            bookTitle: "Import",
+                            bookAuthor: "CSV Import",
+                            additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
+                        )
+                        modelContext.insert(activity)
 
-            } catch {
-                importResult = ImportResult(
-                    title: "Import Failed",
-                    message: error.localizedDescription,
-                    isSuccess: false
-                )
+                        showingImportResult = true
+                    }
+                } catch {
+                    await MainActor.run {
+                        importResult = ImportResult(
+                            title: "Import Failed",
+                            message: error.localizedDescription,
+                            isSuccess: false
+                        )
+                        showingImportResult = true
+                    }
+                }
             }
-
-            showingImportResult = true
 
         case .failure(let error):
             importResult = ImportResult(
@@ -361,6 +472,11 @@ struct ImportResult {
     let title: String
     let message: String
     let isSuccess: Bool
+}
+
+enum ImportType {
+    case catalog
+    case wishlist
 }
 
 // MARK: - Add Book View

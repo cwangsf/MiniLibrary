@@ -601,6 +601,12 @@
         }
       }
     },
+    "CSV format: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes" : {
+
+    },
+    "CSV format: Title, Author, ISBN" : {
+
+    },
     "Current Inventory" : {
       "localizations" : {
         "de" : {
@@ -901,6 +907,9 @@
     "Import Catalog from CSV" : {
 
     },
+    "Import Wishlist from CSV" : {
+
+    },
     "ISBN" : {
 
     },
@@ -1177,6 +1186,12 @@
           }
         }
       }
+    },
+    "Required: Title, Author, Total Copies, Available Copies. All other fields are optional." : {
+
+    },
+    "Required: Title. Author and ISBN are optional but improve search accuracy." : {
+
     },
     "Return Book" : {
       "localizations" : {
