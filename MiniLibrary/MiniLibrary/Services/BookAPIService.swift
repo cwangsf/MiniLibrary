@@ -170,12 +170,13 @@ actor BookAPIService {
 
     // MARK: - Cover Image Methods
 
-    /// Update book with cover URL and metadata if not present
+    /// Update book with cover image and metadata if not present
+    /// Downloads and caches the cover image locally
     /// Works with ISBN or title/author search
     @MainActor
     func updateBookCover(_ book: Book) async {
-        // Skip if already has cover
-        guard book.coverImageURL == nil else {
+        // Skip if already has cached cover
+        guard book.cachedCoverImage == nil else {
             return
         }
 
@@ -204,9 +205,22 @@ actor BookAPIService {
                 }
             }
 
-            // Update book with fetched data
+            // Download and cache the cover image
             if let coverURL = coverURL {
+                // Store the remote URL for reference
                 book.coverImageURL = coverURL
+
+                // Convert HTTP to HTTPS for ATS compliance
+                let secureURL = coverURL.replacingOccurrences(of: "http://", with: "https://")
+
+                // Download and cache the image
+                if let cachedFilename = try await ImageCacheService.shared.cacheImage(
+                    from: secureURL,
+                    for: book.id.uuidString
+                ) {
+                    book.cachedCoverImage = cachedFilename
+                    print("✓ Cached cover for: \(book.title)")
+                }
             }
 
             // Also update other metadata if book doesn't have it (useful for wishlist items)
@@ -246,7 +260,7 @@ actor BookAPIService {
                 }
             }
         } catch {
-            print("Failed to fetch cover for '\(book.title)' by \(book.author): \(error)")
+            print("Failed to fetch/cache cover for '\(book.title)' by \(book.author): \(error)")
         }
     }
 }

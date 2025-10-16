@@ -13,30 +13,25 @@ struct BookCoverImage: View {
     let height: CGFloat
 
     @State private var isLoadingCover = false
+    @State private var cachedImage: UIImage?
 
     var body: some View {
         Group {
-            if let coverURL = book.coverImageURL,
-               let secureURL = secureURL(from: coverURL),
-               let url = URL(string: secureURL) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        placeholderView
-                            .overlay {
-                                ProgressView()
-                            }
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    case .failure:
-                        placeholderView
-                    @unknown default:
-                        placeholderView
+            // First priority: Show cached image if available
+            if let cachedImage = cachedImage {
+                Image(uiImage: cachedImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }
+            // Second priority: Try to load from cache file
+            else if book.cachedCoverImage != nil {
+                placeholderView
+                    .task {
+                        await loadCachedImage()
                     }
-                }
-            } else {
+            }
+            // Third priority: Fetch and cache from API
+            else {
                 placeholderView
                     .task {
                         await loadCover()
@@ -72,20 +67,44 @@ struct BookCoverImage: View {
         }
     }
 
-    private func loadCover() async {
-        guard book.coverImageURL == nil else { return }
+    /// Load cached image from disk
+    private func loadCachedImage() async {
+        guard let filename = book.cachedCoverImage else { return }
 
-        isLoadingCover = true
-        await BookAPIService.shared.updateBookCover(book)
-        isLoadingCover = false
+        if let imageData = await ImageCacheService.shared.loadImage(for: filename),
+           let image = UIImage(data: imageData) {
+            await MainActor.run {
+                self.cachedImage = image
+            }
+        } else {
+            // Cache file is missing, fetch from API
+            await loadCover()
+        }
     }
 
-    /// Convert HTTP URLs to HTTPS for App Transport Security
-    private func secureURL(from urlString: String) -> String? {
-        if urlString.hasPrefix("http://") {
-            return urlString.replacingOccurrences(of: "http://", with: "https://")
+    /// Fetch cover from API and cache it
+    private func loadCover() async {
+        guard book.cachedCoverImage == nil else { return }
+
+        await MainActor.run {
+            isLoadingCover = true
         }
-        return urlString
+
+        await BookAPIService.shared.updateBookCover(book)
+
+        // After fetching, try to load the cached image
+        if let filename = book.cachedCoverImage {
+            if let imageData = await ImageCacheService.shared.loadImage(for: filename),
+               let image = UIImage(data: imageData) {
+                await MainActor.run {
+                    self.cachedImage = image
+                }
+            }
+        }
+
+        await MainActor.run {
+            isLoadingCover = false
+        }
     }
 }
 

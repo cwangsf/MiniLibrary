@@ -24,7 +24,8 @@ final class Book: Codable {
     var publishedDate: String?
     var publisher: String?
     var languageCode: String? // Store as String for flexibility, can be converted to Language enum
-    var coverImageURL: String?
+    var coverImageURL: String? // Remote URL from Google Books (for reference)
+    var cachedCoverImage: String? // Local filename of cached cover image
 
     // User-editable field
     var notes: String?
@@ -54,6 +55,7 @@ final class Book: Codable {
         publisher: String? = nil,
         languageCode: String? = nil,
         coverImageURL: String? = nil,
+        cachedCoverImage: String? = nil,
         notes: String? = nil,
         isWishlistItem: Bool = false,
         isFavorite: Bool = false
@@ -71,6 +73,7 @@ final class Book: Codable {
         self.publisher = publisher
         self.languageCode = languageCode
         self.coverImageURL = coverImageURL
+        self.cachedCoverImage = cachedCoverImage
         self.notes = notes
         self.isWishlistItem = isWishlistItem
         self.isFavorite = isFavorite
@@ -91,6 +94,7 @@ final class Book: Codable {
         case publisher
         case languageCode = "language"
         case coverImageURL = "cover_image_url"
+        case cachedCoverImage = "cached_cover_image"
         case notes
         case isWishlistItem = "is_wishlist_item"
         case isFavorite = "is_favorite"
@@ -111,6 +115,7 @@ final class Book: Codable {
         self.publisher = try container.decodeIfPresent(String.self, forKey: .publisher)
         self.languageCode = try container.decodeIfPresent(String.self, forKey: .languageCode)
         self.coverImageURL = try container.decodeIfPresent(String.self, forKey: .coverImageURL)
+        self.cachedCoverImage = try container.decodeIfPresent(String.self, forKey: .cachedCoverImage)
         self.notes = try container.decodeIfPresent(String.self, forKey: .notes)
         self.isWishlistItem = try container.decodeIfPresent(Bool.self, forKey: .isWishlistItem) ?? false
         self.isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
@@ -131,6 +136,7 @@ final class Book: Codable {
         try container.encodeIfPresent(publisher, forKey: .publisher)
         try container.encodeIfPresent(languageCode, forKey: .languageCode)
         try container.encodeIfPresent(coverImageURL, forKey: .coverImageURL)
+        try container.encodeIfPresent(cachedCoverImage, forKey: .cachedCoverImage)
         try container.encodeIfPresent(notes, forKey: .notes)
         try container.encode(isWishlistItem, forKey: .isWishlistItem)
         try container.encode(isFavorite, forKey: .isFavorite)
