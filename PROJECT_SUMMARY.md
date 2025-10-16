@@ -29,6 +29,8 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - Availability status (available/total copies)
   - Current checkout status with student names and due dates
   - User-editable notes field
+  - **Favorite toggle** - Heart icon in toolbar to mark/unmark favorites
+  - Checkout and Return buttons directly in detail view
 
 - **Catalog View**
   - List of all books in library
@@ -36,6 +38,8 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - Section index scroller on right side (like iOS Contacts)
   - Search functionality (by title or author)
   - Search disables sections, shows flat filtered list
+  - **Filter by favorites** - Toggle to show only favorite books
+  - Filter icon in toolbar (shows count when favorites filter is active)
 
 - **Background Metadata Enhancement**
   - When viewing a book missing description/metadata
@@ -55,11 +59,12 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
 
 - **Return Process**
   - Return from Book Detail view or Return Book screen
-  - Show confirmation screen with checkout details
+  - **Return confirmation dialog** - Shows book cover, student info, dates before confirming
   - Display overdue warning (red badge) if past due date
   - Increase available copies count on return
   - Set return date timestamp
   - Checkout record marked as inactive (not deleted)
+  - Activity log updated automatically
 
 - **Checkout Status Tracking**
   - Active checkouts (not yet returned)
@@ -77,8 +82,9 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
 - **Student List View**
   - Display all registered students
   - Search by library ID or name
-  - Delete students (swipe to delete)
-  - Add new students via form
+  - **Swipe to delete** students from the list
+  - **Delete from Add Student view** - Existing students list with swipe-to-delete
+  - Add new students via form with styled bottom button
 
 - **Student Detail View**
   - Student information display
@@ -153,7 +159,31 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - Can share via Messages, WhatsApp, Email, Copy Link, etc.
   - Uses ISBN if available, else title+author search
 
-### 7. Data Export
+### 7. Data Import & Export
+
+#### CSV Import
+- **Import Catalog from CSV**
+  - Available in Add tab, Export section
+  - File picker to select CSV file
+  - **Fast import** - Books added instantly from CSV data
+  - **Background cover fetch** - Cover images and metadata load after import completes
+  - Format: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes
+  - Required fields: Title, Author, Total Copies, Available Copies
+  - Helper text shows format requirements
+  - Success message shows import count
+  - Activity logged for import
+
+- **Import Wishlist from CSV**
+  - File picker to select CSV file
+  - Format: Title, Author, ISBN
+  - Only Title is required (Author and ISBN improve search accuracy)
+  - Automatically searches Google Books API for each entry
+  - Uses first search result to populate book data
+  - Books added as wishlist items (0 copies)
+  - Success message shows import count
+  - Activity logged for wishlist import
+
+#### CSV Export
 - **Export Catalog to CSV**
   - Available in Add tab, Export section
   - Filters catalog books (excludes wishlist)
@@ -161,7 +191,7 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - Pre-generated on view load for instant sharing
 
 - **Export Wishlist to CSV**
-  - Available in Add tab, Export section (pink text)
+  - Available in Add tab, Export section
   - Filters wishlist books only
   - Exports to `library_wishlist.csv`
   - Pre-generated on view load for instant sharing
@@ -171,6 +201,14 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - Proper CSV escaping (handles commas, quotes, newlines)
   - Opens in Excel, Numbers, Google Sheets
   - Can email, save to Files, or share via any method
+
+#### Bulk Operations
+- **Delete All Data**
+  - Available in Add tab, Export section (red icon)
+  - Confirmation alert before deletion
+  - Deletes all books, students, checkouts, and activities
+  - Cannot be undone
+  - Resets export files
 
 ---
 
@@ -199,6 +237,7 @@ class Book {
     // User data
     var notes: String?                // User-editable notes
     var isWishlistItem: Bool          // Wishlist vs Catalog
+    var isFavorite: Bool              // Favorite flag for filtering
 
     // Relationships
     var checkouts: [CheckoutRecord]?  // All checkouts (active + history)
@@ -274,12 +313,16 @@ enum ActivityType: String {
    - CatalogView → BookDetailView
    - Search bar at top
    - Section index on right
+   - Filter button in toolbar (favorites filter with count badge)
 
 2. **Add Tab** (plus.circle.fill icon)
    - AddView with sections:
      - Scan Book → ScanBookView
      - Manual Entry → Manual form
+     - Check Out Book → CheckoutBookView
      - Return Book → ReturnBookView
+     - CSV Import/Export (Import Catalog, Import Wishlist, Export Catalog, Export Wishlist)
+     - Delete All Data button
 
 3. **Students Tab** (person.2.fill icon)
    - StudentsView → StudentDetailView
@@ -479,6 +522,18 @@ enum ActivityType: String {
 **Problem:** Notes field in AddWishlistItemView was unused and cluttered the UI.
 **Solution:** Removed notes from wishlist add flow. Users can add notes after adding to wishlist if needed.
 
+### 9. Multiple File Importers Conflict
+**Problem:** Two `.fileImporter` modifiers on same NavigationStack caused file picker not to appear.
+**Solution:** Consolidated into single `.fileImporter` with `ImportType` enum (catalog vs wishlist) to track which import to handle.
+
+### 10. Slow CSV Import with Images
+**Problem:** Fetching cover images during CSV import made it very slow (API call per book).
+**Solution:** Import books instantly with CSV data only, then fetch cover images in background Task after import completes. User sees books immediately, covers load progressively.
+
+### 11. Actor Isolation Warning (Swift 6)
+**Problem:** `GoogleBooksResponse` and related structs caused "Main actor-isolated conformance" warning.
+**Solution:** Added `Sendable` conformance to all API response models (GoogleBooksResponse, GoogleBookItem, VolumeInfo, etc.) to work properly across actor boundaries.
+
 ---
 
 ## File Structure
@@ -521,7 +576,8 @@ MiniLibrary/
 ├── Services/
 │   ├── BookAPIService.swift
 │   ├── BookCoverService.swift
-│   └── CSVExporter.swift
+│   ├── CSVExporter.swift
+│   └── CSVImporter.swift
 │
 └── MiniLibraryApp.swift (main entry point)
 ```
@@ -613,13 +669,17 @@ MiniLibrary/
 - [ ] Delete removes from wishlist
 - [ ] Add button in toolbar works
 
-### Catalog
+### Catalog & Favorites
 - [ ] A-Z sections display correctly
 - [ ] Section index scrolls to letter
 - [ ] Search filters books
 - [ ] Search disables sections
 - [ ] Empty states show properly
 - [ ] Google Books link works for catalog items
+- [ ] Favorite toggle in book detail works
+- [ ] Favorites filter in catalog works
+- [ ] Favorites filter shows count badge
+- [ ] Filtered favorites list displays correctly
 
 ### Activity Log
 - [ ] All activity types recorded
@@ -627,7 +687,14 @@ MiniLibrary/
 - [ ] Icons and colors correct
 - [ ] Detailed info displayed
 
-### Export
+### Import & Export
+- [ ] Import Catalog from CSV works
+- [ ] Import Wishlist from CSV works
+- [ ] Import file picker appears correctly
+- [ ] Books import instantly (fast)
+- [ ] Cover images load in background after import
+- [ ] Import success message shows count
+- [ ] Activity logged for imports
 - [ ] Export Catalog to CSV works
 - [ ] Export Wishlist to CSV works
 - [ ] CSV files have correct filenames
@@ -636,6 +703,8 @@ MiniLibrary/
 - [ ] Share sheet works for both exports
 - [ ] Catalog export excludes wishlist items
 - [ ] Wishlist export only includes wishlist items
+- [ ] Delete All Data works with confirmation
+- [ ] Delete All Data removes everything correctly
 
 ---
 
@@ -646,20 +715,20 @@ MiniLibrary/
 2. **Email notifications** - Overdue book reminders
 3. **Barcode generation** - Print library ID cards
 4. **Statistics** - Most popular books, checkout trends
-5. **Import CSV** - Bulk import books from CSV files
-6. **Photo attachments** - Damage documentation
-7. **Fine tracking** - Overdue fines calculation
-8. **Reservation system** - Reserve checked-out books
-9. **Categories/genres** - Organize books by type
-10. **Reading level** - Lexile/AR level tracking
-11. **Series tracking** - Group books in series
-12. **Bulk operations** - Batch edit, bulk delete
-13. **Offline mode** - Queue actions when offline
-14. **Dark mode** - Explicit theme toggle
-15. **Localization** - Multiple language support
-16. **QR codes** - Alternative to barcodes for custom items
-17. **Book recommendations** - Suggest similar books
-18. **Notes with rich text** - Formatting support in notes
+5. **Photo attachments** - Damage documentation
+6. **Fine tracking** - Overdue fines calculation
+7. **Reservation system** - Reserve checked-out books
+8. **Categories/genres** - Organize books by type
+9. **Reading level** - Lexile/AR level tracking
+10. **Series tracking** - Group books in series
+11. **Bulk edit operations** - Batch edit selected books
+12. **Offline mode** - Queue actions when offline
+13. **Dark mode** - Explicit theme toggle
+14. **Additional languages** - Expand beyond current 4 languages (EN, DE, GA, ZH-Hans)
+15. **QR codes** - Alternative to barcodes for custom items
+16. **Book recommendations** - Suggest similar books
+17. **Notes with rich text** - Formatting support in notes
+18. **Checked out books view** - Dedicated view showing all current checkouts with overdue highlighting
 
 ---
 
@@ -676,6 +745,16 @@ MiniLibrary/
 - VisionKit (barcode scanning)
 - SwiftData (persistence)
 - SwiftUI (UI framework)
+
+### Localization
+- **Supported Languages**: 4 languages
+  - English (en) - Source language
+  - German (de) - Deutsch
+  - Irish (ga) - Gaeilge
+  - Simplified Chinese (zh-Hans) - 简体中文
+- **Implementation**: Localizable.xcstrings catalog
+- **Coverage**: All major UI strings are localized
+- **Dynamic Language Switching**: Follows iOS system language settings
 
 ### Build Configuration
 - Bundle identifier: com.yourcompany.minilibrary
@@ -700,10 +779,13 @@ MiniLibrary is a complete library management solution with:
 - ✅ Activity logging for all operations
 - ✅ External links (Google Books, Amazon)
 - ✅ Social sharing for wishlist books
-- ✅ CSV export (catalog and wishlist separately)
+- ✅ **CSV import & export** (catalog and wishlist separately)
 - ✅ Rich metadata from Google Books API
 - ✅ Background metadata enhancement
+- ✅ **Favorites system** with filtering
+- ✅ **Bulk data operations** (delete all, import CSV)
 - ✅ Intuitive iOS-native UI with haptic feedback
+- ✅ **Multi-language support** (English, German, Irish, Chinese)
 - ✅ Offline-capable with background enhancements
 - ✅ No external dependencies
 
@@ -713,8 +795,15 @@ MiniLibrary is a complete library management solution with:
 - Wishlist tap now opens Amazon directly
 - Added share button for wishlist items (iOS share sheet)
 - Added CSV export for both catalog and wishlist
+- **Added CSV import** for catalog and wishlist with background cover fetching
+- **Added favorites system** - Mark books as favorites and filter catalog view
+- **Added return confirmation dialogs** from checked out books list
+- **Added swipe-to-delete** for students
+- **Added Delete All Data** feature with confirmation
 - Removed unused notes field from wishlist add screen
 - Improved external links in BookDetailView
+- Fixed multiple file importer conflict issue
+- Fixed actor isolation warnings for Swift 6 compatibility
 
 The app follows iOS design patterns, uses modern SwiftUI/SwiftData, and provides a complete workflow for managing a personal or classroom library. All core features are implemented and tested.
 
