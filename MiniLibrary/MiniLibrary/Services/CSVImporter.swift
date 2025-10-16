@@ -10,81 +10,103 @@ import SwiftData
 
 struct CSVImporter {
     /// Import books from CSV format
-    /// Expected format: ISBN,Title,Author,Total Copies,Available Copies,Language,Publisher,Published Date,Page Count,Notes
+    /// Flexible format using column headers. Supports both standard and custom column names.
+    /// Standard: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes
+    /// Custom: ISBNs, Title, Primary Author, Copies
     static func importBooks(from csvContent: String, modelContext: ModelContext) throws -> Int {
-        let lines = csvContent.components(separatedBy: .newlines)
+        let rows = CSVParser.parse(csvString: csvContent)
 
-        // Skip header and empty lines
-        guard lines.count > 1 else {
+        guard !rows.isEmpty else {
             throw CSVImportError.emptyFile
         }
 
         var importedCount = 0
 
-        // Start from line 1 (skip header at line 0)
-        for (index, line) in lines.enumerated() where index > 0 {
-            // Skip empty lines
-            guard !line.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                continue
-            }
-
-            do {
-                let fields = try parseCSVLine(line)
-
-                // Validate minimum required fields (ISBN, Title, Author, Total Copies, Available Copies)
-                guard fields.count >= 5 else {
-                    print("Skipping line \(index + 1): insufficient fields")
-                    continue
-                }
-
-                let isbn = fields[0].isEmpty ? nil : fields[0]
-                let title = fields[1]
-                let author = fields[2]
-
-                // Skip if title or author is empty
-                guard !title.isEmpty && !author.isEmpty else {
-                    print("Skipping line \(index + 1): missing title or author")
-                    continue
-                }
-
-                let totalCopies = Int(fields[3]) ?? 1
-                let availableCopies = Int(fields[4]) ?? totalCopies
-
-                // Optional fields from CSV
-                let language = fields.count > 5 && !fields[5].isEmpty ? fields[5] : nil
-                let publisher = fields.count > 6 && !fields[6].isEmpty ? fields[6] : nil
-                let publishedDate = fields.count > 7 && !fields[7].isEmpty ? fields[7] : nil
-                let pageCount = fields.count > 8 ? Int(fields[8]) : nil
-                let notes = fields.count > 9 && !fields[9].isEmpty ? fields[9] : nil
-
-                // Create book with CSV data only
-                // Cover images will be fetched in background after import
-                let book = Book(
-                    isbn: isbn,
-                    title: title,
-                    author: author,
-                    totalCopies: totalCopies,
-                    availableCopies: availableCopies,
-                    bookDescription: nil,
-                    pageCount: pageCount,
-                    publishedDate: publishedDate,
-                    publisher: publisher,
-                    languageCode: language,
-                    coverImageURL: nil,
-                    notes: notes,
-                    isWishlistItem: false
-                )
-
+        for (index, row) in rows.enumerated() {
+            // Create Book from CSV row
+            if let book = createBook(from: row) {
                 modelContext.insert(book)
                 importedCount += 1
-
-            } catch {
-                print("Error parsing line \(index + 1): \(error)")
-                continue
+            } else {
+                print("Skipping line \(index + 2): invalid data: \n     Book info: \(row)")
             }
         }
 
         return importedCount
+    }
+
+    /// Create a Book instance from CSV row (supports multiple column name formats)
+    private static func createBook(from csvRow: [String: String]) -> Book? {
+        // Try "Title" column
+        guard let title = csvRow["Title"]?.trimmingCharacters(in: .whitespaces),
+              !title.isEmpty else {
+            return nil
+        }
+
+        // Try both "Primary Author" and "Author" columns
+        let author: String
+        if let primaryAuthor = csvRow["Primary Author"]?.trimmingCharacters(in: .whitespaces),
+           !primaryAuthor.isEmpty {
+            author = primaryAuthor
+        } else if let standardAuthor = csvRow["Author"]?.trimmingCharacters(in: .whitespaces),
+                  !standardAuthor.isEmpty {
+            author = standardAuthor
+        } else {
+            return nil
+        }
+
+        // Extract first ISBN from "ISBNs" or "ISBN" column
+        var isbn: String? = nil
+        if let isbns = csvRow["ISBNs"]?.trimmingCharacters(in: .whitespaces),
+           !isbns.isEmpty {
+            // ISBNs are in format "1406312207, 9781406312201" or "[1406312207]"
+            let cleaned = isbns.replacingOccurrences(of: "[", with: "")
+                               .replacingOccurrences(of: "]", with: "")
+            isbn = cleaned.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces)
+        } else if let singleISBN = csvRow["ISBN"]?.trimmingCharacters(in: .whitespaces),
+                  !singleISBN.isEmpty {
+            isbn = singleISBN
+        }
+
+        // Get copies (try both "Copies" and "Total Copies")
+        var totalCopies = 1
+        if let copiesStr = csvRow["Copies"]?.trimmingCharacters(in: .whitespaces),
+           let copies = Int(copiesStr), copies > 0 {
+            totalCopies = copies
+        } else if let totalStr = csvRow["Total Copies"]?.trimmingCharacters(in: .whitespaces),
+                  let copies = Int(totalStr), copies > 0 {
+            totalCopies = copies
+        }
+
+        // Get available copies (defaults to total if not specified)
+        var availableCopies = totalCopies
+        if let availStr = csvRow["Available Copies"]?.trimmingCharacters(in: .whitespaces),
+           let avail = Int(availStr), avail >= 0 {
+            availableCopies = avail
+        }
+
+        // Optional fields from CSV
+        let language = csvRow["Language"]?.trimmingCharacters(in: .whitespaces)
+        let publisher = csvRow["Publisher"]?.trimmingCharacters(in: .whitespaces)
+        let publishedDate = csvRow["Published Date"]?.trimmingCharacters(in: .whitespaces)
+        let pageCount = csvRow["Page Count"].flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
+        let notes = csvRow["Notes"]?.trimmingCharacters(in: .whitespaces)
+
+        return Book(
+            isbn: isbn,
+            title: title,
+            author: author,
+            totalCopies: totalCopies,
+            availableCopies: availableCopies,
+            bookDescription: nil,
+            pageCount: pageCount,
+            publishedDate: publishedDate.flatMap { $0.isEmpty ? nil : $0 },
+            publisher: publisher.flatMap { $0.isEmpty ? nil : $0 },
+            languageCode: language.flatMap { $0.isEmpty ? nil : $0 },
+            coverImageURL: nil,
+            notes: notes.flatMap { $0.isEmpty ? nil : $0 },
+            isWishlistItem: false
+        )
     }
 
     /// Import wishlist books from CSV format

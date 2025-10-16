@@ -27,55 +27,14 @@ class DataSeeder {
             throw DataSeederError.fileNotFound
         }
 
-        // Parse CSV
-        let rows = try CSVParser.parse(fileURL: fileURL)
+        // Read CSV content
+        let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
 
-        var booksCreated = 0
-        for row in rows {
-            // Create Book from CSV row
-            if let book = createBook(from: row) {
-                modelContext.insert(book)
-                booksCreated += 1
-            }
-        }
+        // Use existing CSVImporter to import books
+        let booksCreated = try CSVImporter.importBooks(from: csvContent, modelContext: modelContext)
 
         try modelContext.save()
         print("Successfully seeded \(booksCreated) books")
-    }
-
-    /// Create a Book instance from CSV row
-    private static func createBook(from csvRow: [String: String]) -> Book? {
-        guard let title = csvRow["Title"]?.trimmingCharacters(in: .whitespaces),
-              let author = csvRow["Primary Author"]?.trimmingCharacters(in: .whitespaces),
-              !title.isEmpty,
-              !author.isEmpty else {
-            return nil
-        }
-
-        // Extract first ISBN from ISBNs column
-        var isbn: String? = nil
-        if let isbns = csvRow["ISBNs"]?.trimmingCharacters(in: .whitespaces),
-           !isbns.isEmpty {
-            // ISBNs are in format "1406312207, 9781406312201" or "[1406312207]"
-            let cleaned = isbns.replacingOccurrences(of: "[", with: "")
-                               .replacingOccurrences(of: "]", with: "")
-            isbn = cleaned.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces)
-        }
-
-        // Get copies, default to 1
-        var totalCopies = 1
-        if let copiesStr = csvRow["Copies"]?.trimmingCharacters(in: .whitespaces),
-           let copies = Int(copiesStr), copies > 0 {
-            totalCopies = copies
-        }
-
-        return Book(
-            isbn: isbn,
-            title: title,
-            author: author,
-            totalCopies: totalCopies,
-            availableCopies: totalCopies
-        )
     }
 
     /// Load wishlist items from CSV file and insert into SwiftData
