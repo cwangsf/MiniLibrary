@@ -78,6 +78,35 @@ class DataSeeder {
         )
     }
 
+    /// Load wishlist items from CSV file and insert into SwiftData
+    /// Only seeds if no wishlist items exist yet
+    static func seedWishlistFromCSV(fileName: String, modelContext: ModelContext) async throws {
+        // Check if any wishlist items already exist
+        let descriptor = FetchDescriptor<Book>(
+            predicate: #Predicate { $0.isWishlistItem == true }
+        )
+        let existingWishlist = try modelContext.fetch(descriptor)
+
+        guard existingWishlist.isEmpty else {
+            print("Wishlist already seeded, skipping...")
+            return
+        }
+
+        // Get CSV file from bundle
+        guard let fileURL = Bundle.main.url(forResource: fileName, withExtension: "csv") else {
+            throw DataSeederError.fileNotFound
+        }
+
+        // Read CSV content
+        let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+
+        // Use existing CSVImporter to import wishlist
+        let itemsCreated = try await CSVImporter.importWishlist(from: csvContent, modelContext: modelContext)
+
+        try modelContext.save()
+        print("Successfully seeded \(itemsCreated) wishlist items")
+    }
+
     /// Export books to JSON file (for testing or backup)
     static func exportBooksToJSON(books: [Book], to fileURL: URL) throws {
         let encoder = JSONEncoder()
@@ -90,7 +119,6 @@ class DataSeeder {
     }
 
     // MARK: - Debug Seeding
-    #if DEBUG
     /// Seed debug data: clear all data, create sample users and students
     static func seedDebugData(modelContext: ModelContext) {
         do {
@@ -101,13 +129,6 @@ class DataSeeder {
             try modelContext.delete(model: User.self)
             try modelContext.save()
             print("Debug: Cleared all SwiftData")
-
-            // Create sample librarians
-            let librarian1 = User(email: "librarian1@school.com", role: .librarian)
-            let librarian2 = User(email: "librarian2@school.com", role: .librarian)
-            modelContext.insert(librarian1)
-            modelContext.insert(librarian2)
-            print("Debug: Created 2 librarians")
 
             // Create sample students
             for i in 1...6 {
@@ -122,7 +143,6 @@ class DataSeeder {
             print("Debug: Error seeding debug data: \(error)")
         }
     }
-    #endif
 }
 
 enum DataSeederError: Error {

@@ -152,7 +152,7 @@ struct CSVImporter {
                         print("Skipping line \(index + 1): no results found for \(searchInfo)")
                     }
                 } catch {
-                    print("Error searching for book on line \(index + 1): \(error)")
+                    print("Error searching for book on line \(index + 1): \(error). \n      line: \(line)")
                     continue
                 }
 
