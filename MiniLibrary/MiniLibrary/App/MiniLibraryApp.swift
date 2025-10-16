@@ -33,13 +33,11 @@ struct MiniLibraryApp: App {
                 print("Error seeding books: \(error)")
             }
 
-            // Seed wishlist from CSV (async)
-            Task {
-                do {
-                    try await DataSeeder.seedWishlistFromCSV(fileName: "wish_list", modelContext: context)
-                } catch {
-                    print("Error seeding wishlist: \(error)")
-                }
+            // Seed wishlist from CSV (fast - no API calls)
+            do {
+                try DataSeeder.seedWishlistFromCSV(fileName: "wish_list", modelContext: context)
+            } catch {
+                print("Error seeding wishlist: \(error)")
             }
 
             return container

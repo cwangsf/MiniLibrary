@@ -39,7 +39,8 @@ class DataSeeder {
 
     /// Load wishlist items from CSV file and insert into SwiftData
     /// Only seeds if no wishlist items exist yet
-    static func seedWishlistFromCSV(fileName: String, modelContext: ModelContext) async throws {
+    /// Uses fast import (no API calls) for instant loading
+    static func seedWishlistFromCSV(fileName: String, modelContext: ModelContext) throws {
         // Check if any wishlist items already exist
         let descriptor = FetchDescriptor<Book>(
             predicate: #Predicate { $0.isWishlistItem == true }
@@ -59,8 +60,8 @@ class DataSeeder {
         // Read CSV content
         let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
 
-        // Use existing CSVImporter to import wishlist
-        let itemsCreated = try await CSVImporter.importWishlist(from: csvContent, modelContext: modelContext)
+        // Use CSVImporter for instant loading
+        let itemsCreated = try CSVImporter.importWishlist(from: csvContent, modelContext: modelContext)
 
         try modelContext.save()
         print("Successfully seeded \(itemsCreated) wishlist items")

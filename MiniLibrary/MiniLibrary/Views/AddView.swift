@@ -461,44 +461,36 @@ struct AddView: View {
                 return
             }
 
-            defer {
-                fileURL.stopAccessingSecurityScopedResource()
+            do {
+                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                let importedCount = try CSVImporter.importWishlist(from: csvContent, modelContext: modelContext)
+
+                importResult = ImportResult(
+                    title: "Import Successful",
+                    message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") to wishlist from the CSV file.",
+                    isSuccess: true
+                )
+
+                // Log activity
+                let activity = Activity(
+                    type: .addWishlist,
+                    bookTitle: "Import",
+                    bookAuthor: "CSV Import",
+                    additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
+                )
+                modelContext.insert(activity)
+
+                showingImportResult = true
+            } catch {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: error.localizedDescription,
+                    isSuccess: false
+                )
+                showingImportResult = true
             }
 
-            Task {
-                do {
-                    let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
-                    let importedCount = try await CSVImporter.importWishlist(from: csvContent, modelContext: modelContext)
-
-                    await MainActor.run {
-                        importResult = ImportResult(
-                            title: "Import Successful",
-                            message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") to wishlist from the CSV file.",
-                            isSuccess: true
-                        )
-
-                        // Log activity
-                        let activity = Activity(
-                            type: .addWishlist,
-                            bookTitle: "Import",
-                            bookAuthor: "CSV Import",
-                            additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
-                        )
-                        modelContext.insert(activity)
-
-                        showingImportResult = true
-                    }
-                } catch {
-                    await MainActor.run {
-                        importResult = ImportResult(
-                            title: "Import Failed",
-                            message: error.localizedDescription,
-                            isSuccess: false
-                        )
-                        showingImportResult = true
-                    }
-                }
-            }
+            fileURL.stopAccessingSecurityScopedResource()
 
         case .failure(let error):
             importResult = ImportResult(
