@@ -14,6 +14,9 @@ actor BookAPIService {
     private let session: URLSession
     private let decoder: JSONDecoder
 
+    // MARK: - Constants
+    private static let baseURL = "https://www.googleapis.com/books/v1/volumes"
+
     private init() {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 10
@@ -22,11 +25,37 @@ actor BookAPIService {
         self.decoder.keyDecodingStrategy = .convertFromSnakeCase
     }
 
+    // MARK: - URL Builders
+    private func buildISBNSearchURL(_ isbn: String) -> URL? {
+        let urlString = "\(Self.baseURL)?q=isbn:\(isbn)"
+        return URL(string: urlString)
+    }
+
+    private func buildTitleAuthorSearchURL(title: String, author: String) -> URL? {
+        var queryComponents: [String] = []
+
+        if !title.isEmpty {
+            let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? title
+            queryComponents.append("intitle:\(encodedTitle)")
+        }
+
+        if !author.isEmpty {
+            let encodedAuthor = author.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? author
+            queryComponents.append("inauthor:\(encodedAuthor)")
+        }
+
+        guard !queryComponents.isEmpty else {
+            return nil
+        }
+
+        let query = queryComponents.joined(separator: "+")
+        let urlString = "\(Self.baseURL)?q=\(query)&maxResults=5"
+        return URL(string: urlString)
+    }
+
     /// Fetch book info from Google Books API by ISBN
     func fetchBookInfoFromGoogle(isbn: String) async throws -> Book {
-        let urlString = "https://www.googleapis.com/books/v1/volumes?q=isbn:\(isbn)"
-
-        guard let url = URL(string: urlString) else {
+        guard let url = buildISBNSearchURL(isbn) else {
             throw BookAPIError.invalidURL
         }
 
@@ -51,9 +80,7 @@ actor BookAPIService {
 
     /// Search for books by ISBN
     func searchBooksByISBN(_ isbn: String) async throws -> [GoogleBookItem] {
-        let urlString = "https://www.googleapis.com/books/v1/volumes?q=isbn:\(isbn)"
-
-        guard let url = URL(string: urlString) else {
+        guard let url = buildISBNSearchURL(isbn) else {
             throw BookAPIError.invalidURL
         }
 
@@ -78,26 +105,7 @@ actor BookAPIService {
 
     /// Search for books by title and author
     func searchBooksByTitleAndAuthor(title: String, author: String) async throws -> [GoogleBookItem] {
-        var queryComponents: [String] = []
-
-        if !title.isEmpty {
-            let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? title
-            queryComponents.append("intitle:\(encodedTitle)")
-        }
-
-        if !author.isEmpty {
-            let encodedAuthor = author.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? author
-            queryComponents.append("inauthor:\(encodedAuthor)")
-        }
-
-        guard !queryComponents.isEmpty else {
-            throw BookAPIError.invalidURL
-        }
-
-        let query = queryComponents.joined(separator: "+")
-        let urlString = "https://www.googleapis.com/books/v1/volumes?q=\(query)&maxResults=5"
-
-        guard let url = URL(string: urlString) else {
+        guard let url = buildTitleAuthorSearchURL(title: title, author: author) else {
             throw BookAPIError.invalidURL
         }
 

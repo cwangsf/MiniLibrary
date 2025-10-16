@@ -11,14 +11,9 @@ import SwiftUI
 actor BookCoverService {
     static let shared = BookCoverService()
 
-    private let session: URLSession
     private var coverCache: [String: String] = [:] // ISBN -> coverURL
 
-    private init() {
-        let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 5
-        self.session = URLSession(configuration: config)
-    }
+    private init() {}
 
     /// Fetch cover URL for a book by ISBN
     func fetchCoverURL(isbn: String) async throws -> String? {
@@ -27,17 +22,9 @@ actor BookCoverService {
             return cached
         }
 
-        // Try Google Books API
-        let urlString = "https://www.googleapis.com/books/v1/volumes?q=isbn:\(isbn)"
-        guard let url = URL(string: urlString) else {
-            return nil
-        }
-
-        let (data, _) = try await session.data(from: url)
-        let decoder = JSONDecoder()
-        let response = try decoder.decode(GoogleBooksResponse.self, from: data)
-
-        let coverURL = response.items?.first?.volumeInfo.imageLinks?.thumbnail
+        // Use BookAPIService to fetch book data
+        let items = try await BookAPIService.shared.searchBooksByISBN(isbn)
+        let coverURL = items.first?.volumeInfo.imageLinks?.thumbnail
 
         // Cache the result
         if let coverURL = coverURL {

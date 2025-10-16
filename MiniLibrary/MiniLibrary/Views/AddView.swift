@@ -1096,7 +1096,7 @@ struct AddWishlistItemView: View {
             // If ISBN is provided, search by ISBN first
             if !isbn.isEmpty {
                 do {
-                    results = try await searchByISBN(isbn)
+                    results = try await BookAPIService.shared.searchBooksByISBN(isbn)
                 } catch {
                     // ISBN search failed, fall back to title/author search if title is provided
                     print("ISBN search failed, falling back to title/author search: \(error.localizedDescription)")
@@ -1125,26 +1125,6 @@ struct AddWishlistItemView: View {
         }
 
         isSearching = false
-    }
-
-    private func searchByISBN(_ isbn: String) async throws -> [GoogleBookItem] {
-        // Use the existing ISBN search and wrap result in array
-        let urlString = "https://www.googleapis.com/books/v1/volumes?q=isbn:\(isbn)"
-
-        guard let url = URL(string: urlString) else {
-            throw BookAPIError.invalidURL
-        }
-
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let googleResponse = try decoder.decode(GoogleBooksResponse.self, from: data)
-
-        guard let items = googleResponse.items, !items.isEmpty else {
-            throw BookAPIError.bookNotFound
-        }
-
-        return items
     }
 
     private func addBookFromResult(_ item: GoogleBookItem) {
