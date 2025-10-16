@@ -574,8 +574,7 @@ MiniLibrary/
 │   └── ScanBookViewModel.swift
 │
 ├── Services/
-│   ├── BookAPIService.swift
-│   ├── BookCoverService.swift
+│   ├── BookAPIService.swift (includes cover image fetching and caching)
 │   ├── CSVExporter.swift
 │   └── CSVImporter.swift
 │

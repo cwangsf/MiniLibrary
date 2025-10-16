@@ -76,7 +76,7 @@ struct BookCoverImage: View {
         guard book.coverImageURL == nil else { return }
 
         isLoadingCover = true
-        await BookCoverService.shared.updateBookCover(book)
+        await BookAPIService.shared.updateBookCover(book)
         isLoadingCover = false
     }
 
