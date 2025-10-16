@@ -13,7 +13,6 @@ actor BookAPIService {
 
     private let session: URLSession
     private let decoder: JSONDecoder
-    private var coverCache: [String: String] = [:] // ISBN -> coverURL
 
     // MARK: - Constants
     private static let baseURL = "https://www.googleapis.com/books/v1/volumes"
@@ -171,40 +170,83 @@ actor BookAPIService {
 
     // MARK: - Cover Image Methods
 
-    /// Fetch cover URL for a book by ISBN (with caching)
-    func fetchCoverURL(isbn: String) async throws -> String? {
-        // Check cache first
-        if let cached = coverCache[isbn] {
-            return cached
-        }
-
-        // Fetch from API
-        let items = try await searchBooksByISBN(isbn)
-        let coverURL = items.first?.volumeInfo.imageLinks?.thumbnail
-
-        // Cache the result
-        if let coverURL = coverURL {
-            coverCache[isbn] = coverURL
-        }
-
-        return coverURL
-    }
-
-    /// Update book with cover URL if not present
+    /// Update book with cover URL and metadata if not present
+    /// Works with ISBN or title/author search
     @MainActor
     func updateBookCover(_ book: Book) async {
-        // Skip if already has cover or no ISBN
-        guard book.coverImageURL == nil,
-              let isbn = book.isbn else {
+        // Skip if already has cover
+        guard book.coverImageURL == nil else {
             return
         }
 
         do {
-            if let coverURL = try await fetchCoverURL(isbn: isbn) {
+            var coverURL: String?
+            var updatedMetadata: GoogleBookItem?
+
+            // Try ISBN search first if available
+            if let isbn = book.isbn {
+                let items = try await searchBooksByISBN(isbn)
+                if let firstItem = items.first {
+                    coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
+                    updatedMetadata = firstItem
+                }
+            }
+
+            // Fall back to title/author search if no ISBN or ISBN search failed
+            if coverURL == nil {
+                let items = try await searchBooksByTitleAndAuthor(
+                    title: book.title,
+                    author: book.author
+                )
+                if let firstItem = items.first {
+                    coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
+                    updatedMetadata = firstItem
+                }
+            }
+
+            // Update book with fetched data
+            if let coverURL = coverURL {
                 book.coverImageURL = coverURL
             }
+
+            // Also update other metadata if book doesn't have it (useful for wishlist items)
+            if let metadata = updatedMetadata {
+                let volumeInfo = metadata.volumeInfo
+
+                if book.isbn == nil,
+                   let isbn = volumeInfo.industryIdentifiers?.first(where: { $0.type == "ISBN_13" || $0.type == "ISBN_10" })?.identifier {
+                    book.isbn = isbn
+                }
+
+                if book.bookDescription == nil {
+                    book.bookDescription = volumeInfo.description
+                }
+
+                if book.pageCount == nil {
+                    book.pageCount = volumeInfo.pageCount
+                }
+
+                if book.publishedDate == nil {
+                    book.publishedDate = volumeInfo.publishedDate
+                }
+
+                if book.publisher == nil {
+                    book.publisher = volumeInfo.publisher
+                }
+
+                if book.languageCode == nil {
+                    book.languageCode = volumeInfo.language
+                }
+
+                // Update author if it was "Unknown Author"
+                if book.author == "Unknown Author",
+                   let authors = volumeInfo.authors,
+                   !authors.isEmpty {
+                    book.author = authors.joined(separator: ", ")
+                }
+            }
         } catch {
-            print("Failed to fetch cover for ISBN \(isbn): \(error)")
+            print("Failed to fetch cover for '\(book.title)' by \(book.author): \(error)")
         }
     }
 }
