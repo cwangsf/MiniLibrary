@@ -195,9 +195,12 @@ actor BookAPIService {
 
             // Fall back to title/author search if no ISBN or ISBN search failed
             if coverURL == nil {
+                // Don't include "Unknown Author" in search - it won't find results
+                let searchAuthor = (book.author == "Unknown Author") ? "" : book.author
+
                 let items = try await searchBooksByTitleAndAuthor(
                     title: book.title,
-                    author: book.author
+                    author: searchAuthor
                 )
                 if let firstItem = items.first {
                     coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
