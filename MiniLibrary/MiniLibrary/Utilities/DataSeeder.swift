@@ -87,6 +87,7 @@ class DataSeeder {
             try modelContext.delete(model: Student.self)
             try modelContext.delete(model: CheckoutRecord.self)
             try modelContext.delete(model: User.self)
+            try modelContext.delete(model: Activity.self)
             try modelContext.save()
             print("Debug: Cleared all SwiftData")
 
