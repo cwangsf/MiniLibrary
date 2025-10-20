@@ -148,7 +148,7 @@ actor BookAPIService {
     }
 
     /// Convert GoogleBookItem to Book for wishlist
-    func createBookFromSearchResult(_ item: GoogleBookItem, isWishlistItem: Bool = false) -> Book {
+    nonisolated func createBookFromSearchResult(_ item: GoogleBookItem, isWishlistItem: Bool = false) -> Book {
         let volumeInfo = item.volumeInfo
         let isbn = volumeInfo.industryIdentifiers?.first(where: { $0.type == "ISBN_13" || $0.type == "ISBN_10" })?.identifier
 
