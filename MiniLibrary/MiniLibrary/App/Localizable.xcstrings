@@ -1091,29 +1091,6 @@
         }
       }
     },
-    "Notes (Optional)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notizen (Optional)"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nótaí (Roghnach)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "备注（可选）"
-          }
-        }
-      }
-    },
     "of %lld total" : {
 
     },
@@ -1173,29 +1150,6 @@
     "Recent Activity" : {
 
     },
-    "Recent Checkouts" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kürzliche Ausleihen"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seiceálacha Amach Le Déanaí"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最近借阅"
-          }
-        }
-      }
-    },
     "Required: Title, Author, Total Copies, Available Copies. All other fields are optional." : {
 
     },
@@ -1220,29 +1174,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "归还图书"
-          }
-        }
-      }
-    },
-    "Scan Another Book" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ein weiteres Buch scannen"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scanáil Leabhar Eile"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "扫描另一本图书"
           }
         }
       }
@@ -1338,29 +1269,6 @@
     "Search Google Books to get complete information, or add manually with the details you have." : {
 
     },
-    "Search Results" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suchergebnisse"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Torthaí Cuardaigh"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "搜索结果"
-          }
-        }
-      }
-    },
     "Search Results - Select a Book" : {
 
     },
@@ -1432,29 +1340,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择学生"
-          }
-        }
-      }
-    },
-    "Start checking out books to see them here" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beginnen Sie mit dem Ausleihen von Büchern, um sie hier zu sehen"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tosaigh ag seiceáil amach leabhair chun iad a fheiceáil anseo"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "开始借阅图书以在此查看"
           }
         }
       }
@@ -1586,29 +1471,6 @@
     },
     "Total Copies: %lld" : {
 
-    },
-    "Try searching with different keywords" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Versuchen Sie es mit anderen Suchbegriffen"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bain triail as eochairfhocail éagsúla"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "尝试使用不同的关键词搜索"
-          }
-        }
-      }
     },
     "Try searching with different keywords or add manually" : {
 

@@ -403,7 +403,7 @@ struct BookDetailView: View {
                         return
                     }
 
-                    fetchedBook = await BookAPIService.shared.createBookFromSearchResult(firstItem)
+                    fetchedBook = BookAPIService.shared.createBookFromSearchResult(firstItem)
                 }
 
                 // Update the existing book with fetched metadata

@@ -12,7 +12,7 @@ actor BookAPIService {
     static let shared = BookAPIService()
 
     private let session: URLSession
-    private let decoder: JSONDecoder
+    private nonisolated let decoder: JSONDecoder
 
     // MARK: - Constants
     private static let baseURL = "https://www.googleapis.com/books/v1/volumes"
@@ -21,8 +21,10 @@ actor BookAPIService {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 10
         self.session = URLSession(configuration: config)
-        self.decoder = JSONDecoder()
-        self.decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        self.decoder = decoder
     }
 
     // MARK: - URL Builders

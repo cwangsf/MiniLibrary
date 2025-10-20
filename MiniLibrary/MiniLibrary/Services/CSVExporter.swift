@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CSVExporter {
+enum CSVExporter {
     /// Export books to CSV format
     static func exportBooks(_ books: [Book]) -> String {
         var csv = "ISBN,Title,Author,Total Copies,Available Copies,Language,Publisher,Published Date,Page Count,Notes\n"
