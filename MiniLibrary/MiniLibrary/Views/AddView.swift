@@ -1011,19 +1011,26 @@ struct AddWishlistItemView: View {
 
     @State private var title = ""
     @State private var author = ""
+    @State private var publisher = ""
     @State private var isbn = ""
     @State private var searchResults: [GoogleBookItem] = []
     @State private var isSearching = false
     @State private var searchError: String?
     @State private var hasSearched = false
+    @State private var showManualAddConfirmation = false
+
+    var canSearch: Bool {
+        !isbn.isEmpty || !title.isEmpty || !author.isEmpty || !publisher.isEmpty
+    }
 
     var body: some View {
         Form {
             Section("Book Information") {
                 TextField("ISBN (optional)", text: $isbn)
                     .keyboardType(.numberPad)
-                TextField("Title", text: $title)
+                TextField("Title (optional)", text: $title)
                 TextField("Author (optional)", text: $author)
+                TextField("Publisher (optional)", text: $publisher)
             }
 
             Section {
@@ -1041,7 +1048,20 @@ struct AddWishlistItemView: View {
                         Text(isSearching ? "Searching..." : "Search Google Books")
                     }
                 }
-                .disabled(title.isEmpty || isSearching)
+                .disabled(!canSearch || isSearching)
+
+                Button {
+                    showManualAddConfirmation = true
+                } label: {
+                    HStack {
+                        Image(systemName: "plus.circle")
+                        Text("Add to Wishlist Manually")
+                    }
+                }
+                .disabled(!canSearch)
+            } footer: {
+                Text("Search Google Books to get complete information, or add manually with the details you have.")
+                    .font(.caption)
             }
 
             if let error = searchError {
@@ -1053,7 +1073,7 @@ struct AddWishlistItemView: View {
             }
 
             if !searchResults.isEmpty {
-                Section("Search Results") {
+                Section("Search Results - Select a Book") {
                     ForEach(Array(searchResults.enumerated()), id: \.offset) { index, item in
                         Button {
                             addBookFromResult(item)
@@ -1068,13 +1088,29 @@ struct AddWishlistItemView: View {
                     ContentUnavailableView(
                         "No Results",
                         systemImage: "magnifyingglass",
-                        description: Text("Try searching with different keywords")
+                        description: Text("Try searching with different keywords or add manually")
                     )
                 }
             }
         }
         .navigationTitle("Add to Wishlist")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Add to Wishlist?", isPresented: $showManualAddConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Add") {
+                addManually()
+            }
+        } message: {
+            let parts = [
+                title.isEmpty ? nil : "Title: \(title)",
+                author.isEmpty ? nil : "Author: \(author)",
+                publisher.isEmpty ? nil : "Publisher: \(publisher)",
+                isbn.isEmpty ? nil : "ISBN: \(isbn)"
+            ].compactMap { $0 }
+
+            let message = parts.isEmpty ? "Add this book to your wishlist?" : parts.joined(separator: "\n")
+            return Text(message)
+        }
     }
 
     private func searchGoogle() async {
@@ -1092,7 +1128,7 @@ struct AddWishlistItemView: View {
                 } catch {
                     // ISBN search failed, fall back to title/author search if title is provided
                     print("ISBN search failed, falling back to title/author search: \(error.localizedDescription)")
-                    if !title.isEmpty {
+                    if !title.isEmpty || !author.isEmpty {
                         results = try await BookAPIService.shared.searchBooksByTitleAndAuthor(
                             title: title,
                             author: author
@@ -1130,6 +1166,37 @@ struct AddWishlistItemView: View {
             bookTitle: book.title,
             bookAuthor: book.author,
             additionalInfo: nil
+        )
+        modelContext.insert(activity)
+
+        dismiss()
+    }
+
+    private func addManually() {
+        // Use provided info or defaults
+        let bookTitle = title.isEmpty ? "Untitled Book" : title
+        let bookAuthor = author.isEmpty ? "Unknown Author" : author
+        let bookISBN = isbn.isEmpty ? nil : isbn
+        let bookPublisher = publisher.isEmpty ? nil : publisher
+
+        let book = Book(
+            isbn: bookISBN,
+            title: bookTitle,
+            author: bookAuthor,
+            totalCopies: 0,
+            availableCopies: 0,
+            publisher: bookPublisher,
+            isWishlistItem: true
+        )
+
+        modelContext.insert(book)
+
+        // Log activity
+        let activity = Activity(
+            type: .addWishlist,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+            additionalInfo: "Added manually"
         )
         modelContext.insert(activity)
 
