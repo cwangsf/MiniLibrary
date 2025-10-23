@@ -110,8 +110,8 @@ struct CSVImporter {
     }
 
     /// Import wishlist books from CSV format
-    /// Expected format: Title,Author,ISBN
-    /// Only Title is required, Author and ISBN are optional
+    /// Expected format: ISBN, Title, Author
+    /// Title is required, ISBN and Author are optional
     /// Books are created immediately with available data, metadata can be fetched later
     static func importWishlist(from csvContent: String, modelContext: ModelContext) throws -> Int {
         let rows = CSVParser.parse(csvString: csvContent)
@@ -128,7 +128,7 @@ struct CSVImporter {
                 modelContext.insert(book)
                 importedCount += 1
             } else {
-                print("Skipping line \(index + 2): invalid wishlist data")
+                print("Skipping line \(index + 2): invalid wishlist data - Title is required")
             }
         }
 
@@ -136,6 +136,7 @@ struct CSVImporter {
     }
 
     /// Create a wishlist Book instance from CSV row (no API calls)
+    /// Format: ISBN, Title, Author (Title is required, others optional)
     private static func createWishlistBook(from csvRow: [String: String]) -> Book? {
         // Title is required
         guard let title = csvRow["Title"]?.trimmingCharacters(in: .whitespaces),
@@ -154,15 +155,19 @@ struct CSVImporter {
         }
 
         // ISBN is optional (try both "ISBN" and "ISBNs")
+        // Clean ISBN by removing hyphens and other common separators
         var isbn: String? = nil
         if let csvISBN = csvRow["ISBN"]?.trimmingCharacters(in: .whitespaces),
            !csvISBN.isEmpty {
-            isbn = csvISBN
+            isbn = cleanISBN(csvISBN)
         } else if let isbns = csvRow["ISBNs"]?.trimmingCharacters(in: .whitespaces),
                   !isbns.isEmpty {
+            // Extract first ISBN from comma-separated list
             let cleaned = isbns.replacingOccurrences(of: "[", with: "")
                                .replacingOccurrences(of: "]", with: "")
-            isbn = cleaned.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces)
+            if let firstISBN = cleaned.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces) {
+                isbn = cleanISBN(firstISBN)
+            }
         }
 
         return Book(
@@ -173,6 +178,23 @@ struct CSVImporter {
             availableCopies: 0,
             isWishlistItem: true
         )
+    }
+
+    /// Clean ISBN by removing hyphens, spaces, and keeping only digits and 'X'
+    /// Examples: "978-0-123456-78-9" -> "9780123456789", "0-306-40615-X" -> "030640615X"
+    private static func cleanISBN(_ isbn: String) -> String {
+        let cleaned = isbn.replacingOccurrences(of: "-", with: "")
+                          .replacingOccurrences(of: " ", with: "")
+                          .trimmingCharacters(in: .whitespaces)
+
+        // Validate it contains only digits and optionally 'X' at the end
+        let isValid = cleaned.allSatisfy { $0.isNumber || $0 == "X" || $0 == "x" }
+
+        guard isValid, !cleaned.isEmpty else {
+            return isbn // Return original if invalid format
+        }
+
+        return cleaned.uppercased() // Ensure 'X' is uppercase
     }
 
 }
