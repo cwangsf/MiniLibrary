@@ -1014,6 +1014,7 @@ struct AddWishlistItemView: View {
     @State private var publisher = ""
     @State private var isbn = ""
     @State private var searchResults: [GoogleBookItem] = []
+    @State private var selectedItems: Set<Int> = [] // Track selected items by index
     @State private var isSearching = false
     @State private var searchError: String?
     @State private var hasSearched = false
@@ -1073,14 +1074,39 @@ struct AddWishlistItemView: View {
             }
 
             if !searchResults.isEmpty {
-                Section("Search Results - Select a Book") {
+                Section {
                     ForEach(Array(searchResults.enumerated()), id: \.offset) { index, item in
                         Button {
-                            addBookFromResult(item)
+                            toggleSelection(index)
                         } label: {
-                            BookSearchResultRow(item: item)
+                            HStack {
+                                BookSearchResultRow(item: item)
+
+                                Spacer()
+
+                                // Checkmark for selected items
+                                if selectedItems.contains(index) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.blue)
+                                        .font(.title3)
+                                } else {
+                                    Image(systemName: "circle")
+                                        .foregroundStyle(.gray)
+                                        .font(.title3)
+                                }
+                            }
                         }
                         .padding(.vertical, 4)
+                    }
+                } header: {
+                    HStack {
+                        Text("Search Results - Select Books")
+                        Spacer()
+                        if !selectedItems.isEmpty {
+                            Text("\(selectedItems.count) selected")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             } else if hasSearched && !isSearching {
@@ -1111,12 +1137,64 @@ struct AddWishlistItemView: View {
             let message = parts.isEmpty ? "Add this book to your wishlist?" : parts.joined(separator: "\n")
             return Text(message)
         }
+        .safeAreaInset(edge: .bottom) {
+            if !selectedItems.isEmpty {
+                Button {
+                    addSelectedBooks()
+                } label: {
+                    HStack {
+                        Image(systemName: "plus.circle.fill")
+                        Text("Add \(selectedItems.count) Book\(selectedItems.count == 1 ? "" : "s") to Wishlist")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.blue)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .padding()
+                .background(.ultraThinMaterial)
+            }
+        }
+    }
+
+    private func toggleSelection(_ index: Int) {
+        if selectedItems.contains(index) {
+            selectedItems.remove(index)
+        } else {
+            selectedItems.insert(index)
+        }
+    }
+
+    private func addSelectedBooks() {
+        var addedCount = 0
+
+        for index in selectedItems.sorted() {
+            guard index < searchResults.count else { continue }
+            let item = searchResults[index]
+            let book = BookAPIService.shared.createBookFromSearchResult(item, isWishlistItem: true)
+            modelContext.insert(book)
+            addedCount += 1
+        }
+
+        // Log activity
+        let activity = Activity(
+            type: .addWishlist,
+            bookTitle: "Bulk Add",
+            bookAuthor: "Google Books Search",
+            additionalInfo: "\(addedCount) book\(addedCount == 1 ? "" : "s") added"
+        )
+        modelContext.insert(activity)
+
+        dismiss()
     }
 
     private func searchGoogle() async {
         isSearching = true
         searchError = nil
         hasSearched = false
+        selectedItems.removeAll() // Clear previous selections
 
         do {
             var results: [GoogleBookItem] = []
@@ -1153,23 +1231,6 @@ struct AddWishlistItemView: View {
         }
 
         isSearching = false
-    }
-
-    private func addBookFromResult(_ item: GoogleBookItem) {
-        let book = BookAPIService.shared.createBookFromSearchResult(item, isWishlistItem: true)
-
-        modelContext.insert(book)
-
-        // Log activity
-        let activity = Activity(
-            type: .addWishlist,
-            bookTitle: book.title,
-            bookAuthor: book.author,
-            additionalInfo: nil
-        )
-        modelContext.insert(activity)
-
-        dismiss()
     }
 
     private func addManually() {

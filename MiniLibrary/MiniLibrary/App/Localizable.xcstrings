@@ -17,6 +17,9 @@
     "%lld available" : {
 
     },
+    "%lld selected" : {
+
+    },
     "%lld total copies" : {
 
     },
@@ -64,6 +67,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Add %1$lld %2$@"
+          }
+        }
+      }
+    },
+    "Add %lld Book%@ to Wishlist" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Add %1$lld Book%2$@ to Wishlist"
           }
         }
       }
@@ -1269,7 +1282,7 @@
     "Search Google Books to get complete information, or add manually with the details you have." : {
 
     },
-    "Search Results - Select a Book" : {
+    "Search Results - Select Books" : {
 
     },
     "Searching..." : {
