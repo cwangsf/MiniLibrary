@@ -45,6 +45,7 @@ struct BookRowView: View {
                     }
                     .foregroundStyle(book.availableCopies > 0 ? .green : .red)
                 }
+                .padding(.trailing)
             }
         }
         .padding(.vertical, 4)

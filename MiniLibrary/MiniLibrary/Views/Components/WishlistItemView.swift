@@ -61,7 +61,9 @@ struct WishlistItemView: View {
                     .padding(.leading, 8)
             }
             .buttonStyle(.plain)
+            .padding(.trailing)
         }
+        .padding(.trailing)
     }
     
     private func generateAmazonURL(for book: Book) -> URL? {

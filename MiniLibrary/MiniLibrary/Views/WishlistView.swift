@@ -18,34 +18,77 @@ struct WishlistView: View {
     @State private var showingAddWishlistSheet = false
     @State private var shareItem: ShareItem?
 
-    var body: some View {
-        List {
-            if wishlistBooks.isEmpty {
-                ContentUnavailableView(
-                    "No Wishlist Items",
-                    systemImage: "heart",
-                    description: Text("Books you want to add to your library will appear here")
-                )
+    // Group books by first letter of title
+    var groupedBooks: [String: [Book]] {
+        Dictionary(grouping: wishlistBooks) { book in
+            let firstChar = book.title.prefix(1).uppercased()
+            // Check if it's a letter
+            if firstChar.rangeOfCharacter(from: .letters) != nil {
+                return firstChar
             } else {
-                ForEach(wishlistBooks) { book in
-                    
-                    WishlistItemView(book: book, shareItem: $shareItem)
-                    .padding(.vertical, 4)
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        Button(role: .destructive) {
-                            deleteBook(book)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
+                return "#"
+            }
+        }
+    }
 
-                        Button {
-                            selectedBook = book
-                            showingAcquireSheet = true
-                        } label: {
-                            Label("Acquire", systemImage: "plus.circle")
+    var sortedSectionTitles: [String] {
+        let titles = groupedBooks.keys.sorted()
+        // Move "#" to the end if it exists
+        if let hashIndex = titles.firstIndex(of: "#") {
+            var sorted = titles
+            sorted.remove(at: hashIndex)
+            sorted.append("#")
+            return sorted
+        }
+        return titles
+    }
+
+    var body: some View {
+        ScrollViewReader { proxy in
+            ZStack(alignment: .trailing) {
+                List {
+                    if wishlistBooks.isEmpty {
+                        ContentUnavailableView(
+                            "No Wishlist Items",
+                            systemImage: "heart",
+                            description: Text("Books you want to add to your library will appear here")
+                        )
+                    } else {
+                        ForEach(sortedSectionTitles, id: \.self) { letter in
+                            Section(header: Text(letter).id(letter)) {
+                                ForEach(groupedBooks[letter] ?? []) { book in
+                                    WishlistItemView(book: book, shareItem: $shareItem)
+                                        .padding(.vertical, 4)
+                                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                            Button(role: .destructive) {
+                                                deleteBook(book)
+                                            } label: {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+
+                                            Button {
+                                                selectedBook = book
+                                                showingAcquireSheet = true
+                                            } label: {
+                                                Label("Acquire", systemImage: "plus.circle")
+                                            }
+                                            .tint(.green)
+                                        }
+                                }
+                            }
                         }
-                        .tint(.green)
                     }
+                }
+                .listStyle(.plain)
+
+                // Section Index Titles (A-Z) on the right side
+                if !wishlistBooks.isEmpty && !sortedSectionTitles.isEmpty {
+                    SectionIndexTitles(titles: sortedSectionTitles) { letter in
+                        withAnimation {
+                            proxy.scrollTo(letter, anchor: .top)
+                        }
+                    }
+                    .padding(.trailing, 5)
                 }
             }
         }
