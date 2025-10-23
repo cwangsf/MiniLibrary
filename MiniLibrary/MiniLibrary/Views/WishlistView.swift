@@ -55,7 +55,7 @@ struct WishlistView: View {
                         )
                     } else {
                         ForEach(sortedSectionTitles, id: \.self) { letter in
-                            Section(header: Text(letter).id(letter)) {
+                            Section {
                                 ForEach(groupedBooks[letter] ?? []) { book in
                                     WishlistItemView(book: book, shareItem: $shareItem)
                                         .padding(.vertical, 4)
@@ -75,7 +75,10 @@ struct WishlistView: View {
                                             .tint(.green)
                                         }
                                 }
+                            } header: {
+                                Text(letter)
                             }
+                            .id(letter)
                         }
                     }
                 }
@@ -88,7 +91,7 @@ struct WishlistView: View {
                             proxy.scrollTo(letter, anchor: .top)
                         }
                     }
-                    .padding(.trailing, 5)
+                    .padding(.trailing)
                 }
             }
         }

@@ -22,17 +22,14 @@ struct ReturnConfirmationView: View {
                         .padding(.top, 40)
 
                     // Confirmation Message
-                    VStack(spacing: 16) {
+                    VStack {
                         Text("Confirm Return")
                             .font(.title2)
                             .fontWeight(.bold)
 
-                        VStack(spacing: 12) {
+                        VStack {
                             // Book Info
                             VStack(spacing: 4) {
-                                Text("Book")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
                                 Text(book.title)
                                     .font(.headline)
                                     .multilineTextAlignment(.center)
@@ -45,10 +42,11 @@ struct ReturnConfirmationView: View {
                                 .padding(.horizontal, 40)
 
                             // Student Info
-                            VStack(spacing: 4) {
+                            HStack {
                                 Text("Student")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+                                Spacer()
                                 HStack {
                                     Image(systemName: "person.fill")
                                         .foregroundStyle(.blue)
@@ -61,10 +59,11 @@ struct ReturnConfirmationView: View {
                                 .padding(.horizontal, 40)
 
                             // Checkout Info
-                            VStack(spacing: 4) {
+                            HStack {
                                 Text("Checked Out")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+                                Spacer()
                                 HStack {
                                     Image(systemName: "calendar")
                                         .foregroundStyle(.blue)
@@ -77,10 +76,11 @@ struct ReturnConfirmationView: View {
                                 .padding(.horizontal, 40)
 
                             // Due Date
-                            VStack(spacing: 4) {
+                            HStack {
                                 Text("Due Date")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+                                Spacer()
                                 HStack {
                                     Image(systemName: "calendar")
                                         .foregroundStyle(checkout.isOverdue ? .red : .orange)
@@ -93,8 +93,7 @@ struct ReturnConfirmationView: View {
                                         .font(.caption2)
                                         .fontWeight(.bold)
                                         .foregroundStyle(.white)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 2)
+                                        .padding()
                                         .background(.red)
                                         .clipShape(Capsule())
                                 }

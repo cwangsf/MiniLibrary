@@ -86,7 +86,7 @@ struct CatalogView: View {
                                 proxy.scrollTo(letter, anchor: .top)
                             }
                         }
-                        .padding(.trailing, 5)
+                        .padding(.trailing)
                     }
                 }
             }

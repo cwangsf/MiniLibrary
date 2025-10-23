@@ -15,16 +15,16 @@ struct SectionIndexTitles: View {
     @State private var hapticFeedback = UIImpactFeedbackGenerator(style: .light)
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: 3) {
             ForEach(titles, id: \.self) { letter in
                 Text(letter)
-                    .font(.system(size: 11, weight: .semibold))
+                    .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(selectedLetter == letter ? .white : .blue)
-                    .frame(width: 20, height: 16)
+                    .frame(width: 28, height: 22)
                     .background(
                         Circle()
                             .fill(selectedLetter == letter ? Color.blue : Color.clear)
-                            .frame(width: 18, height: 18)
+                            .frame(width: 24, height: 24)
                     )
                     .contentShape(Rectangle())
                     .onTapGesture {
@@ -32,8 +32,8 @@ struct SectionIndexTitles: View {
                     }
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 4)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 6)
         .background(
             Capsule()
                 .fill(.ultraThinMaterial)
@@ -63,7 +63,7 @@ struct SectionIndexTitles: View {
 
     private func handleDrag(at location: CGPoint) {
         // Calculate which letter is being dragged over
-        let itemHeight: CGFloat = 18 // height + spacing
+        let itemHeight: CGFloat = 25 // height (22) + spacing (3)
         let index = Int(location.y / itemHeight)
 
         if index >= 0 && index < titles.count {
