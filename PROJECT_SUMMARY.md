@@ -94,7 +94,9 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
 ### 4. Wishlist System
 - **Add to Wishlist**
   - Search Google Books by title/author
-  - Select from search results
+  - **Multi-select** - Select multiple books from search results
+  - Checkmark UI for selected items
+  - **Add X Books to Wishlist** button at bottom
   - Books marked with `isWishlistItem = true`
   - Zero copies (totalCopies = 0, availableCopies = 0)
   - Add notes about why you want the book
@@ -102,6 +104,8 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
 - **Wishlist View**
   - Separate view from catalog
   - List wishlist items with book cover images
+  - **Alphabetical sections (A-Z, plus # for non-letters)**
+  - **Section index scroller on right side** (like iOS Contacts)
   - **Tap book** → Opens Amazon to purchase
   - **Tap share icon** → Share book via Messages, WhatsApp, Email, etc.
   - **Swipe left** → Delete or Acquire options
@@ -175,10 +179,10 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
 
 - **Import Wishlist from CSV**
   - File picker to select CSV file
-  - Format: Title, Author, ISBN
+  - Format: ISBN, Title, Author
   - Only Title is required (Author and ISBN improve search accuracy)
-  - Automatically searches Google Books API for each entry
-  - Uses first search result to populate book data
+  - **ISBN cleaning** - Automatically removes hyphens and spaces from ISBNs
+  - Handles ISBN-10 with 'X' checksum digit
   - Books added as wishlist items (0 copies)
   - Success message shows import count
   - Activity logged for wishlist import
@@ -361,11 +365,14 @@ enum ActivityType: String {
 ### SectionIndexTitles
 - Custom A-Z index scroller (like iOS Contacts)
 - Vertical list of letters on right side
+- **Larger touch targets** - 28×22pt frames for easy tapping
+- **Increased font size** - 13pt semibold for readability
 - Tap to jump to section
 - Drag to scroll through sections
 - Haptic feedback on selection
-- Visual highlight on selected letter
+- Visual highlight on selected letter (blue circle)
 - Background capsule with material effect
+- Used in both CatalogView and WishlistView
 
 ### ShareSheet
 - UIViewControllerRepresentable wrapper for UIActivityViewController
@@ -534,6 +541,18 @@ enum ActivityType: String {
 **Problem:** `GoogleBooksResponse` and related structs caused "Main actor-isolated conformance" warning.
 **Solution:** Added `Sendable` conformance to all API response models (GoogleBooksResponse, GoogleBookItem, VolumeInfo, etc.) to work properly across actor boundaries.
 
+### 12. BookAPIService Decoder Isolation (Swift 6)
+**Problem:** Shared `decoder` property in actor caused actor isolation warnings.
+**Solution:** Marked decoder as `private nonisolated let decoder: JSONDecoder` to allow concurrent access without actor isolation.
+
+### 13. ShareItem Binding Type Mismatch
+**Problem:** WishlistItemView expected `Binding<ShareItem>` but WishlistView passed `Binding<ShareItem?>`.
+**Solution:** Changed WishlistItemView to accept optional binding `@Binding var shareItem: ShareItem?` to match the `.sheet(item:)` pattern.
+
+### 14. Section Index Jump to Wrong Position
+**Problem:** Tapping letter in index scrolled to cells underneath section header instead of the section itself.
+**Solution:** Moved `.id(letter)` from header Text to the Section itself, ensuring `scrollTo(letter)` scrolls to the entire section.
+
 ---
 
 ## File Structure
@@ -564,19 +583,22 @@ MiniLibrary/
 ├── Views/Components/
 │   ├── BookCoverImage.swift
 │   ├── BookRowView.swift
+│   ├── WishlistItemView.swift
 │   ├── BarcodeScannerView.swift
 │   ├── CheckoutConfirmationView.swift
 │   ├── ReturnConfirmationView.swift
 │   ├── AddCopyConfirmationView.swift (in ScanBookView.swift)
-│   └── SectionIndexTitles.swift
+│   ├── SectionIndexTitles.swift
+│   └── ShareSheet.swift (in WishlistView.swift)
 │
 ├── ViewModels/
 │   └── ScanBookViewModel.swift
 │
 ├── Services/
-│   ├── BookAPIService.swift (includes cover image fetching and caching)
-│   ├── CSVExporter.swift
-│   └── CSVImporter.swift
+│   ├── BookAPIService.swift (actor-based, includes cover image fetching and caching)
+│   ├── CSVExporter.swift (enum with static methods)
+│   ├── CSVImporter.swift (struct with ISBN cleaning)
+│   └── CSVParser.swift
 │
 └── MiniLibraryApp.swift (main entry point)
 ```
@@ -659,7 +681,12 @@ MiniLibrary/
 
 ### Wishlist
 - [ ] Search and add to wishlist
+- [ ] Multi-select books from search results
+- [ ] Checkmark UI shows selected items
+- [ ] Add X Books button works with multiple selections
 - [ ] Wishlist items show with 0 copies and book covers
+- [ ] A-Z sections display correctly
+- [ ] Section index scrolls to letter
 - [ ] Tap wishlist item opens Amazon
 - [ ] Share button opens iOS share sheet
 - [ ] Share text includes formatted message and Amazon URL
@@ -689,6 +716,8 @@ MiniLibrary/
 ### Import & Export
 - [ ] Import Catalog from CSV works
 - [ ] Import Wishlist from CSV works
+- [ ] ISBN cleaning removes hyphens and spaces
+- [ ] ISBN-10 with 'X' checksum handled correctly
 - [ ] Import file picker appears correctly
 - [ ] Books import instantly (fast)
 - [ ] Cover images load in background after import
@@ -790,11 +819,15 @@ MiniLibrary is a complete library management solution with:
 
 **Recent Updates (Post-Initial Release):**
 - Added A-Z section index scroller in catalog (like iOS Contacts)
+- **Added A-Z section index scroller in wishlist** (like catalog)
+- **Increased section index size** - Larger touch targets (28×22pt) and font (13pt)
 - Added book cover images to wishlist view
 - Wishlist tap now opens Amazon directly
 - Added share button for wishlist items (iOS share sheet)
+- **Multi-select wishlist** - Select multiple books from search results to add
 - Added CSV export for both catalog and wishlist
 - **Added CSV import** for catalog and wishlist with background cover fetching
+- **ISBN cleaning in CSV import** - Automatically removes hyphens and spaces
 - **Added favorites system** - Mark books as favorites and filter catalog view
 - **Added return confirmation dialogs** from checked out books list
 - **Added swipe-to-delete** for students
@@ -802,7 +835,9 @@ MiniLibrary is a complete library management solution with:
 - Removed unused notes field from wishlist add screen
 - Improved external links in BookDetailView
 - Fixed multiple file importer conflict issue
-- Fixed actor isolation warnings for Swift 6 compatibility
+- **Fixed Swift 6 actor isolation warnings** - BookAPIService decoder, Sendable conformance
+- **Fixed ShareItem binding** - Changed to optional binding in WishlistItemView
+- **Fixed section index scrolling** - Moved .id() to Section instead of header
 
 The app follows iOS design patterns, uses modern SwiftUI/SwiftData, and provides a complete workflow for managing a personal or classroom library. All core features are implemented and tested.
 
