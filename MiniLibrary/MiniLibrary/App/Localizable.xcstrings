@@ -106,6 +106,9 @@
     "Add Copies" : {
 
     },
+    "Add Items" : {
+
+    },
     "Add New Book" : {
 
     },
@@ -196,6 +199,9 @@
           }
         }
       }
+    },
+    "Add to Catalog/Wishlist, check out, or return books instantly" : {
+
     },
     "Add to Wishlist" : {
       "localizations" : {
@@ -963,6 +969,9 @@
     "Library ID (e.g., LIB-001)" : {
 
     },
+    "Manage Checkouts" : {
+
+    },
     "No Active Checkouts" : {
       "localizations" : {
         "de" : {
@@ -1164,6 +1173,9 @@
 
     },
     "Publisher (optional)" : {
+
+    },
+    "Quick Actions" : {
 
     },
     "Recent Activity" : {

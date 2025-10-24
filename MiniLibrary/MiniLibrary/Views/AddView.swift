@@ -28,16 +28,35 @@ struct AddView: View {
     var body: some View {
         NavigationStack {
             List {
+                // Quick Scan - Prominent Section
                 Section {
                     NavigationLink(destination: ScanBookView()) {
-                        HStack {
+                        HStack(spacing: 16) {
                             Image(systemName: "barcode.viewfinder")
+                                .font(.system(size: 32))
                                 .foregroundStyle(.blue)
-                            Text("Scan Book Barcode")
-                                .foregroundStyle(.tint)
-                        }
-                    }
+                                .frame(width: 50)
 
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Scan Book Barcode")
+                                    .font(.headline)
+                                    .foregroundStyle(.primary)
+
+                                Text("Add to Catalog/Wishlist, check out, or return books instantly")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+                        }
+                        .padding(.vertical, 8)
+                    }
+                } header: {
+                    Text("Quick Actions")
+                }
+
+                // Manual Entry Options
+                Section("Add Items") {
                     NavigationLink(destination: AddBookView()) {
                         HStack {
                             Image(systemName: "book.fill")
@@ -66,7 +85,7 @@ struct AddView: View {
                     }
                 }
 
-                Section {
+                Section("Manage Checkouts") {
                     NavigationLink(destination: CheckoutBookView()) {
                         HStack {
                             Image(systemName: "arrow.right.circle.fill")
