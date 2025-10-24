@@ -17,10 +17,17 @@ struct WishlistView: View {
     @State private var showingAcquireSheet = false
     @State private var showingAddWishlistSheet = false
     @State private var shareItem: ShareItem?
+    @State private var selectedLanguage: LanguageFilter = .all
+
+    // Apply language filter
+    // Include books without language info (metadata not yet fetched)
+    var filteredWishlistBooks: [Book] {
+        selectedLanguage.filter(wishlistBooks, includeUnknown: true)
+    }
 
     // Group books by first letter of title
     var groupedBooks: [String: [Book]] {
-        Dictionary(grouping: wishlistBooks) { book in
+        Dictionary(grouping: filteredWishlistBooks) { book in
             let firstChar = book.title.prefix(1).uppercased()
             // Check if it's a letter
             if firstChar.rangeOfCharacter(from: .letters) != nil {
@@ -54,6 +61,15 @@ struct WishlistView: View {
                             description: Text("Books you want to add to your library will appear here")
                         )
                     } else {
+                        // Language filter segmented control as list header
+                        Section {
+                            EmptyView()
+                        } header: {
+                            LanguageFilterPicker(selectedLanguage: $selectedLanguage)
+                                .padding(.horizontal)
+                        }
+                        .listSectionSeparator(.hidden)
+
                         ForEach(sortedSectionTitles, id: \.self) { letter in
                             Section {
                                 ForEach(groupedBooks[letter] ?? []) { book in
@@ -85,7 +101,7 @@ struct WishlistView: View {
                 .listStyle(.plain)
 
                 // Section Index Titles (A-Z) on the right side
-                if !wishlistBooks.isEmpty && !sortedSectionTitles.isEmpty {
+                if !filteredWishlistBooks.isEmpty && !sortedSectionTitles.isEmpty {
                     SectionIndexTitles(titles: sortedSectionTitles) { letter in
                         withAnimation {
                             proxy.scrollTo(letter, anchor: .top)

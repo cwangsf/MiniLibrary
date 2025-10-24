@@ -18,21 +18,7 @@ struct CatalogView: View {
         let catalogBooks = books.filter { !$0.isWishlistItem }
 
         // Apply language filter
-        let languageFilteredBooks: [Book]
-        switch selectedLanguage {
-        case .all:
-            languageFilteredBooks = catalogBooks
-        case .english:
-            languageFilteredBooks = catalogBooks.filter { book in
-                guard let langCode = book.languageCode?.lowercased() else { return false }
-                return langCode == "en" || langCode == "english" || langCode.contains("english")
-            }
-        case .german:
-            languageFilteredBooks = catalogBooks.filter { book in
-                guard let langCode = book.languageCode?.lowercased() else { return false }
-                return langCode == "de" || langCode == "german" || langCode.contains("german")
-            }
-        }
+        let languageFilteredBooks = selectedLanguage.filter(catalogBooks)
 
         // Apply search filter
         if searchText.isEmpty {

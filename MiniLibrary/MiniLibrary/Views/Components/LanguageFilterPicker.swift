@@ -11,6 +11,30 @@ enum LanguageFilter: String, CaseIterable {
     case all = "All"
     case english = "English"
     case german = "German"
+
+    /// Filter books by language
+    /// - Parameter books: Array of books to filter
+    /// - Parameter includeUnknown: If true, books without language info are included in all filters (default: false)
+    func filter(_ books: [Book], includeUnknown: Bool = false) -> [Book] {
+        switch self {
+        case .all:
+            return books
+        case .english:
+            return books.filter { book in
+                guard let langCode = book.languageCode?.lowercased() else {
+                    return includeUnknown  // Include books without language if requested
+                }
+                return langCode == "en" || langCode == "english" || langCode.contains("english")
+            }
+        case .german:
+            return books.filter { book in
+                guard let langCode = book.languageCode?.lowercased() else {
+                    return includeUnknown  // Include books without language if requested
+                }
+                return langCode == "de" || langCode == "german" || langCode.contains("german")
+            }
+        }
+    }
 }
 
 struct LanguageFilterPicker: View {
