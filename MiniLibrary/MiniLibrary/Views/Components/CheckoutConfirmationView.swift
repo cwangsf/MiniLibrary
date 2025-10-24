@@ -19,8 +19,7 @@ struct CheckoutConfirmationView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     Text("Confirm Checkout")
-                        .font(.title2)
-                        .fontWeight(.bold)
+                        .sectionTitle()
                     // Book Cover
                     BookCoverImage(book: book, width: 120, height: 180)
                         .padding(.top, 40)
@@ -31,11 +30,9 @@ struct CheckoutConfirmationView: View {
                             // Book Info
                             VStack {
                                 Text(book.title)
-                                    .font(.headline)
-                                    .multilineTextAlignment(.center)
+                                    .bookTitle()
                                 Text(book.author)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                                    .bookAuthor()
                             }
 
                             Divider()
@@ -44,14 +41,13 @@ struct CheckoutConfirmationView: View {
                             // Student Info
                             HStack {
                                 Text("Student")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .labelStyle()
                                 Spacer()
                                 HStack {
                                     Image(systemName: "person.fill")
-                                        .foregroundStyle(.blue)
+                                        .personIcon()
                                     Text(student.libraryId)
-                                        .font(.headline)
+                                        .valueText()
                                 }
                             }
 
@@ -61,14 +57,13 @@ struct CheckoutConfirmationView: View {
                             // Due Date
                             HStack {
                                 Text("Due Date")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .labelStyle()
                                 Spacer()
                                 HStack {
                                     Image(systemName: "calendar")
-                                        .foregroundStyle(.orange)
+                                        .warningIcon()
                                     Text(dueDate.formatted(date: .long, time: .omitted))
-                                        .font(.headline)
+                                        .valueText()
                                 }
                             }
                         }

@@ -47,8 +47,7 @@ struct CheckoutDetailRow: View {
             // Student Info
             HStack {
                 Image(systemName: "person.fill")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .smallIcon(color: .secondary)
                 Text(checkout.student?.libraryId ?? "Unknown")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -80,16 +79,9 @@ struct CheckoutDetailRow: View {
             if checkout.isOverdue {
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.caption)
                     Text("OVERDUE")
-                        .font(.caption)
-                        .fontWeight(.bold)
                 }
-                .foregroundStyle(.white)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(.red)
-                .clipShape(Capsule())
+                .badge()
             }
 
             // Return Button

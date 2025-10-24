@@ -18,8 +18,7 @@ struct ReturnConfirmationView: View {
             VStack(spacing: 24) {
                 // Title
                 Text("Confirm Return")
-                    .font(.title2)
-                    .fontWeight(.bold)
+                    .sectionTitle()
                     .padding(.top, 20)
 
                 // Book Cover
@@ -31,11 +30,9 @@ struct ReturnConfirmationView: View {
                         // Book Info
                         VStack(spacing: 4) {
                             Text(book.title)
-                                .font(.headline)
-                                .multilineTextAlignment(.center)
+                                .bookTitle()
                             Text(book.author)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                                .bookAuthor()
                         }
 
                         Divider()
@@ -44,14 +41,13 @@ struct ReturnConfirmationView: View {
                         // Student Info
                         HStack {
                             Text("Student")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .labelStyle()
                             Spacer()
                             HStack {
                                 Image(systemName: "person.fill")
-                                    .foregroundStyle(.blue)
+                                    .personIcon()
                                 Text(checkout.student?.libraryId ?? "Unknown")
-                                    .font(.headline)
+                                    .valueText()
                             }
                         }
 
@@ -61,12 +57,11 @@ struct ReturnConfirmationView: View {
                         // Checkout Info
                         HStack {
                             Text("Checked Out")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .labelStyle()
                             Spacer()
                             HStack {
                                 Image(systemName: "calendar")
-                                    .foregroundStyle(.blue)
+                                    .calendarIcon()
                                 Text(checkout.checkoutDate.formatted(date: .abbreviated, time: .omitted))
                                     .font(.subheadline)
                             }
@@ -78,25 +73,18 @@ struct ReturnConfirmationView: View {
                         // Due Date
                         HStack {
                             Text("Due Date")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .labelStyle()
                             Spacer()
                             HStack {
                                 Image(systemName: "calendar")
-                                    .foregroundStyle(checkout.isOverdue ? .red : .orange)
+                                    .iconStyle(color: checkout.isOverdue ? .red : .orange)
                                 Text(checkout.dueDate.formatted(date: .abbreviated, time: .omitted))
                                     .font(.subheadline)
                                     .foregroundStyle(checkout.isOverdue ? .red : .primary)
                             }
                             if checkout.isOverdue {
                                 Text("OVERDUE")
-                                    .font(.caption2)
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(.white)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
-                                    .background(.red)
-                                    .clipShape(Capsule())
+                                    .badge()
                             }
                         }
                     }

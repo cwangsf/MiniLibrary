@@ -22,22 +22,18 @@ struct AcquireWishlistItemView: View {
                     // Book info
                     VStack(spacing: 16) {
                         Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 60))
-                            .foregroundStyle(.green)
+                            .largeIcon(color: .green)
                             .padding(.top, 40)
 
                         Text("Add to Catalog")
-                            .font(.title2)
-                            .fontWeight(.bold)
+                            .sectionTitle()
 
                         VStack(spacing: 12) {
                             VStack(spacing: 4) {
                                 Text(book.title)
-                                    .font(.headline)
-                                    .multilineTextAlignment(.center)
+                                    .bookTitle()
                                 Text(book.author)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                                    .bookAuthor()
                             }
 
                             if let notes = book.notes, !notes.isEmpty {
@@ -46,8 +42,7 @@ struct AcquireWishlistItemView: View {
 
                                 VStack(spacing: 4) {
                                     Text("Notes")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                        .labelStyle()
                                     Text(notes)
                                         .font(.subheadline)
                                         .multilineTextAlignment(.center)
@@ -60,8 +55,7 @@ struct AcquireWishlistItemView: View {
 
                             VStack(spacing: 8) {
                                 Text("Copies to Add")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                    .labelStyle()
 
                                 Stepper(value: $copiesToAdd, in: 1...99) {
                                     Text("\(copiesToAdd)")
