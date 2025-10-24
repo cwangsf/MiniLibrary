@@ -113,6 +113,14 @@ struct WishlistView: View {
                 }
             }
         }
+        .safeAreaInset(edge: .top, spacing: 0) {
+            if !wishlistBooks.isEmpty {
+                LanguageFilterPicker(selectedLanguage: $selectedLanguage)
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(.ultraThinMaterial)
+            }
+        }
         .sheet(isPresented: $showingAcquireSheet) {
             if let book = selectedBook {
                 AcquireWishlistItemView(book: book)
