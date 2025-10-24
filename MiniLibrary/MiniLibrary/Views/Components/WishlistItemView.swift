@@ -14,7 +14,7 @@ struct WishlistItemView: View {
         // Main content - tapping opens Amazon
         HStack {
             Button {
-                if let url = generateAmazonURL(for: book) {
+                if let url = book.amazonURL() {
                     UIApplication.shared.open(url)
                 }
             } label: {
@@ -47,7 +47,7 @@ struct WishlistItemView: View {
             
             // Share button
             Button {
-                if let url = generateAmazonURL(for: book) {
+                if let url = book.amazonURL() {
                     shareItem = ShareItem(
                         title: book.title,
                         author: book.author,
@@ -64,15 +64,5 @@ struct WishlistItemView: View {
             .padding(.trailing)
         }
         .padding(.trailing)
-    }
-    
-    private func generateAmazonURL(for book: Book) -> URL? {
-        if let isbn = book.isbn {
-            return URL(string: "https://www.amazon.com/s?k=\(isbn)")
-        } else {
-            let query = "\(book.title) \(book.author)"
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-            return URL(string: "https://www.amazon.com/s?k=\(query)")
-        }
     }
 }

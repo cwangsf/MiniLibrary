@@ -175,7 +175,7 @@ struct BookDetailView: View {
                 VStack(spacing: 12) {
                     if book.isWishlistItem {
                         // For wishlist items - link to Amazon
-                        if let amazonURL = generateAmazonURL() {
+                        if let amazonURL = book.amazonURL() {
                             Link(destination: amazonURL) {
                                 HStack {
                                     Image(systemName: "cart.fill")
@@ -186,7 +186,7 @@ struct BookDetailView: View {
                         }
                     } else {
                         // For catalog items - link to Google Books
-                        if let googleBooksURL = generateGoogleBooksURL() {
+                        if let googleBooksURL = book.googleBooksURL() {
                             Link(destination: googleBooksURL) {
                                 HStack {
                                     Image(systemName: "book.fill")
@@ -311,30 +311,6 @@ struct BookDetailView: View {
 
         book.totalCopies = totalCopies
         book.availableCopies = availableCopies
-    }
-
-    private func generateGoogleBooksURL() -> URL? {
-        if let isbn = book.isbn {
-            // Use ISBN for most accurate results
-            return URL(string: "https://books.google.com/books?isbn=\(isbn)")
-        } else {
-            // Fallback to title and author search
-            let query = "\(book.title) \(book.author)"
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-            return URL(string: "https://books.google.com/books?q=\(query)")
-        }
-    }
-
-    private func generateAmazonURL() -> URL? {
-        if let isbn = book.isbn {
-            // Use ISBN for most accurate results
-            return URL(string: "https://www.amazon.com/s?k=\(isbn)")
-        } else {
-            // Fallback to title and author search
-            let query = "\(book.title) \(book.author)"
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-            return URL(string: "https://www.amazon.com/s?k=\(query)")
-        }
     }
 
     private func fetchBookInfoIfNeeded() {

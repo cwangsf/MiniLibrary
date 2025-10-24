@@ -142,3 +142,34 @@ final class Book: Codable {
         try container.encode(isFavorite, forKey: .isFavorite)
     }
 }
+
+// MARK: - URL Generation
+extension Book {
+    /// Generates a Google Books URL for this book
+    /// - Returns: URL to search for this book on Google Books, using ISBN if available, otherwise title and author
+    func googleBooksURL() -> URL? {
+        if let isbn = isbn {
+            // Use ISBN for most accurate results
+            return URL(string: "https://books.google.com/books?isbn=\(isbn)")
+        } else {
+            // Fallback to title and author search
+            let query = "\(title) \(author)"
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            return URL(string: "https://books.google.com/books?q=\(query)")
+        }
+    }
+
+    /// Generates an Amazon URL for this book
+    /// - Returns: URL to search for this book on Amazon, using ISBN if available, otherwise title and author
+    func amazonURL() -> URL? {
+        if let isbn = isbn {
+            // Use ISBN for most accurate results
+            return URL(string: "https://www.amazon.com/s?k=\(isbn)")
+        } else {
+            // Fallback to title and author search
+            let query = "\(title) \(author)"
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            return URL(string: "https://www.amazon.com/s?k=\(query)")
+        }
+    }
+}
