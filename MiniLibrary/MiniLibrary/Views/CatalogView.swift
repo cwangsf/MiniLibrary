@@ -32,29 +32,16 @@ struct CatalogView: View {
     }
 
     // Group books by first letter of title
-    var groupedBooks: [String: [Book]] {
-        let catalogBooks = filteredBooks
-        return Dictionary(grouping: catalogBooks) { book in
-            let firstChar = book.title.prefix(1).uppercased()
-            // Check if it's a letter
-            if firstChar.rangeOfCharacter(from: .letters) != nil {
-                return firstChar
-            } else {
-                return "#"
-            }
-        }
+    private var alphabeticalGrouping: AlphabeticalGrouping<Book> {
+        AlphabeticalGrouper.group(filteredBooks, by: \.title)
     }
 
-    var sortedSectionTitles: [String] {
-        let titles = groupedBooks.keys.sorted()
-        // Move "#" to the end if it exists
-        if let hashIndex = titles.firstIndex(of: "#") {
-            var sorted = titles
-            sorted.remove(at: hashIndex)
-            sorted.append("#")
-            return sorted
-        }
-        return titles
+    private var groupedBooks: [String: [Book]] {
+        alphabeticalGrouping.grouped
+    }
+
+    private var sortedSectionTitles: [String] {
+        alphabeticalGrouping.sortedSectionTitles
     }
 
     var body: some View {
