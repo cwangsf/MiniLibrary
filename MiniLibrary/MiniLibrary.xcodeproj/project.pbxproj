@@ -33,14 +33,20 @@
 		26302DA72EAB739D00B9D1FA /* Exceptions for "MiniLibrary" folder in "MiniLibraryTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				App/Localizable.xcstrings,
+				App/sample_books.csv,
 				App/samples.xlsx,
+				App/wish_list.csv,
 			);
 			target = 263418172E991875001BE034 /* MiniLibraryTests */;
 		};
 		26302DA82EAB739D00B9D1FA /* Exceptions for "MiniLibrary" folder in "MiniLibraryUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				App/Localizable.xcstrings,
+				App/sample_books.csv,
 				App/samples.xlsx,
+				App/wish_list.csv,
 			);
 			target = 263418212E991875001BE034 /* MiniLibraryUITests */;
 		};
