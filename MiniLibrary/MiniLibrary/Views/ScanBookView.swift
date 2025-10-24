@@ -47,15 +47,9 @@ struct ScanBookView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
+                    // Don't show toolbar button in confirming state
                     if case .confirming = viewModel.state {
-                        Button {
-                            viewModel.reset()
-                        } label: {
-                            HStack {
-                                Image(systemName: "chevron.left")
-                                Text("Back")
-                            }
-                        }
+                        EmptyView()
                     } else {
                         Button("Cancel") {
                             dismiss()
@@ -235,6 +229,18 @@ struct ScanBookView: View {
                         .foregroundStyle(.primary)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+
+                Button {
+                    viewModel.reset()
+                } label: {
+                    Text("Cancel")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .foregroundStyle(.red)
+                }
+                .buttonStyle(.bordered)
+                .tint(.red)
             }
             .padding()
             .background(.ultraThinMaterial)
