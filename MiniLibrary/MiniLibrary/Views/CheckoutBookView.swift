@@ -130,14 +130,7 @@ struct CheckoutBookView: View {
         modelContext.insert(checkout)
 
         // Log activity
-        let activity = Activity(
-            type: .checkout,
-            bookTitle: book.title,
-            bookAuthor: book.author,
-            studentLibraryId: student.libraryId,
-            additionalInfo: "Due \(dueDate.formatted(date: .abbreviated, time: .omitted))"
-        )
-        modelContext.insert(activity)
+        ActivityLogger.logCheckout(book, student: student, dueDate: dueDate, modelContext: modelContext)
 
         dismiss()
         onCheckoutComplete?()

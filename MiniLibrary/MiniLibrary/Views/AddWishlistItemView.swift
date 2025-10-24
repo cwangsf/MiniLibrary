@@ -178,13 +178,7 @@ struct AddWishlistItemView: View {
         }
         
         // Log activity
-        let activity = Activity(
-            type: .addWishlist,
-            bookTitle: "Bulk Add",
-            bookAuthor: "Google Books Search",
-            additionalInfo: "\(addedCount) book\(addedCount == 1 ? "" : "s") added"
-        )
-        modelContext.insert(activity)
+        ActivityLogger.logWishlistBulkAdd(count: addedCount, modelContext: modelContext)
         
         dismiss()
     }
@@ -250,15 +244,9 @@ struct AddWishlistItemView: View {
         )
         
         modelContext.insert(book)
-        
+
         // Log activity
-        let activity = Activity(
-            type: .addWishlist,
-            bookTitle: book.title,
-            bookAuthor: book.author,
-            additionalInfo: "Added manually"
-        )
-        modelContext.insert(activity)
+        ActivityLogger.logWishlistAddedManually(book, modelContext: modelContext)
         
         dismiss()
     }

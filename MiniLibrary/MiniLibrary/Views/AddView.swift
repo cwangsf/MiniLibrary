@@ -312,13 +312,7 @@ struct AddView: View {
                 )
 
                 // Log activity
-                let activity = Activity(
-                    type: .addBook,
-                    bookTitle: "Import",
-                    bookAuthor: "CSV Import",
-                    additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
-                )
-                modelContext.insert(activity)
+                ActivityLogger.logCatalogCSVImport(count: importedCount, modelContext: modelContext)
 
                 showingImportResult = true
 
@@ -382,13 +376,7 @@ struct AddView: View {
                 )
 
                 // Log activity
-                let activity = Activity(
-                    type: .addWishlist,
-                    bookTitle: "Import",
-                    bookAuthor: "CSV Import",
-                    additionalInfo: "\(importedCount) book\(importedCount == 1 ? "" : "s") imported"
-                )
-                modelContext.insert(activity)
+                ActivityLogger.logWishlistCSVImport(count: importedCount, modelContext: modelContext)
 
                 showingImportResult = true
             } catch {

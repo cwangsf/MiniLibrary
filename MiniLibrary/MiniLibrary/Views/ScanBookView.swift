@@ -427,13 +427,7 @@ struct ScanBookView: View {
         modelContext.insert(book)
 
         // Log activity
-        let activity = Activity(
-            type: .addBook,
-            bookTitle: book.title,
-            bookAuthor: book.author,
-            additionalInfo: "\(book.totalCopies) \(book.totalCopies == 1 ? "copy" : "copies")"
-        )
-        modelContext.insert(activity)
+        ActivityLogger.logBookAdded(book, copies: book.totalCopies, modelContext: modelContext)
 
         // Dismiss the view to go back to Add tab
         dismiss()
@@ -444,13 +438,7 @@ struct ScanBookView: View {
         book.availableCopies += copies
 
         // Log activity
-        let activity = Activity(
-            type: .addBook,
-            bookTitle: book.title,
-            bookAuthor: book.author,
-            additionalInfo: "Added \(copies) more \(copies == 1 ? "copy" : "copies")"
-        )
-        modelContext.insert(activity)
+        ActivityLogger.logCopiesAdded(book, copies: copies, modelContext: modelContext)
 
         showingAddCopyConfirmation = false
         viewModel.reset()

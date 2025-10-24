@@ -71,13 +71,7 @@ struct AddBookView: View {
         modelContext.insert(book)
 
         // Log activity
-        let activity = Activity(
-            type: .addBook,
-            bookTitle: book.title,
-            bookAuthor: book.author,
-            additionalInfo: "\(totalCopies) \(totalCopies == 1 ? "copy" : "copies")"
-        )
-        modelContext.insert(activity)
+        ActivityLogger.logBookAdded(book, copies: totalCopies, modelContext: modelContext)
 
         dismiss()
     }

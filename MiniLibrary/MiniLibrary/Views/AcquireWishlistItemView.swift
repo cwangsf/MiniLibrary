@@ -107,13 +107,7 @@ struct AcquireWishlistItemView: View {
         book.availableCopies = copiesToAdd
 
         // Log activity
-        let activity = Activity(
-            type: .fulfillWishlist,
-            bookTitle: book.title,
-            bookAuthor: book.author,
-            additionalInfo: "\(copiesToAdd) \(copiesToAdd == 1 ? "copy" : "copies")"
-        )
-        modelContext.insert(activity)
+        ActivityLogger.logWishlistFulfilled(book, copies: copiesToAdd, modelContext: modelContext)
 
         dismiss()
     }
