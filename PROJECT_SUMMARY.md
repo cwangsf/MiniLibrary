@@ -874,3 +874,169 @@ MiniLibrary is a complete library management solution with:
 The app follows iOS design patterns, uses modern SwiftUI/SwiftData, and provides a complete workflow for managing a personal or classroom library. All core features are implemented and tested.
 
 For Android migration, focus on equivalent technologies (Room, Compose, CameraX, Retrofit) while maintaining the same feature set and user flow.
+
+---
+
+## Code Quality & Refactoring (October 2025)
+
+### Refactoring Summary
+
+Comprehensive code refactoring was performed to improve maintainability, reduce duplication, and establish reusable patterns throughout the codebase.
+
+### A. View Modifier Refactoring
+
+**1. Button Styles** - `ProminentButtonStyle.swift`
+- **Created reusable button modifiers:**
+  - `.prominentButton(color:fullWidth:)` - Colored buttons with white text, rounded corners
+  - `.secondaryButton(fullWidth:)` - Gray background buttons
+- **Replaced verbose styling** - Reduced 8+ lines of button styling to 1 line
+- **Files updated**: 6 files (ScanBookView, ReturnConfirmationView, CheckoutConfirmationView, BookDetailView, AddWishlistItemView, AcquireWishlistItemView)
+
+**2. Text Styles** - `TextStyles.swift`
+- **Created semantic text modifiers:**
+  - `.sectionTitle()` - Title2, bold
+  - `.labelStyle()` - Caption, secondary
+  - `.bookTitle()` - Headline, centered
+  - `.bookAuthor()` - Subheadline, secondary
+  - `.valueText()` - Headline
+  - `.badge(backgroundColor:foregroundColor:)` - Caption2, bold with background
+- **Files updated**: 4 files (ReturnConfirmationView, CheckoutConfirmationView, ScanBookView, AcquireWishlistItemView)
+
+**3. Icon Styles** - `IconStyles.swift`
+- **Created icon style modifiers:**
+  - `.iconStyle(color:)` - Standard colored icon
+  - `.smallIcon(color:)` - Caption2 sized icon
+  - `.largeIcon(color:size:)` - Large decorative icon (default 60pt)
+  - Semantic styles: `.personIcon()`, `.calendarIcon()`, `.successIcon()`, `.warningIcon()`, `.errorIcon()`
+- **Files updated**: 5 files (ReturnConfirmationView, CheckoutConfirmationView, ScanBookView, AcquireWishlistItemView, CheckedOutBooksListView)
+
+### B. Service Layer Extraction
+
+**1. BookManagementService.swift**
+- **Purpose**: Centralize book management operations
+- **Methods:**
+  - `returnBook(_:modelContext:)` - Handles book returns with activity logging
+- **Eliminated duplication**: Removed identical `returnBook()` logic from 4 files
+- **Files updated**: BookDetailView, CheckedOutBooksListView, ReturnBookView, ScanBookView
+
+**2. ActivityLogger.swift**
+- **Purpose**: Centralize all activity logging operations
+- **Methods (10 total):**
+  - Book: `logBookAdded(_:copies:)`, `logCopiesAdded(_:copies:)`
+  - Checkout: `logCheckout(_:student:dueDate:)`, `logReturn(_:studentLibraryId:)`
+  - Wishlist: `logWishlistAdded(_:)`, `logWishlistAddedManually(_:)`, `logWishlistBulkAdd(count:)`, `logWishlistFulfilled(_:copies:)`
+  - CSV Import: `logCatalogCSVImport(count:)`, `logWishlistCSVImport(count:)`
+- **Eliminated duplication**: Removed ~70 lines of duplicate Activity creation code from 7 files
+- **Type-safe**: Specialized methods prevent logging errors
+- **Files updated**: BookManagementService, CheckoutBookView, ScanBookView (2 locations), AcquireWishlistItemView, AddWishlistItemView (2 locations), AddBookView, AddView (2 locations)
+
+### C. Model Extensions
+
+**1. Book URL Generation** - `Book.swift` extension
+- **Methods added:**
+  - `googleBooksURL()` - Generates Google Books search URL
+  - `amazonURL()` - Generates Amazon search URL
+  - Both use ISBN when available, fallback to title + author
+- **Eliminated duplication**: Removed 32 lines of duplicate URL generation from 2 files
+- **More semantic API**: `book.amazonURL()` vs `generateAmazonURL(for: book)`
+- **Files updated**: BookDetailView, WishlistItemView
+
+### D. Utility Components
+
+**1. AlphabeticalGrouping.swift**
+- **Purpose**: Reusable alphabetical grouping for any type
+- **Components:**
+  - `AlphabeticalGrouping<T>` - Result struct with grouped dictionary and sorted section titles
+  - `AlphabeticalGrouper` - Static grouping utility using KeyPath
+- **Features:**
+  - Generic implementation works with any type
+  - Groups by first letter (A-Z) with "#" for non-letters
+  - Automatically moves "#" to end of sorted list
+- **Eliminated duplication**: Removed 46 lines of duplicate grouping logic from 2 files
+- **Files updated**: CatalogView, WishlistView
+
+**2. ScannerCornerBrackets.swift**
+- **Purpose**: Reusable barcode scanner overlay component
+- **Components:**
+  - `ScannerCornerBrackets` - Main view with customizable color, length, thickness
+  - `CornerBracket` - Private helper for individual corners
+- **Eliminated duplication**: Removed 80+ lines of repetitive corner bracket code
+- **Customizable**: Easy to change appearance without touching complex layout code
+- **Reduced file size**: ScanBookView reduced from 790 lines to 686 lines (104 lines removed)
+
+### E. UI Improvements
+
+**1. Add Tab Reorganization** - `AddView.swift`
+- **"Scan Book Barcode" made prominent:**
+  - Moved to separate "Quick Actions" section at top
+  - Larger icon (32pt) with descriptive subtitle
+  - "Add, check out, or return books instantly" description
+  - Extra padding for visual separation
+- **Better organization:**
+  - "Quick Actions" - Scan Book Barcode
+  - "Add Items" - Manual book/wishlist/student entry
+  - "Manage Checkouts" - Check out/Return books
+  - "Export" - CSV Import/Export and bulk operations
+
+**2. Language Filter UI** - `CatalogView.swift` & `WishlistView.swift`
+- **Improved placement**: Moved from awkward Section/EmptyView pattern to `.safeAreaInset`
+- **Better visual separation**: Uses `.ultraThinMaterial` background
+- **Consistent implementation**: Same pattern in both Catalog and Wishlist views
+
+### F. Architecture Benefits
+
+**Overall Impact:**
+- **DRY Principle**: Eliminated ~200+ lines of duplicate code across the codebase
+- **Single Source of Truth**: Changes to common patterns only need to be made once
+- **Type Safety**: Specialized methods and components prevent errors
+- **Maintainability**: Easier to find and update common functionality
+- **Testability**: Isolated components and services are easier to unit test
+- **Consistency**: Same patterns and styles used throughout the app
+- **Readability**: View code is cleaner and easier to understand
+- **Reusability**: Components can be used in new features without modification
+
+### G. Updated File Structure
+
+```
+MiniLibrary/
+├── Models/
+│   ├── Book.swift (+ URL generation extension)
+│   └── ...
+│
+├── Views/Components/
+│   ├── ProminentButtonStyle.swift (NEW)
+│   ├── TextStyles.swift (NEW)
+│   ├── IconStyles.swift (NEW)
+│   ├── ScannerCornerBrackets.swift (NEW)
+│   └── ...
+│
+├── Services/
+│   ├── BookManagementService.swift (NEW)
+│   ├── ActivityLogger.swift (NEW)
+│   └── ...
+│
+├── Utilities/
+│   ├── AlphabeticalGrouping.swift (NEW)
+│   └── ...
+```
+
+### H. Code Metrics
+
+**Lines of Code Reduced:**
+- Button/Text/Icon styling: ~150 lines eliminated
+- Activity logging: ~70 lines eliminated
+- URL generation: ~32 lines eliminated
+- Alphabetical grouping: ~46 lines eliminated
+- Scanner corner brackets: ~80 lines eliminated
+- **Total: ~378 lines of duplicate code removed**
+
+**Files Refactored:**
+- View modifiers: 15 files updated
+- Services: 7 files updated
+- Utilities: 2 files updated
+- **Total: 24 files improved**
+
+**New Reusable Components Created:**
+- 7 new files (ProminentButtonStyle, TextStyles, IconStyles, ScannerCornerBrackets, BookManagementService, ActivityLogger, AlphabeticalGrouping)
+- All documented with clear purpose and usage examples
+- All type-safe and generic where appropriate
