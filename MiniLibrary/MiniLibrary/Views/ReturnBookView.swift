@@ -59,13 +59,25 @@ struct ReturnBookView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingReturnConfirmation) {
             if let checkout = checkoutToReturn, let book = checkout.book {
-                ReturnConfirmationView(
-                    book: book,
-                    checkout: checkout,
-                    onConfirm: {
-                        returnBook(checkout)
+                NavigationStack {
+                    ReturnConfirmationView(
+                        book: book,
+                        checkout: checkout,
+                        onConfirm: {
+                            returnBook(checkout)
+                        }
+                    )
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                showingReturnConfirmation = false
+                            }
+                        }
                     }
-                )
+                    .navigationTitle("Return Book")
+                    .navigationBarTitleDisplayMode(.inline)
+                }
+                .presentationDetents([.medium, .large])
             }
         }
     }

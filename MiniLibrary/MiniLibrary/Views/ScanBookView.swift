@@ -478,12 +478,23 @@ struct AddCopyConfirmationView: View {
     let onConfirm: (Int) -> Void
     let onCancel: () -> Void
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
 
     @State private var copiesToAdd = 1
     @State private var showingCheckoutView = false
+    @State private var navigationPath = NavigationPath()
+
+    // Get active checkouts for this book
+    var activeCheckouts: [CheckoutRecord] {
+        book.checkouts?.filter { $0.isActive } ?? []
+    }
+
+    var hasActiveCheckouts: Bool {
+        !activeCheckouts.isEmpty
+    }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ScrollView {
                 VStack(spacing: 24) {
                     // Book Cover
@@ -527,6 +538,29 @@ struct AddCopyConfirmationView: View {
                                 Text("\(book.availableCopies) available")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
+                            }
+
+                            // Active Checkouts (if any)
+                            if hasActiveCheckouts {
+                                Divider()
+                                    .padding(.horizontal, 40)
+
+                                VStack(spacing: 4) {
+                                    Text("Currently Checked Out")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    VStack(spacing: 4) {
+                                        ForEach(activeCheckouts) { checkout in
+                                            HStack {
+                                                Image(systemName: "person.fill")
+                                                    .font(.caption2)
+                                                    .foregroundStyle(.orange)
+                                                Text(checkout.student?.libraryId ?? "Unknown")
+                                                    .font(.subheadline)
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
                             Divider()
@@ -582,6 +616,39 @@ struct AddCopyConfirmationView: View {
                         }
                         .disabled(book.availableCopies == 0)
 
+                        // Return Book Button (only show if there are active checkouts)
+                        if hasActiveCheckouts {
+                            if activeCheckouts.count == 1, let checkout = activeCheckouts.first {
+                                // Single checkout - direct navigation
+                                NavigationLink(value: checkout) {
+                                    HStack {
+                                        Image(systemName: "arrow.uturn.left.circle.fill")
+                                        Text("Return Book")
+                                    }
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(.orange)
+                                    .foregroundStyle(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                }
+                            } else {
+                                // Multiple checkouts - navigate to selection list
+                                NavigationLink(value: "selectReturn") {
+                                    HStack {
+                                        Image(systemName: "arrow.uturn.left.circle.fill")
+                                        Text("Return Book")
+                                    }
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(.orange)
+                                    .foregroundStyle(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                }
+                            }
+                        }
+
                         Button {
                             onCancel()
                             dismiss()
@@ -601,15 +668,190 @@ struct AddCopyConfirmationView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $showingCheckoutView) {
-                CheckoutBookView(book: book) {
-                    // After checkout completes, dismiss the confirmation view
-                    dismiss()
-                    onCancel()
+            .navigationDestination(for: String.self) { destination in
+                if destination == "selectReturn" {
+                    // Show selection list for multiple checkouts
+                    List(activeCheckouts) { checkout in
+                        NavigationLink(value: checkout) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(checkout.student?.libraryId ?? "Unknown Student")
+                                    .font(.headline)
+                                Text("Due: \(checkout.dueDate.formatted(date: .abbreviated, time: .omitted))")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                if checkout.isOverdue {
+                                    Text("OVERDUE")
+                                        .font(.caption2)
+                                        .fontWeight(.bold)
+                                        .foregroundStyle(.red)
+                                }
+                            }
+                        }
+                    }
+                    .navigationTitle("Select Student")
+                    .navigationBarTitleDisplayMode(.inline)
                 }
+            }
+            .navigationDestination(for: CheckoutRecord.self) { checkout in
+                // Show return confirmation
+                ScrollView {
+                    VStack(spacing: 24) {
+                        // Title
+                        Text("Confirm Return")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .padding(.top, 20)
+
+                        // Book Cover
+                        BookCoverImage(book: book, width: 120, height: 180)
+
+                        // Confirmation details
+                        VStack {
+                            VStack {
+                                // Book Info
+                                VStack(spacing: 4) {
+                                    Text(book.title)
+                                        .font(.headline)
+                                        .multilineTextAlignment(.center)
+                                    Text(book.author)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+
+                                Divider()
+                                    .padding(.horizontal, 40)
+
+                                // Student Info
+                                HStack {
+                                    Text("Student")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                    HStack {
+                                        Image(systemName: "person.fill")
+                                            .foregroundStyle(.blue)
+                                        Text(checkout.student?.libraryId ?? "Unknown")
+                                            .font(.headline)
+                                    }
+                                }
+
+                                Divider()
+                                    .padding(.horizontal, 40)
+
+                                // Checkout Info
+                                HStack {
+                                    Text("Checked Out")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                    HStack {
+                                        Image(systemName: "calendar")
+                                            .foregroundStyle(.blue)
+                                        Text(checkout.checkoutDate.formatted(date: .abbreviated, time: .omitted))
+                                            .font(.subheadline)
+                                    }
+                                }
+
+                                Divider()
+                                    .padding(.horizontal, 40)
+
+                                // Due Date
+                                HStack {
+                                    Text("Due Date")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                    HStack {
+                                        Image(systemName: "calendar")
+                                            .foregroundStyle(checkout.isOverdue ? .red : .orange)
+                                        Text(checkout.dueDate.formatted(date: .abbreviated, time: .omitted))
+                                            .font(.subheadline)
+                                            .foregroundStyle(checkout.isOverdue ? .red : .primary)
+                                    }
+                                    if checkout.isOverdue {
+                                        Text("OVERDUE")
+                                            .font(.caption2)
+                                            .fontWeight(.bold)
+                                            .foregroundStyle(.white)
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 4)
+                                            .background(.red)
+                                            .clipShape(Capsule())
+                                    }
+                                }
+                            }
+                            .padding()
+                            .background(.background)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                        }
+                        .padding(.horizontal)
+
+                        // Action Buttons
+                        VStack(spacing: 12) {
+                            Button {
+                                returnBook(checkout)
+                            } label: {
+                                HStack {
+                                    Image(systemName: "checkmark.circle.fill")
+                                    Text("Confirm Return")
+                                }
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(.green)
+                                .foregroundStyle(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+
+                            Button {
+                                navigationPath.removeLast()
+                            } label: {
+                                Text("Cancel")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(.gray.opacity(0.2))
+                                    .foregroundStyle(.primary)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.top, 20)
+                        .padding(.bottom, 40)
+                    }
+                }
+                .navigationTitle("Return Book")
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
         .presentationDetents([.medium, .large])
+        .sheet(isPresented: $showingCheckoutView) {
+            CheckoutBookView(book: book) {
+                // After checkout completes, dismiss the confirmation view
+                dismiss()
+                onCancel()
+            }
+        }
+    }
+
+    private func returnBook(_ checkout: CheckoutRecord) {
+        checkout.returnDate = Date()
+        book.availableCopies += 1
+
+        // Log activity
+        let activity = Activity(
+            type: .return,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+            studentLibraryId: checkout.student?.libraryId,
+            additionalInfo: nil
+        )
+        modelContext.insert(activity)
+
+        // Pop back to root and dismiss the sheet
+        navigationPath = NavigationPath()
+        dismiss()
+        onCancel()
     }
 }
 

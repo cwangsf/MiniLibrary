@@ -645,6 +645,9 @@
         }
       }
     },
+    "Currently Checked Out" : {
+
+    },
     "Currently Checked Out By" : {
       "localizations" : {
         "de" : {

@@ -23,22 +23,22 @@ struct MiniLibraryApp: App {
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             let context = ModelContext(container)
-
-            DataSeeder.seedDebugData(modelContext: context)
-
-            // Seed books from CSV
-            do {
-                try DataSeeder.seedBooksFromCSV(fileName: "sample_books", modelContext: context)
-            } catch {
-                print("Error seeding books: \(error)")
-            }
-
-            // Seed wishlist from CSV (fast - no API calls)
-            do {
-                try DataSeeder.seedWishlistFromCSV(fileName: "wish_list", modelContext: context)
-            } catch {
-                print("Error seeding wishlist: \(error)")
-            }
+//
+//            DataSeeder.seedDebugData(modelContext: context)
+//
+//            // Seed books from CSV
+//            do {
+//                try DataSeeder.seedBooksFromCSV(fileName: "sample_books", modelContext: context)
+//            } catch {
+//                print("Error seeding books: \(error)")
+//            }
+//
+//            // Seed wishlist from CSV (fast - no API calls)
+//            do {
+//                try DataSeeder.seedWishlistFromCSV(fileName: "wish_list", modelContext: context)
+//            } catch {
+//                print("Error seeding wishlist: \(error)")
+//            }
 
             return container
         } catch {
