@@ -480,6 +480,7 @@ struct AddCopyConfirmationView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var copiesToAdd = 1
+    @State private var showingCheckoutView = false
 
     var body: some View {
         NavigationStack {
@@ -566,6 +567,22 @@ struct AddCopyConfirmationView: View {
                         }
 
                         Button {
+                            showingCheckoutView = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "arrow.right.circle.fill")
+                                Text("Check Out Book")
+                            }
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.green)
+                            .foregroundStyle(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                        .disabled(book.availableCopies == 0)
+
+                        Button {
                             onCancel()
                             dismiss()
                         } label: {
@@ -584,6 +601,13 @@ struct AddCopyConfirmationView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showingCheckoutView) {
+                CheckoutBookView(book: book) {
+                    // After checkout completes, dismiss the confirmation view
+                    dismiss()
+                    onCancel()
+                }
+            }
         }
         .presentationDetents([.medium, .large])
     }
