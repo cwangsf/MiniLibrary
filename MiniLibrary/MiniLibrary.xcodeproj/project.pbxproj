@@ -29,9 +29,30 @@
 		263418222E991875001BE034 /* MiniLibraryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MiniLibraryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		26302DA72EAB739D00B9D1FA /* Exceptions for "MiniLibrary" folder in "MiniLibraryTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				App/samples.xlsx,
+			);
+			target = 263418172E991875001BE034 /* MiniLibraryTests */;
+		};
+		26302DA82EAB739D00B9D1FA /* Exceptions for "MiniLibrary" folder in "MiniLibraryUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				App/samples.xlsx,
+			);
+			target = 263418212E991875001BE034 /* MiniLibraryUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2634180B2E991873001BE034 /* MiniLibrary */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				26302DA72EAB739D00B9D1FA /* Exceptions for "MiniLibrary" folder in "MiniLibraryTests" target */,
+				26302DA82EAB739D00B9D1FA /* Exceptions for "MiniLibrary" folder in "MiniLibraryUITests" target */,
+			);
 			path = MiniLibrary;
 			sourceTree = "<group>";
 		};

@@ -391,6 +391,10 @@ struct AddCopyConfirmationView: View {
 
                         VStack(spacing: 12) {
                             // Book Info
+                            VStack(spacing: 4) {
+                                Text("Book")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                                 Text(book.title)
                                     .font(.headline)
                                     .multilineTextAlignment(.center)
