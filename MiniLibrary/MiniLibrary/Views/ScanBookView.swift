@@ -310,24 +310,14 @@ struct ScanBookView: View {
                         Image(systemName: "checkmark.circle.fill")
                         Text("Confirm & Add Book")
                     }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(.green)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .prominentButton(color: .green)
                 }
 
                 Button {
                     viewModel.confirmBook()
                 } label: {
                     Text("Edit Details")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.gray.opacity(0.2))
-                        .foregroundStyle(.primary)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .secondaryButton()
                 }
 
                 Button {
@@ -379,12 +369,7 @@ struct ScanBookView: View {
                     Image(systemName: "plus.circle.fill")
                     Text("Add Book")
                 }
-                .font(.headline)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background((viewModel.title.isEmpty || viewModel.author.isEmpty) ? .gray : .blue)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .prominentButton(color: (viewModel.title.isEmpty || viewModel.author.isEmpty) ? .gray : .blue)
             }
             .disabled(viewModel.title.isEmpty || viewModel.author.isEmpty)
             .padding()
@@ -592,12 +577,7 @@ struct AddCopyConfirmationView: View {
                                 Image(systemName: "plus.circle.fill")
                                 Text("Add \(copiesToAdd) \(copiesToAdd == 1 ? "Copy" : "Copies")")
                             }
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.blue)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .prominentButton(color: .blue)
                         }
 
                         Button {
@@ -607,12 +587,7 @@ struct AddCopyConfirmationView: View {
                                 Image(systemName: "arrow.right.circle.fill")
                                 Text("Check Out Book")
                             }
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.green)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .prominentButton(color: .green)
                         }
                         .disabled(book.availableCopies == 0)
 
@@ -625,12 +600,7 @@ struct AddCopyConfirmationView: View {
                                         Image(systemName: "arrow.uturn.left.circle.fill")
                                         Text("Return Book")
                                     }
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(.orange)
-                                    .foregroundStyle(.white)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .prominentButton(color: .orange)
                                 }
                             } else {
                                 // Multiple checkouts - navigate to selection list
@@ -639,12 +609,7 @@ struct AddCopyConfirmationView: View {
                                         Image(systemName: "arrow.uturn.left.circle.fill")
                                         Text("Return Book")
                                     }
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(.orange)
-                                    .foregroundStyle(.white)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .prominentButton(color: .orange)
                                 }
                             }
                         }
@@ -654,12 +619,7 @@ struct AddCopyConfirmationView: View {
                             dismiss()
                         } label: {
                             Text("Cancel")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.gray.opacity(0.2))
-                                .foregroundStyle(.primary)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .secondaryButton()
                         }
                     }
                     .padding(.horizontal)
@@ -795,24 +755,14 @@ struct AddCopyConfirmationView: View {
                                     Image(systemName: "checkmark.circle.fill")
                                     Text("Confirm Return")
                                 }
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.green)
-                                .foregroundStyle(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .prominentButton(color: .green)
                             }
 
                             Button {
                                 navigationPath.removeLast()
                             } label: {
                                 Text("Cancel")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(.gray.opacity(0.2))
-                                    .foregroundStyle(.primary)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .secondaryButton()
                             }
                         }
                         .padding(.horizontal)

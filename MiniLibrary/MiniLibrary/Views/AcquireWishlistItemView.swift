@@ -87,24 +87,14 @@ struct AcquireWishlistItemView: View {
                                 Image(systemName: "checkmark.circle.fill")
                                 Text("Add \(copiesToAdd) \(copiesToAdd == 1 ? "Copy" : "Copies")")
                             }
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.green)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .prominentButton(color: .green)
                         }
 
                         Button {
                             dismiss()
                         } label: {
                             Text("Cancel")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.gray.opacity(0.2))
-                                .foregroundStyle(.primary)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .secondaryButton()
                         }
                     }
                     .padding(.horizontal)

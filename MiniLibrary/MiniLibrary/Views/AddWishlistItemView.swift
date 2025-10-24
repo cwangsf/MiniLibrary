@@ -150,12 +150,7 @@ struct AddWishlistItemView: View {
                         Image(systemName: "plus.circle.fill")
                         Text("Add \(selectedItems.count) Book\(selectedItems.count == 1 ? "" : "s") to Wishlist")
                     }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .prominentButton(color: .blue)
                 }
                 .padding()
                 .background(.ultraThinMaterial)

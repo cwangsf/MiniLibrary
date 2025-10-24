@@ -41,11 +41,7 @@ struct BookDetailView: View {
                             Image(systemName: "arrow.right.circle.fill")
                             Text("Check Out Book")
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.blue)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .prominentButton(color: .blue)
                     }
                     .padding(.horizontal)
                 }
@@ -68,11 +64,7 @@ struct BookDetailView: View {
                                             .font(.caption)
                                     }
                                 }
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding()
-                                .background(.green)
-                                .foregroundStyle(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .prominentButton(color: .green)
                             }
                         }
                     }
@@ -189,12 +181,7 @@ struct BookDetailView: View {
                                     Image(systemName: "cart.fill")
                                     Text("Find on Amazon")
                                 }
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.orange)
-                                .foregroundStyle(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .prominentButton(color: .orange)
                             }
                         }
                     } else {
@@ -205,12 +192,7 @@ struct BookDetailView: View {
                                     Image(systemName: "book.fill")
                                     Text("View on Google Books")
                                 }
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.blue.opacity(0.8))
-                                .foregroundStyle(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .prominentButton(color: .blue.opacity(0.8))
                             }
                         }
                     }

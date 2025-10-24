@@ -88,24 +88,14 @@ struct CheckoutConfirmationView: View {
                                 Image(systemName: "checkmark.circle.fill")
                                 Text("Confirm Checkout")
                             }
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.blue)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .prominentButton(color: .blue)
                         }
 
                         Button {
                             dismiss()
                         } label: {
                             Text("Cancel")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.gray.opacity(0.2))
-                                .foregroundStyle(.primary)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .secondaryButton()
                         }
                     }
                     .padding(.horizontal)
