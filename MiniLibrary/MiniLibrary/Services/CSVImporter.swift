@@ -86,7 +86,14 @@ struct CSVImporter {
         }
 
         // Optional fields from CSV
-        let language = csvRow["Language"]?.trimmingCharacters(in: .whitespaces)
+        // Try both "Languages" (plural) and "Language" (singular)
+        let language: String?
+        if let languages = csvRow["Languages"]?.trimmingCharacters(in: .whitespaces), !languages.isEmpty {
+            language = languages
+        } else {
+            language = csvRow["Language"]?.trimmingCharacters(in: .whitespaces)
+        }
+
         let publisher = csvRow["Publisher"]?.trimmingCharacters(in: .whitespaces)
         let publishedDate = csvRow["Published Date"]?.trimmingCharacters(in: .whitespaces)
         let pageCount = csvRow["Page Count"].flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }

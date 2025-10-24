@@ -12,14 +12,33 @@ struct CatalogView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Book.title) private var books: [Book]
     @State private var searchText = ""
+    @State private var selectedLanguage: LanguageFilter = .all
 
     var filteredBooks: [Book] {
         let catalogBooks = books.filter { !$0.isWishlistItem }
 
+        // Apply language filter
+        let languageFilteredBooks: [Book]
+        switch selectedLanguage {
+        case .all:
+            languageFilteredBooks = catalogBooks
+        case .english:
+            languageFilteredBooks = catalogBooks.filter { book in
+                guard let langCode = book.languageCode?.lowercased() else { return false }
+                return langCode == "en" || langCode == "english" || langCode.contains("english")
+            }
+        case .german:
+            languageFilteredBooks = catalogBooks.filter { book in
+                guard let langCode = book.languageCode?.lowercased() else { return false }
+                return langCode == "de" || langCode == "german" || langCode.contains("german")
+            }
+        }
+
+        // Apply search filter
         if searchText.isEmpty {
-            return catalogBooks
+            return languageFilteredBooks
         } else {
-            return catalogBooks.filter { book in
+            return languageFilteredBooks.filter { book in
                 book.title.localizedCaseInsensitiveContains(searchText) ||
                 book.author.localizedCaseInsensitiveContains(searchText)
             }
@@ -57,16 +76,27 @@ struct CatalogView: View {
             ScrollViewReader { proxy in
                 ZStack(alignment: .trailing) {
                     List {
+                        // Language filter segmented control as list header
+                        Section {
+                            EmptyView()
+                        } header: {
+                            LanguageFilterPicker(selectedLanguage: $selectedLanguage)
+                        }
+                        .listSectionSeparator(.hidden)
+
                         if searchText.isEmpty {
                             // Grouped view with section index when not searching
                             ForEach(sortedSectionTitles, id: \.self) { letter in
-                                Section(header: Text(letter).id(letter)) {
+                                Section {
                                     ForEach(groupedBooks[letter] ?? []) { book in
                                         NavigationLink(destination: BookDetailView(book: book)) {
                                             BookRowView(book: book)
                                         }
                                     }
+                                } header: {
+                                    Text(letter)
                                 }
+                                .id(letter)
                             }
                         } else {
                             // Flat list when searching
