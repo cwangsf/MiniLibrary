@@ -32,9 +32,6 @@ struct AcquireWishlistItemView: View {
 
                         VStack(spacing: 12) {
                             VStack(spacing: 4) {
-                                Text("Book")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
                                 Text(book.title)
                                     .font(.headline)
                                     .multilineTextAlignment(.center)
