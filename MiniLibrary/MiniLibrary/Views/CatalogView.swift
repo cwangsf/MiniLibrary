@@ -81,16 +81,14 @@ struct CatalogView: View {
                                 proxy.scrollTo(letter, anchor: .top)
                             }
                         }
-                        .padding(.trailing)
                     }
                 }
             }
             .navigationTitle("Catalog")
             .searchable(text: $searchText, prompt: "Search books or authors")
-            .safeAreaInset(edge: .top, spacing: 0) {
+            .safeAreaInset(edge: .bottom) {
                 LanguageFilterPicker(selectedLanguage: $selectedLanguage)
                     .padding(.horizontal)
-                    .padding(.vertical, 8)
                     .background(.ultraThinMaterial)
             }
         }
