@@ -11,6 +11,7 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
 - **Add Books via Barcode Scanning**
   - Scan ISBN barcode using device camera
   - Automatically fetch book metadata from Google Books API
+  - Can add multiple books at the same time
   - Show confirmation screen with book details before adding
   - Option to edit details before finalizing
   - Manual ISBN entry fallback option
@@ -29,7 +30,7 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - Availability status (available/total copies)
   - Current checkout status with student names and due dates
   - User-editable notes field
-  - **Favorite toggle** - Heart icon in toolbar to mark/unmark favorites
+  - Heart icon in toolbar to mark/unmark favorites
   - Checkout and Return buttons directly in detail view
 
 - **Catalog View**
@@ -39,8 +40,6 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - Search functionality (by title or author)
   - Search disables sections, shows flat filtered list
   - **Language filter** - Segmented control with All/English/German options
-  - **Filter by favorites** - Toggle to show only favorite books
-  - Filter icon in toolbar (shows count when favorites filter is active)
 
 - **Background Metadata Enhancement**
   - When viewing a book missing description/metadata
@@ -76,21 +75,13 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
 ### 3. Student Management
 - **Student Records**
   - Library ID (unique identifier)
-  - First Name, Last Name
-  - Grade level
-  - Checkout history relationship
+  - Grade level (optional)
 
 - **Student List View**
   - Display all registered students
   - Search by library ID or name
-  - **Swipe to delete** students from the list
   - **Delete from Add Student view** - Existing students list with swipe-to-delete
-  - Add new students via form with styled bottom button
-
-- **Student Detail View**
-  - Student information display
-  - Current checkouts list
-  - Checkout history
+  - Add new students via form
 
 ### 4. Wishlist System
 - **Add to Wishlist**
