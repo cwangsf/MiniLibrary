@@ -61,15 +61,6 @@ struct WishlistView: View {
                             description: Text("Books you want to add to your library will appear here")
                         )
                     } else {
-                        // Language filter segmented control as list header
-                        Section {
-                            EmptyView()
-                        } header: {
-                            LanguageFilterPicker(selectedLanguage: $selectedLanguage)
-                                .padding(.horizontal)
-                        }
-                        .listSectionSeparator(.hidden)
-
                         ForEach(sortedSectionTitles, id: \.self) { letter in
                             Section {
                                 ForEach(groupedBooks[letter] ?? []) { book in

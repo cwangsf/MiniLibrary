@@ -62,15 +62,6 @@ struct CatalogView: View {
             ScrollViewReader { proxy in
                 ZStack(alignment: .trailing) {
                     List {
-                        // Language filter segmented control as list header
-                        Section {
-                            EmptyView()
-                        } header: {
-                            LanguageFilterPicker(selectedLanguage: $selectedLanguage)
-                                .padding(.horizontal)
-                        }
-                        .listSectionSeparator(.hidden)
-
                         if searchText.isEmpty {
                             // Grouped view with section index when not searching
                             ForEach(sortedSectionTitles, id: \.self) { letter in
@@ -109,6 +100,12 @@ struct CatalogView: View {
             }
             .navigationTitle("Catalog")
             .searchable(text: $searchText, prompt: "Search books or authors")
+            .safeAreaInset(edge: .top, spacing: 0) {
+                LanguageFilterPicker(selectedLanguage: $selectedLanguage)
+                    .padding(.horizontal)
+                    .padding(.vertical, 8)
+                    .background(.ultraThinMaterial)
+            }
         }
     }
 }
