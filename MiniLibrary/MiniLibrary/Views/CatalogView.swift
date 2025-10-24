@@ -81,6 +81,7 @@ struct CatalogView: View {
                             EmptyView()
                         } header: {
                             LanguageFilterPicker(selectedLanguage: $selectedLanguage)
+                                .padding(.horizontal)
                         }
                         .listSectionSeparator(.hidden)
 
