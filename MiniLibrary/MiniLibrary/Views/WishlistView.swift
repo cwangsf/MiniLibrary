@@ -57,7 +57,7 @@ struct WishlistView: View {
                     if wishlistBooks.isEmpty {
                         ContentUnavailableView(
                             "No Wishlist Items",
-                            systemImage: "heart",
+                            systemImage: "list.star",
                             description: Text("Books you want to add to your library will appear here")
                         )
                     } else {
