@@ -38,6 +38,7 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - Section index scroller on right side (like iOS Contacts)
   - Search functionality (by title or author)
   - Search disables sections, shows flat filtered list
+  - **Language filter** - Segmented control with All/English/German options
   - **Filter by favorites** - Toggle to show only favorite books
   - Filter icon in toolbar (shows count when favorites filter is active)
 
@@ -106,6 +107,7 @@ MiniLibrary is a personal library management iOS application built with SwiftUI 
   - List wishlist items with book cover images
   - **Alphabetical sections (A-Z, plus # for non-letters)**
   - **Section index scroller on right side** (like iOS Contacts)
+  - **Language filter** - Segmented control with All/English/German options (includes books without language metadata)
   - **Tap book** → Opens Amazon to purchase
   - **Tap share icon** → Share book via Messages, WhatsApp, Email, etc.
   - **Swipe left** → Delete or Acquire options
@@ -433,7 +435,8 @@ enum ActivityType: String {
    - If exists → Show "Add Copy" confirmation
    - If new → Fetch from Google Books API
 4. Show confirmation screen with book details
-5. Options: "Confirm & Add Book" or "Edit Details"
+5. Options: "Confirm & Add Book", "Edit Details", or "Cancel"
+   - Cancel button at bottom returns to scanning (no toolbar "Back" button)
 6. On confirm → Insert into SwiftData, log activity, dismiss
 
 ### Search Implementation
@@ -553,6 +556,18 @@ enum ActivityType: String {
 **Problem:** Tapping letter in index scrolled to cells underneath section header instead of the section itself.
 **Solution:** Moved `.id(letter)` from header Text to the Section itself, ensuring `scrollTo(letter)` scrolls to the entire section.
 
+### 15. CSV Import Language Column Mismatch
+**Problem:** CSVImporter looked for "Language" column but actual CSV file had "Languages" (plural).
+**Solution:** Updated CSVImporter to check for both "Languages" and "Language" column names, trying plural first then falling back to singular.
+
+### 16. Language Filter Not Matching Books
+**Problem:** Language filter looking for "en"/"de" codes but CSV data contained full words like "English"/"German".
+**Solution:** Enhanced filter logic to check multiple patterns: exact code match (`"en"`), full word (`"english"`), and substring match (`.contains("english")`), all case-insensitive.
+
+### 17. Wishlist Books Missing from Language Filter
+**Problem:** Wishlist books imported from simple CSV don't have language metadata, so language filters showed very few books.
+**Solution:** Added `includeUnknown` parameter to `LanguageFilter.filter()` method. Set to `true` for WishlistView so books without language data still appear in all filter modes.
+
 ---
 
 ## File Structure
@@ -589,6 +604,7 @@ MiniLibrary/
 │   ├── ReturnConfirmationView.swift
 │   ├── AddCopyConfirmationView.swift (in ScanBookView.swift)
 │   ├── SectionIndexTitles.swift
+│   ├── LanguageFilterPicker.swift (LanguageFilter enum + picker view)
 │   └── ShareSheet.swift (in WishlistView.swift)
 │
 ├── ViewModels/
@@ -651,7 +667,8 @@ MiniLibrary/
 ### Books
 - [ ] Scan ISBN barcode successfully
 - [ ] Fetch book info from Google Books
-- [ ] Show confirmation before adding
+- [ ] Show confirmation before adding (three buttons: Confirm, Edit, Cancel)
+- [ ] Cancel button at bottom returns to scanning (no toolbar Back button)
 - [ ] Edit book details before adding
 - [ ] Manual book entry works
 - [ ] Handle duplicate ISBN (add copy prompt)
@@ -694,6 +711,11 @@ MiniLibrary/
 - [ ] Acquire converts to catalog item
 - [ ] Delete removes from wishlist
 - [ ] Add button in toolbar works
+- [ ] Language filter segmented control appears in wishlist
+- [ ] "All" language filter shows all wishlist books (including those without language metadata)
+- [ ] "English" language filter includes books without metadata
+- [ ] "German" language filter includes books without metadata
+- [ ] Language filter preserves A-Z sections
 
 ### Catalog & Favorites
 - [ ] A-Z sections display correctly
@@ -706,6 +728,12 @@ MiniLibrary/
 - [ ] Favorites filter in catalog works
 - [ ] Favorites filter shows count badge
 - [ ] Filtered favorites list displays correctly
+- [ ] Language filter segmented control appears in catalog
+- [ ] "All" language filter shows all books
+- [ ] "English" language filter shows only English books
+- [ ] "German" language filter shows only German books
+- [ ] Language filter works correctly with search
+- [ ] Language filter preserves sections
 
 ### Activity Log
 - [ ] All activity types recorded
@@ -838,6 +866,10 @@ MiniLibrary is a complete library management solution with:
 - **Fixed Swift 6 actor isolation warnings** - BookAPIService decoder, Sendable conformance
 - **Fixed ShareItem binding** - Changed to optional binding in WishlistItemView
 - **Fixed section index scrolling** - Moved .id() to Section instead of header
+- **Added language filter** - Segmented control in Catalog and Wishlist views (All/English/German)
+- **Created LanguageFilterPicker component** - Reusable language filter with enum-based filtering
+- **Enhanced CSV import** - Supports both "Language" and "Languages" column names
+- **Improved scan book confirmation flow** - Removed toolbar "Back" button, added "Cancel" button at bottom of confirmation screen
 
 The app follows iOS design patterns, uses modern SwiftUI/SwiftData, and provides a complete workflow for managing a personal or classroom library. All core features are implemented and tested.
 

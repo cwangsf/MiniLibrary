@@ -11,6 +11,7 @@ MiniLibrary helps you manage your personal or classroom book collection with fea
 - 📚 **Book Catalog Management** - Scan ISBNs or add books manually
 - 👥 **Student Checkout System** - Track who has which books
 - ⭐ **Favorites & Wishlist** - Mark favorites and manage wish-to-buy lists
+- 🔍 **Advanced Filtering** - Filter by language (English/German) and favorites
 - 📊 **Activity Logging** - Complete history of all library operations
 - 📥📤 **CSV Import/Export** - Bulk operations for catalog and wishlist
 - 🌍 **Multi-language Support** - English, German, Irish, Simplified Chinese
