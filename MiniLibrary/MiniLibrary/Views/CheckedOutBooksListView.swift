@@ -113,20 +113,7 @@ struct CheckoutDetailRow: View {
     }
 
     private func returnBook(_ checkout: CheckoutRecord) {
-        checkout.returnDate = Date()
-        if let book = checkout.book {
-            book.availableCopies += 1
-
-            // Log activity
-            let activity = Activity(
-                type: .return,
-                bookTitle: book.title,
-                bookAuthor: book.author,
-                studentLibraryId: checkout.student?.libraryId,
-                additionalInfo: nil
-            )
-            modelContext.insert(activity)
-        }
+        BookManagementService.returnBook(checkout, modelContext: modelContext)
     }
 }
 
