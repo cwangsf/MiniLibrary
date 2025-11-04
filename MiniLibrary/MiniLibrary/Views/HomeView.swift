@@ -106,39 +106,7 @@ struct HomeView: View {
     }
 }
 
-struct StatCard: View {
-    let title: String
-    let value: String
-    let icon: String
-    let color: Color
-    var action: (() -> Void)? = nil
 
-    var body: some View {
-        Button {
-            action?()
-        } label: {
-            VStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.title)
-                    .foregroundStyle(color)
-
-                Text(value)
-                    .font(.title2)
-                    .fontWeight(.bold)
-
-                Text(title)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(color.opacity(0.1))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
-        .buttonStyle(.plain)
-        .disabled(action == nil)
-    }
-}
 
 #Preview {
     HomeView()
