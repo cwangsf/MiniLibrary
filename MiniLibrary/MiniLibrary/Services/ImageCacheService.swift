@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 /// Service for caching book cover images to disk
 actor ImageCacheService {
@@ -41,11 +40,6 @@ actor ImageCacheService {
 
         // Download the image
         let (data, _) = try await URLSession.shared.data(from: url)
-
-        // Verify it's a valid image
-        guard UIImage(data: data) != nil else {
-            return nil
-        }
 
         // Save to disk
         return try saveImageData(data, for: bookId)

@@ -7,12 +7,12 @@
 
 import Foundation
 
-// MARK: - API Service Actor (Thread-safe)
-actor BookAPIService {
+// MARK: - API Service (Stateless)
+struct BookAPIService {
     static let shared = BookAPIService()
 
     private let session: URLSession
-    private nonisolated let decoder: JSONDecoder
+    private let decoder: JSONDecoder
 
     // MARK: - Constants
     private static let baseURL = "https://www.googleapis.com/books/v1/volumes"
@@ -150,7 +150,7 @@ actor BookAPIService {
     }
 
     /// Convert GoogleBookItem to Book for wishlist
-    nonisolated func createBookFromSearchResult(_ item: GoogleBookItem, isWishlistItem: Bool = false) -> Book {
+    func createBookFromSearchResult(_ item: GoogleBookItem, isWishlistItem: Bool = false) -> Book {
         let volumeInfo = item.volumeInfo
         let isbn = volumeInfo.industryIdentifiers?.first(where: { $0.type == "ISBN_13" || $0.type == "ISBN_10" })?.identifier
 
@@ -175,7 +175,6 @@ actor BookAPIService {
     /// Update book with cover image and metadata if not present
     /// Downloads and caches the cover image locally
     /// Works with ISBN or title/author search
-    @MainActor
     func updateBookCover(_ book: Book) async {
         // Skip if already has cached cover
         guard book.cachedCoverImage == nil else {
