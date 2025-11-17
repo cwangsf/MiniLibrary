@@ -28,7 +28,7 @@ struct MiniLibraryApp: App {
 
             // Seed books from CSV
             do {
-                try DataSeeder.seedBooksFromCSV(fileName: "sample_books", modelContext: context)
+                try DataSeeder.seedBooksFromCSV(fileName: "all_books", modelContext: context)
             } catch {
                 print("Error seeding books: \(error)")
             }

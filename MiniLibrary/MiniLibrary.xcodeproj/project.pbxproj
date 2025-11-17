@@ -33,6 +33,7 @@
 		26302DA72EAB739D00B9D1FA /* Exceptions for "MiniLibrary" folder in "MiniLibraryTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				App/all_books.csv,
 				App/Localizable.xcstrings,
 				App/sample_books.csv,
 				App/samples.xlsx,
@@ -43,6 +44,7 @@
 		26302DA82EAB739D00B9D1FA /* Exceptions for "MiniLibrary" folder in "MiniLibraryUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				App/all_books.csv,
 				App/Localizable.xcstrings,
 				App/sample_books.csv,
 				App/samples.xlsx,
