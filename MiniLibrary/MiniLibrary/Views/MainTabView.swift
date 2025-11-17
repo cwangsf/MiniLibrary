@@ -7,23 +7,59 @@
 
 import SwiftUI
 
-struct MainTabView: View {
-    var body: some View {
-        TabView {
+// MARK: - Tab Enum
+enum AppTab: Hashable, CaseIterable {
+    case home
+    case catalog
+    case add
+
+    var label: String {
+        switch self {
+        case .home:
+            return "Home"
+        case .catalog:
+            return "Catalog"
+        case .add:
+            return "Add"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .home:
+            return "house.fill"
+        case .catalog:
+            return "books.vertical.fill"
+        case .add:
+            return "plus.circle.fill"
+        }
+    }
+
+    @ViewBuilder
+    var view: some View {
+        switch self {
+        case .home:
             HomeView()
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
-                }
-
+        case .catalog:
             CatalogView()
-                .tabItem {
-                    Label("Catalog", systemImage: "books.vertical.fill")
-                }
-
+        case .add:
             AddView()
-                .tabItem {
-                    Label("Add", systemImage: "plus.circle.fill")
-                }
+        }
+    }
+}
+
+struct MainTabView: View {
+    @State private var selectedTab: AppTab = .home
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            ForEach(AppTab.allCases, id: \.self) { tab in
+                tab.view
+                    .tabItem {
+                        Label(tab.label, systemImage: tab.systemImage)
+                    }
+                    .tag(tab)
+            }
         }
     }
 }
