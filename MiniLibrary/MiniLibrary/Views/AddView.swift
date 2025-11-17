@@ -152,6 +152,20 @@ struct AddView: View {
                         }
                     }
                 }
+
+                // App Info Section
+                Section("About") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("App Version")
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Text(getAppVersion() + " (" + getAppBuild() + ")")
+                                
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
             }
             .navigationTitle("Add")
             .alert("Delete All Data?", isPresented: $showingDeleteConfirmation) {
@@ -417,6 +431,22 @@ struct AddView: View {
             )
             showingImportResult = true
         }
+    }
+
+    // MARK: - App Version Info
+
+    private func getAppVersion() -> String {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            return version
+        }
+        return "Unknown"
+    }
+
+    private func getAppBuild() -> String {
+        if let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            return build
+        }
+        return "Unknown"
     }
 }
 
