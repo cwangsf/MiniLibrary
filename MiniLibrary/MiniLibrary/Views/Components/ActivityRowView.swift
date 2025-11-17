@@ -11,7 +11,7 @@ struct ActivityRowView: View {
     let activity: Activity
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top) {
             // Icon
             Image(systemName: activity.type.icon)
                 .font(.title3)
@@ -70,8 +70,6 @@ struct ActivityRowView: View {
         .padding()
         .background(.background)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
-        .padding(.horizontal)
     }
 
     private func colorForType(_ type: ActivityType) -> Color {
