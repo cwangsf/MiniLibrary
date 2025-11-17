@@ -109,6 +109,9 @@
         }
       }
     },
+    "About" : {
+
+    },
     "Acquire" : {
       "localizations" : {
         "de" : {
@@ -480,6 +483,9 @@
           }
         }
       }
+    },
+    "App Version" : {
+
     },
     "Author" : {
       "localizations" : {
