@@ -82,15 +82,20 @@ struct CatalogView: View {
                             }
                         }
                     }
+
+                    // Floating language filter at bottom
+                    VStack {
+                        Spacer()
+
+                        LanguageFilterPicker(selectedLanguage: $selectedLanguage)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(12)
+                    }
+                    .allowsHitTesting(true)
                 }
             }
             .navigationTitle("Catalog")
             .searchable(text: $searchText, prompt: "Search books or authors")
-            .safeAreaInset(edge: .bottom) {
-                LanguageFilterPicker(selectedLanguage: $selectedLanguage)
-                    .padding(.horizontal)
-                    .background(.ultraThinMaterial)
-            }
         }
     }
 }
