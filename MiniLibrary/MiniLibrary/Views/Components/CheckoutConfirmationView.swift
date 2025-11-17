@@ -20,6 +20,8 @@ struct CheckoutConfirmationView: View {
                 VStack(spacing: 24) {
                     Text("Confirm Checkout")
                         .sectionTitle()
+                        .padding(.top, 20)
+                    
                     // Book Cover
                     BookCoverImage(book: book, width: 120, height: 180)
                         .padding(.top, 40)

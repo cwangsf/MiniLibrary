@@ -80,7 +80,7 @@ struct HomeView: View {
 
                     // Recent Activity Section
                     if !activities.isEmpty {
-                        VStack(alignment: .leading, spacing: 10) {
+                        VStack(alignment: .leading) {
                             Text("Recent Activity")
                                 .font(.headline)
                                 .padding(.horizontal)
