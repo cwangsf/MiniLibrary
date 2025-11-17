@@ -24,7 +24,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		263418092E991873001BE034 /* MiniLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		263418092E991873001BE034 /* St. Kilian Library.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "St. Kilian Library.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		263418182E991875001BE034 /* MiniLibraryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MiniLibraryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		263418222E991875001BE034 /* MiniLibraryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MiniLibraryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -114,7 +114,7 @@
 		2634180A2E991873001BE034 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				263418092E991873001BE034 /* MiniLibrary.app */,
+				263418092E991873001BE034 /* St. Kilian Library.app */,
 				263418182E991875001BE034 /* MiniLibraryTests.xctest */,
 				263418222E991875001BE034 /* MiniLibraryUITests.xctest */,
 			);
@@ -143,7 +143,7 @@
 			packageProductDependencies = (
 			);
 			productName = MiniLibrary;
-			productReference = 263418092E991873001BE034 /* MiniLibrary.app */;
+			productReference = 263418092E991873001BE034 /* St. Kilian Library.app */;
 			productType = "com.apple.product-type.application";
 		};
 		263418172E991875001BE034 /* MiniLibraryTests */ = {
@@ -446,7 +446,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.7;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cwang.SKDSLib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "St. Kilian Library";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -494,7 +494,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 15.7;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cwang.SKDSLib;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "St. Kilian Library";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
