@@ -823,6 +823,9 @@
         }
       }
     },
+    "Class Code (optional)" : {
+
+    },
     "Confirm & Add Book" : {
       "localizations" : {
         "de" : {
@@ -932,6 +935,9 @@
           }
         }
       }
+    },
+    "CSV format: First Name, Last Name, Class" : {
+
     },
     "CSV format: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes" : {
       "localizations" : {
@@ -1332,6 +1338,9 @@
         }
       }
     },
+    "Export Students to CSV" : {
+
+    },
     "Export Wishlist to CSV" : {
       "localizations" : {
         "de" : {
@@ -1421,6 +1430,7 @@
       }
     },
     "Grade %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1443,6 +1453,7 @@
       }
     },
     "Grade Level (optional)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1507,6 +1518,9 @@
           }
         }
       }
+    },
+    "Import Students from CSV" : {
+
     },
     "Import Wishlist from CSV" : {
       "localizations" : {
@@ -1619,6 +1633,7 @@
       }
     },
     "Library ID (e.g., LIB-001)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1817,6 +1832,7 @@
       }
     },
     "Not specified" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2079,6 +2095,9 @@
           }
         }
       }
+    },
+    "Required: First Name, Last Name. Class is optional." : {
+
     },
     "Required: Title, Author, Total Copies, Available Copies. All other fields are optional." : {
       "localizations" : {
@@ -2431,6 +2450,9 @@
           }
         }
       }
+    },
+    "Student Name (e.g., John Smith)" : {
+
     },
     "Student: %@" : {
       "localizations" : {

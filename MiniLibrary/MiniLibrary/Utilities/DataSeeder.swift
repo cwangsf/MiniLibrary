@@ -79,7 +79,7 @@ class DataSeeder {
     }
 
     // MARK: - Debug Seeding
-    /// Seed debug data: clear all data, create sample users and students
+    /// Seed debug data: clear all data
     static func seedDebugData(modelContext: ModelContext) {
         do {
             // Clear all data
@@ -90,16 +90,6 @@ class DataSeeder {
             try modelContext.delete(model: Activity.self)
             try modelContext.save()
             print("Debug: Cleared all SwiftData")
-
-            // Create sample students
-            for i in 1...6 {
-                let student = Student(
-                    libraryId: String(format: "Student-%03d", i),
-                    gradeLevel: i
-                )
-                modelContext.insert(student)
-            }
-            try modelContext.save()
         } catch {
             print("Debug: Error seeding debug data: \(error)")
         }

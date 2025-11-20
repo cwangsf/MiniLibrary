@@ -14,19 +14,14 @@ struct AddStudentView: View {
     @Query private var students: [Student]
 
     @State private var libraryId = ""
-    @State private var gradeLevel: Int?
+    @State private var classCode = ""
 
     var body: some View {
         Form {
             Section("Student Information") {
-                TextField("Library ID (e.g., LIB-001)", text: $libraryId)
+                TextField("Student Name (e.g., John Smith)", text: $libraryId)
 
-                Picker("Grade Level (optional)", selection: $gradeLevel) {
-                    Text("Not specified").tag(nil as Int?)
-                    ForEach(1...6, id: \.self) { grade in
-                        Text("Grade \(grade)").tag(grade as Int?)
-                    }
-                }
+                TextField("Class Code (optional)", text: $classCode)
             }
 
             if !students.isEmpty {
@@ -35,8 +30,8 @@ struct AddStudentView: View {
                         HStack {
                             Text(student.libraryId)
                             Spacer()
-                            if let grade = student.gradeLevel {
-                                Text("Grade \(grade)")
+                            if let code = student.classCode {
+                                Text(code)
                                     .foregroundStyle(.secondary)
                                     .font(.caption)
                             }
@@ -72,7 +67,7 @@ struct AddStudentView: View {
     private func addStudent() {
         let student = Student(
             libraryId: libraryId,
-            gradeLevel: gradeLevel
+            classCode: classCode.isEmpty ? nil : classCode
         )
 
         modelContext.insert(student)
