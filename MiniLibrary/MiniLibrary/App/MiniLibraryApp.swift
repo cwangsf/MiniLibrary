@@ -27,6 +27,7 @@ struct MiniLibraryApp: App {
             DataSeeder.seedDebugData(modelContext: context)
 
             // Seed books from CSV
+            #if DEBUG
             do {
                 try DataSeeder.seedBooksFromCSV(fileName: "sample_books", modelContext: context)
             } catch {
@@ -39,6 +40,7 @@ struct MiniLibraryApp: App {
             } catch {
                 print("Error seeding wishlist: \(error)")
             }
+            #endif
 
             return container
         } catch {
