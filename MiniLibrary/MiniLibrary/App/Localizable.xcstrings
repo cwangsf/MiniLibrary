@@ -824,7 +824,26 @@
       }
     },
     "Class Code (optional)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klassencode (optional)"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cód Aicme (roghnach)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "班级代码（可选）"
+          }
+        }
+      }
     },
     "Confirm & Add Book" : {
       "localizations" : {
@@ -937,7 +956,26 @@
       }
     },
     "CSV format: First Name, Last Name, Class" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSV-Format: Vorname, Nachname, Klasse"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formáid CSV: Ainm, Sloinne, Aicme"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSV格式：名字、姓氏、班级"
+          }
+        }
+      }
     },
     "CSV format: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes" : {
       "localizations" : {
@@ -1251,7 +1289,26 @@
       }
     },
     "Edit Student" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schüler bearbeiten"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuir Dalta in Eagar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "编辑学生"
+          }
+        }
+      }
     },
     "Enter ISBN Manually" : {
       "localizations" : {
@@ -1342,7 +1399,26 @@
       }
     },
     "Export Students to CSV" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schüler als CSV exportieren"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Easpórtáil Daltaí go CSV"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出学生为CSV"
+          }
+        }
+      }
     },
     "Export Wishlist to CSV" : {
       "localizations" : {
@@ -1523,7 +1599,26 @@
       }
     },
     "Import Students from CSV" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schüler aus CSV importieren"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iompórtáil Daltaí ó CSV"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从CSV导入学生"
+          }
+        }
+      }
     },
     "Import Wishlist from CSV" : {
       "localizations" : {
@@ -2100,7 +2195,26 @@
       }
     },
     "Required: First Name, Last Name. Class is optional." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erforderlich: Vorname, Nachname. Klasse ist optional."
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riachtanach: Ainm, Sloinne. Tá Aicme roghnach."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "必填项：名字、姓氏。班级为可选。"
+          }
+        }
+      }
     },
     "Required: Title, Author, Total Copies, Available Copies. All other fields are optional." : {
       "localizations" : {
@@ -2169,7 +2283,26 @@
       }
     },
     "Save" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichern"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sábháil"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存"
+          }
+        }
+      }
     },
     "Scan Book" : {
       "localizations" : {
@@ -2458,10 +2591,48 @@
       }
     },
     "Student Name" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schülername"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ainm an Dalta"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "学生姓名"
+          }
+        }
+      }
     },
     "Student Name (e.g., John Smith)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schülername (z.B. John Smith)"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ainm an Dalta (m.sh. John Smith)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "学生姓名（例如 John Smith）"
+          }
+        }
+      }
     },
     "Student: %@" : {
       "localizations" : {
