@@ -167,4 +167,20 @@ struct ActivityLogger {
         )
         modelContext.insert(activity)
     }
+
+    // MARK: - Student Activities
+
+    /// Logs when students are imported from CSV
+    /// - Parameters:
+    ///   - count: Number of students imported
+    ///   - modelContext: The SwiftData model context
+    static func logStudentCSVImport(count: Int, modelContext: ModelContext) {
+        let activity = Activity(
+            type: .addBook,
+            bookTitle: "Student Import",
+            bookAuthor: "CSV Import",
+            additionalInfo: "\(count) student\(count == 1 ? "" : "s") imported"
+        )
+        modelContext.insert(activity)
+    }
 }

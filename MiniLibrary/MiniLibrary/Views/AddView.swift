@@ -19,6 +19,8 @@ struct AddView: View {
     @State private var isExporting = false
     @State private var exportWishlistFileURL: URL?
     @State private var isExportingWishlist = false
+    @State private var exportStudentsFileURL: URL?
+    @State private var isExportingStudents = false
     @State private var showingDeleteConfirmation = false
     @State private var showingImportPicker = false
     @State private var importResult: ImportResult?
@@ -128,6 +130,17 @@ struct AddView: View {
                         }
                     )
 
+                    // Export Students
+                    ExportStudentsRow(
+                        isExporting: isExportingStudents,
+                        exportFileURL: exportStudentsFileURL,
+                        onExport: {
+                            Task {
+                                await exportStudents()
+                            }
+                        }
+                    )
+
                     // Import Catalog
                     ImportCatalogRow {
                         importType = .catalog
@@ -137,6 +150,12 @@ struct AddView: View {
                     // Import Wishlist
                     ImportWishlistRow {
                         importType = .wishlist
+                        showingImportPicker = true
+                    }
+
+                    // Import Students
+                    ImportStudentsRow {
+                        importType = .students
                         showingImportPicker = true
                     }
 
@@ -185,6 +204,8 @@ struct AddView: View {
                     handleImportResult(result)
                 } else if importType == .wishlist {
                     handleImportWishlistResult(result)
+                } else if importType == .students {
+                    handleImportStudentsResult(result)
                 }
             }
             .alert(importResult?.title ?? "Import Result", isPresented: $showingImportResult) {
@@ -198,6 +219,7 @@ struct AddView: View {
                 // Pre-generate the export files in background
                 await exportCatalog()
                 await exportWishlist()
+                await exportStudents()
             }
         }
     }
@@ -238,6 +260,24 @@ struct AddView: View {
         }
     }
 
+    private func exportStudents() async {
+        isExportingStudents = true
+
+        // Capture students to avoid cross-context issues
+        let studentList = students
+
+        // Run export in background
+        let url = await Task.detached {
+            let csvContent = CSVExporter.exportStudents(studentList)
+            return CSVExporter.saveToTemporaryFile(csvContent, filename: "library_students.csv")
+        }.value
+
+        await MainActor.run {
+            exportStudentsFileURL = url
+            isExportingStudents = false
+        }
+    }
+
     private func deleteAllData() {
         // Delete all activities
         for activity in activities {
@@ -262,6 +302,7 @@ struct AddView: View {
         // Reset export URLs
         exportFileURL = nil
         exportWishlistFileURL = nil
+        exportStudentsFileURL = nil
     }
 
     private func fetchCoverImagesForImportedBooks() async {
@@ -433,6 +474,65 @@ struct AddView: View {
         }
     }
 
+    private func handleImportStudentsResult(_ result: Result<[URL], Error>) {
+        switch result {
+        case .success(let urls):
+            guard let fileURL = urls.first else {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: "No file selected",
+                    isSuccess: false
+                )
+                showingImportResult = true
+                return
+            }
+
+            // Start accessing security-scoped resource
+            guard fileURL.startAccessingSecurityScopedResource() else {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: "Unable to access the selected file",
+                    isSuccess: false
+                )
+                showingImportResult = true
+                return
+            }
+
+            do {
+                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                let importedCount = try CSVImporter.importStudents(from: csvContent, modelContext: modelContext)
+
+                importResult = ImportResult(
+                    title: "Import Successful",
+                    message: "Successfully imported \(importedCount) student\(importedCount == 1 ? "" : "s") from the CSV file.",
+                    isSuccess: true
+                )
+
+                // Log activity
+                ActivityLogger.logStudentCSVImport(count: importedCount, modelContext: modelContext)
+
+                showingImportResult = true
+            } catch {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: error.localizedDescription,
+                    isSuccess: false
+                )
+                showingImportResult = true
+            }
+
+            fileURL.stopAccessingSecurityScopedResource()
+
+        case .failure(let error):
+            importResult = ImportResult(
+                title: "Import Failed",
+                message: error.localizedDescription,
+                isSuccess: false
+            )
+            showingImportResult = true
+        }
+    }
+
     // MARK: - App Version Info
 
     private func getAppVersion() -> String {
@@ -461,6 +561,7 @@ struct ImportResult {
 enum ImportType {
     case catalog
     case wishlist
+    case students
 }
 
 #Preview {

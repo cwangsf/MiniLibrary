@@ -11,36 +11,36 @@ import SwiftData
 @Model
 final class Student: Codable {
     @Attribute(.unique) var libraryId: String
-    var gradeLevel: Int?
+    var classCode: String?
     var createdAt: Date
 
     @Relationship(deleteRule: .cascade, inverse: \CheckoutRecord.student)
     var checkouts: [CheckoutRecord]?
 
-    init(libraryId: String, gradeLevel: Int? = nil, createdAt: Date = Date()) {
+    init(libraryId: String, classCode: String? = nil, createdAt: Date = Date()) {
         self.libraryId = libraryId
-        self.gradeLevel = gradeLevel
+        self.classCode = classCode
         self.createdAt = createdAt
     }
 
     // MARK: - Codable
     enum CodingKeys: String, CodingKey {
         case libraryId = "library_id"
-        case gradeLevel = "grade_level"
+        case classCode = "class_code"
         case createdAt = "created_at"
     }
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.libraryId = try container.decode(String.self, forKey: .libraryId)
-        self.gradeLevel = try container.decodeIfPresent(Int.self, forKey: .gradeLevel)
+        self.classCode = try container.decodeIfPresent(String.self, forKey: .classCode)
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(libraryId, forKey: .libraryId)
-        try container.encodeIfPresent(gradeLevel, forKey: .gradeLevel)
+        try container.encodeIfPresent(classCode, forKey: .classCode)
         try container.encode(createdAt, forKey: .createdAt)
     }
 }

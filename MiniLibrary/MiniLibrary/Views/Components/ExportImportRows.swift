@@ -144,3 +144,72 @@ struct ImportWishlistRow: View {
         }
     }
 }
+
+// MARK: - Export Students Row
+struct ExportStudentsRow: View {
+    let isExporting: Bool
+    let exportFileURL: URL?
+    let onExport: () -> Void
+
+    var body: some View {
+        if isExporting {
+            HStack {
+                HStack {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundStyle(.purple)
+                    Text("Export Students to CSV")
+                        .foregroundStyle(.tint)
+                }
+                Spacer()
+                ProgressView()
+            }
+        } else if let url = exportFileURL {
+            ShareLink(item: url) {
+                HStack {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundStyle(.purple)
+                    Text("Export Students to CSV")
+                        .foregroundStyle(.tint)
+                }
+            }
+        } else {
+            Button(action: onExport) {
+                HStack {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundStyle(.purple)
+                    Text("Export Students to CSV")
+                        .foregroundStyle(.tint)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Import Students Row
+struct ImportStudentsRow: View {
+    let onImport: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button(action: onImport) {
+                HStack {
+                    Image(systemName: "square.and.arrow.down")
+                        .foregroundStyle(.orange)
+                    Text("Import Students from CSV")
+                        .foregroundStyle(.tint)
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("CSV format: First Name, Last Name, Class")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+
+                Text("Required: First Name, Last Name. Class is optional.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.leading, 28)
+        }
+    }
+}

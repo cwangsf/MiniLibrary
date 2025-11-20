@@ -14,32 +14,39 @@ struct AddStudentView: View {
     @Query private var students: [Student]
 
     @State private var libraryId = ""
-    @State private var gradeLevel: Int?
+    @State private var classCode = ""
+    @State private var editingStudent: Student?
+    @State private var editingName = ""
+    @State private var editingCode = ""
+    @State private var showingEditSheet = false
 
     var body: some View {
         Form {
             Section("Student Information") {
-                TextField("Library ID (e.g., LIB-001)", text: $libraryId)
+                TextField("Student Name (e.g., John Smith)", text: $libraryId)
 
-                Picker("Grade Level (optional)", selection: $gradeLevel) {
-                    Text("Not specified").tag(nil as Int?)
-                    ForEach(1...6, id: \.self) { grade in
-                        Text("Grade \(grade)").tag(grade as Int?)
-                    }
-                }
+                TextField("Class Code (optional)", text: $classCode)
             }
 
             if !students.isEmpty {
                 Section("Existing Students") {
                     ForEach(students) { student in
-                        HStack {
-                            Text(student.libraryId)
-                            Spacer()
-                            if let grade = student.gradeLevel {
-                                Text("Grade \(grade)")
-                                    .foregroundStyle(.secondary)
-                                    .font(.caption)
+                        Button(action: {
+                            editingStudent = student
+                            editingName = student.libraryId
+                            editingCode = student.classCode ?? ""
+                            showingEditSheet = true
+                        }) {
+                            HStack {
+                                Text(student.libraryId)
+                                Spacer()
+                                if let code = student.classCode {
+                                    Text(code)
+                                        .foregroundStyle(.secondary)
+                                        .font(.caption)
+                                }
                             }
+                            .foregroundStyle(.primary)
                         }
                     }
                     .onDelete(perform: deleteStudents)
@@ -67,16 +74,54 @@ struct AddStudentView: View {
             .padding()
             .background(.ultraThinMaterial)
         }
+        .sheet(isPresented: $showingEditSheet) {
+            editStudentSheet
+        }
+    }
+
+    @ViewBuilder
+    private var editStudentSheet: some View {
+        NavigationStack {
+            Form {
+                Section("Edit Student") {
+                    TextField("Student Name", text: $editingName)
+                    TextField("Class Code (optional)", text: $editingCode)
+                }
+            }
+            .navigationTitle("Edit Student")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        showingEditSheet = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        saveEditedStudent()
+                        showingEditSheet = false
+                    }
+                    .disabled(editingName.isEmpty)
+                }
+            }
+        }
     }
 
     private func addStudent() {
         let student = Student(
             libraryId: libraryId,
-            gradeLevel: gradeLevel
+            classCode: classCode.isEmpty ? nil : classCode
         )
 
         modelContext.insert(student)
         dismiss()
+    }
+
+    private func saveEditedStudent() {
+        guard let student = editingStudent else { return }
+
+        student.libraryId = editingName
+        student.classCode = editingCode.isEmpty ? nil : editingCode
     }
 
     private func deleteStudents(at offsets: IndexSet) {

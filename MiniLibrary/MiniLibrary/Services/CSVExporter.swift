@@ -41,6 +41,28 @@ enum CSVExporter {
         return field
     }
 
+    /// Export students to CSV format
+    static func exportStudents(_ students: [Student]) -> String {
+        var csv = "First Name,Last Name,Class\n"
+
+        for student in students {
+            let parts = student.libraryId.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
+            let firstName = parts.count > 0 ? String(parts[0]) : ""
+            let lastName = parts.count > 1 ? String(parts[1]) : ""
+            let classCode = student.classCode ?? ""
+
+            let fields = [
+                escapeCSV(firstName),
+                escapeCSV(lastName),
+                escapeCSV(classCode)
+            ]
+
+            csv += fields.joined(separator: ",") + "\n"
+        }
+
+        return csv
+    }
+
     /// Save CSV string to temporary file and return URL
     static func saveToTemporaryFile(_ csvContent: String, filename: String = "library_catalog.csv") -> URL? {
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory

@@ -204,6 +204,55 @@ struct CSVImporter {
         return cleaned.uppercased() // Ensure 'X' is uppercase
     }
 
+    /// Import students from CSV format
+    /// Expected format: First Name, Last Name, Class (optional)
+    /// First Name and Last Name are required, Class is optional
+    static func importStudents(from csvContent: String, modelContext: ModelContext) throws -> Int {
+        let rows = CSVParser.parse(csvString: csvContent)
+
+        guard !rows.isEmpty else {
+            throw CSVImportError.emptyFile
+        }
+
+        var importedCount = 0
+
+        for (index, row) in rows.enumerated() {
+            // Create Student from CSV row
+            if let student = createStudent(from: row) {
+                modelContext.insert(student)
+                importedCount += 1
+            } else {
+                print("Skipping line \(index + 2): invalid student data - First Name and Last Name are required")
+            }
+        }
+
+        return importedCount
+    }
+
+    /// Create a Student instance from CSV row
+    /// Format: First Name, Last Name, Class (optional)
+    private static func createStudent(from csvRow: [String: String]) -> Student? {
+        // First Name and Last Name are required
+        guard let firstName = csvRow["First Name"]?.trimmingCharacters(in: .whitespaces),
+              !firstName.isEmpty else {
+            return nil
+        }
+
+        guard let lastName = csvRow["Last Name"]?.trimmingCharacters(in: .whitespaces),
+              !lastName.isEmpty else {
+            return nil
+        }
+
+        // Create libraryId as "FirstName LastName"
+        let libraryId = "\(firstName) \(lastName)"
+
+        // Class is optional
+        let classCode = csvRow["Class"]?.trimmingCharacters(in: .whitespaces).isEmpty == false ?
+            csvRow["Class"]?.trimmingCharacters(in: .whitespaces) : nil
+
+        return Student(libraryId: libraryId, classCode: classCode)
+    }
+
 }
 
 enum CSVImportError: LocalizedError {
