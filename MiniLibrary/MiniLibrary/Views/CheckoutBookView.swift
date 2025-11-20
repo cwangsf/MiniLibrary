@@ -22,6 +22,9 @@ struct CheckoutBookView: View {
     @State private var selectedStudent: Student?
     @State private var dueDate = Date().addingTimeInterval(14 * 24 * 60 * 60) // 2 weeks default
     @State private var showingConfirmation = false
+    @State private var showingAddStudent = false
+    @State private var newStudentName = ""
+    @State private var newStudentClass = ""
 
     var availableBooks: [Book] {
         books.filter { $0.availableCopies > 0 }
@@ -63,6 +66,17 @@ struct CheckoutBookView: View {
                         Text("Select a student").tag(nil as Student?)
                         ForEach(students) { student in
                             Text(student.libraryId).tag(student as Student?)
+                        }
+                    }
+
+                    Button(action: {
+                        showingAddStudent = true
+                    }) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundStyle(.orange)
+                            Text("Add New Student")
+                                .foregroundStyle(.tint)
                         }
                     }
                 }
@@ -113,7 +127,52 @@ struct CheckoutBookView: View {
                     )
                 }
             }
+            .sheet(isPresented: $showingAddStudent) {
+                addStudentSheet
+            }
         }
+    }
+
+    @ViewBuilder
+    private var addStudentSheet: some View {
+        NavigationStack {
+            Form {
+                Section("Student Information") {
+                    TextField(String(localized: "Student Name (e.g., John Smith)"), text: $newStudentName)
+                    TextField(String(localized: "Class Code (optional)"), text: $newStudentClass)
+                }
+            }
+            .navigationTitle(String(localized: "Add New Student"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        showingAddStudent = false
+                        newStudentName = ""
+                        newStudentClass = ""
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add") {
+                        addStudent()
+                        showingAddStudent = false
+                    }
+                    .disabled(newStudentName.isEmpty)
+                }
+            }
+        }
+    }
+
+    private func addStudent() {
+        let student = Student(
+            libraryId: newStudentName,
+            classCode: newStudentClass.isEmpty ? nil : newStudentClass
+        )
+
+        modelContext.insert(student)
+        selectedStudent = student
+        newStudentName = ""
+        newStudentClass = ""
     }
 
     private func checkoutBook() {
