@@ -21,38 +21,45 @@ struct CSVImporter {
         }
 
         var importedCount = 0
+        var skippedLines: [(lineNumber: Int, reason: String, row: [String: String])] = []
 
         for (index, row) in rows.enumerated() {
             // Create Book from CSV row
-            if let book = createBook(from: row) {
+            let result = createBook(from: row)
+            if let book = result.book {
                 modelContext.insert(book)
                 importedCount += 1
             } else {
-                print("Skipping line \(index + 2): invalid data: \n     Book info: \(row)")
+                skippedLines.append((lineNumber: index + 2, reason: result.reason, row: row))
+                print("Skipping line \(index + 2): \(result.reason)\n     Book info: \(row)")
             }
+        }
+
+        // Save skipped lines to a new CSV file
+        if !skippedLines.isEmpty {
+            saveSkippedLines(skippedLines, fileName: "skipped_books.csv")
         }
 
         return importedCount
     }
 
     /// Create a Book instance from CSV row (supports multiple column name formats)
-    private static func createBook(from csvRow: [String: String]) -> Book? {
+    /// Returns a tuple of (book, reason) where book is nil if creation failed
+    private static func createBook(from csvRow: [String: String]) -> (book: Book?, reason: String) {
         // Try "Title" column
         guard let title = csvRow["Title"]?.trimmingCharacters(in: .whitespaces),
               !title.isEmpty else {
-            return nil
+            return (nil, "Missing or empty Title")
         }
 
-        // Try both "Primary Author" and "Author" columns
-        let author: String
+        // Try both "Primary Author" and "Author" columns (author is optional)
+        var author: String? = nil
         if let primaryAuthor = csvRow["Primary Author"]?.trimmingCharacters(in: .whitespaces),
            !primaryAuthor.isEmpty {
             author = primaryAuthor
         } else if let standardAuthor = csvRow["Author"]?.trimmingCharacters(in: .whitespaces),
                   !standardAuthor.isEmpty {
             author = standardAuthor
-        } else {
-            return nil
         }
 
         // Extract first ISBN from "ISBNs" or "ISBN" column
@@ -99,7 +106,7 @@ struct CSVImporter {
         let pageCount = csvRow["Page Count"].flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
         let notes = csvRow["Notes"]?.trimmingCharacters(in: .whitespaces)
 
-        return Book(
+        let book = Book(
             isbn: isbn,
             title: title,
             author: author,
@@ -114,6 +121,7 @@ struct CSVImporter {
             notes: notes.flatMap { $0.isEmpty ? nil : $0 },
             isWishlistItem: false
         )
+        return (book, "")
     }
 
     /// Import wishlist books from CSV format
@@ -202,6 +210,52 @@ struct CSVImporter {
         }
 
         return cleaned.uppercased() // Ensure 'X' is uppercase
+    }
+
+    /// Save skipped lines to a CSV file in the Documents directory
+    private static func saveSkippedLines(_ skippedLines: [(lineNumber: Int, reason: String, row: [String: String])], fileName: String) {
+        guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            print("Unable to access Documents directory")
+            return
+        }
+
+        let fileURL = documentsURL.appendingPathComponent(fileName)
+
+        // Get all unique column headers from skipped lines
+        var allHeaders = Set<String>()
+        for (_, _, row) in skippedLines {
+            allHeaders.formUnion(row.keys)
+        }
+        let sortedHeaders = Array(allHeaders).sorted()
+
+        // Build CSV content
+        var csvContent = "Line Number,Reason," + sortedHeaders.joined(separator: ",") + "\n"
+
+        for (lineNumber, reason, row) in skippedLines {
+            var values = [String(lineNumber)]
+
+            // Add reason with proper CSV escaping
+            let escapedReason = reason.contains(",") || reason.contains("\"") || reason.contains("\n") ?
+                "\"\(reason.replacingOccurrences(of: "\"", with: "\"\""))\"" : reason
+            values.append(escapedReason)
+
+            for header in sortedHeaders {
+                let value = row[header] ?? ""
+                // Escape quotes and wrap in quotes if contains comma
+                let escapedValue = value.contains(",") || value.contains("\"") || value.contains("\n") ?
+                    "\"\(value.replacingOccurrences(of: "\"", with: "\"\""))\"" : value
+                values.append(escapedValue)
+            }
+            csvContent += values.joined(separator: ",") + "\n"
+        }
+
+        // Write to file
+        do {
+            try csvContent.write(to: fileURL, atomically: true, encoding: .utf8)
+            print("Skipped lines saved to: \(fileURL.path)")
+        } catch {
+            print("Error saving skipped lines: \(error.localizedDescription)")
+        }
     }
 
     /// Import students from CSV format

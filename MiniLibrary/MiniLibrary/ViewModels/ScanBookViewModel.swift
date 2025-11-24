@@ -70,7 +70,7 @@ class ScanBookViewModel {
             let book = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
             scannedBook = book
             title = book.title
-            author = book.author
+            author = book.author ?? ""
             self.isbn = book.isbn ?? isbn
 
             print("Debug: Fetched book - Title: \(book.title), Author: \(book.author), ISBN: \(book.isbn ?? "nil")")

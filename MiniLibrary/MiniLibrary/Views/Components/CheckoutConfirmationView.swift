@@ -33,8 +33,10 @@ struct CheckoutConfirmationView: View {
                             VStack {
                                 Text(book.title)
                                     .bookTitle()
-                                Text(book.author)
-                                    .bookAuthor()
+                                if let author = book.author {
+                                    Text(author)
+                                        .bookAuthor()
+                                }
                             }
 
                             Divider()

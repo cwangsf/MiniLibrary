@@ -340,7 +340,7 @@ struct BookDetailView: View {
                     // Fallback to title/author search
                     let items = try await BookAPIService.shared.searchBooksByTitleAndAuthor(
                         title: book.title,
-                        author: book.author
+                        author: book.author ?? ""
                     )
 
                     guard let firstItem = items.first else {

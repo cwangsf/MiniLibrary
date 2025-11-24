@@ -29,9 +29,10 @@ struct WishlistItemView: View {
                             .lineLimit(2)
                             .foregroundStyle(.primary)
                         
-                        Text(book.author)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                        if let author = book.author {
+                            Text(author)
+                                .bookAuthor()
+                        }
                         
                         if let notes = book.notes, !notes.isEmpty {
                             Text(notes)
@@ -50,7 +51,7 @@ struct WishlistItemView: View {
                 if let url = book.amazonURL() {
                     shareItem = ShareItem(
                         title: book.title,
-                        author: book.author,
+                        author: book.author ?? "",
                         url: url
                     )
                 }

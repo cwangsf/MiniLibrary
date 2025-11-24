@@ -175,10 +175,12 @@ struct ScanBookView: View {
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
 
-                    Text(book.author)
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
+                    if let author = book.author {
+                        Text(author)
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
 
                     if let isbn = book.isbn {
                         Text("ISBN: \(isbn)")
@@ -405,8 +407,10 @@ struct AddCopyConfirmationView: View {
                                     .labelStyle()
                                 Text(book.title)
                                     .bookTitle()
-                                Text(book.author)
-                                    .bookAuthor()
+                                if let author = book.author {
+                                    Text(author)
+                                        .bookAuthor()
+                                }
                             }
 
                             Divider()
@@ -569,8 +573,10 @@ struct AddCopyConfirmationView: View {
                                 VStack(spacing: 4) {
                                     Text(book.title)
                                         .bookTitle()
-                                    Text(book.author)
-                                        .bookAuthor()
+                                    if let author = book.author {
+                                        Text(author)
+                                            .bookAuthor()
+                                    }
                                 }
 
                                 Divider()
