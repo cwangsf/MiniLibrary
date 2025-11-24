@@ -16,7 +16,7 @@ enum CSVExporter {
             let fields = [
                 escapeCSV(book.isbn ?? ""),
                 escapeCSV(book.title),
-                escapeCSV(book.author),
+                escapeCSV(book.author ?? ""),
                 String(book.totalCopies),
                 String(book.availableCopies),
                 escapeCSV(book.language?.displayName ?? ""),

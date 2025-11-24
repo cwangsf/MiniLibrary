@@ -32,8 +32,10 @@ struct AcquireWishlistItemView: View {
                             VStack(spacing: 4) {
                                 Text(book.title)
                                     .bookTitle()
-                                Text(book.author)
-                                    .bookAuthor()
+                                if let author = book.author {
+                                    Text(author)
+                                        .bookAuthor()
+                                }
                             }
 
                             if let notes = book.notes, !notes.isEmpty {

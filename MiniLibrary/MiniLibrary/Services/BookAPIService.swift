@@ -137,7 +137,7 @@ struct BookAPIService {
         return Book(
             isbn: isbn,
             title: volumeInfo.title,
-            author: volumeInfo.authors?.joined(separator: ", ") ?? "Unknown Author",
+            author: volumeInfo.authors?.joined(separator: ", "),
             totalCopies: 1,
             availableCopies: 1,
             bookDescription: volumeInfo.description,
@@ -157,7 +157,7 @@ struct BookAPIService {
         return Book(
             isbn: isbn,
             title: volumeInfo.title,
-            author: volumeInfo.authors?.joined(separator: ", ") ?? "Unknown Author",
+            author: volumeInfo.authors?.joined(separator: ", "),
             totalCopies: isWishlistItem ? 0 : 1,
             availableCopies: isWishlistItem ? 0 : 1,
             bookDescription: volumeInfo.description,
@@ -196,8 +196,8 @@ struct BookAPIService {
 
             // Fall back to title/author search if no ISBN or ISBN search failed
             if coverURL == nil {
-                // Don't include "Unknown Author" in search - it won't find results
-                let searchAuthor = (book.author == "Unknown Author") ? "" : book.author
+                // Don't include nil or empty author in search - use empty string instead
+                let searchAuthor = book.author ?? ""
 
                 let items = try await searchBooksByTitleAndAuthor(
                     title: book.title,
@@ -256,15 +256,16 @@ struct BookAPIService {
                     book.languageCode = volumeInfo.language
                 }
 
-                // Update author if it was "Unknown Author"
-                if book.author == "Unknown Author",
+                // Update author if it's nil or empty
+                if (book.author ?? "").isEmpty,
                    let authors = volumeInfo.authors,
                    !authors.isEmpty {
                     book.author = authors.joined(separator: ", ")
                 }
             }
         } catch {
-            print("Failed to fetch/cache cover for '\(book.title)' by \(book.author): \(error)")
+            let authorInfo = book.author.map { " by \($0)" } ?? ""
+            print("Failed to fetch/cache cover for '\(book.title)'\(authorInfo): \(error)")
         }
     }
 }

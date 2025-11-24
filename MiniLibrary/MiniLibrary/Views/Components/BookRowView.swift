@@ -21,9 +21,10 @@ struct BookRowView: View {
                     .font(.headline)
                     .lineLimit(2)
 
-                Text(book.author)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                if let author = book.author {
+                    Text(author)
+                        .bookAuthor()
+                }
 
                 HStack {
                     if let isbn = book.isbn {
