@@ -26,7 +26,7 @@ struct CatalogView: View {
         } else {
             return languageFilteredBooks.filter { book in
                 book.title.localizedCaseInsensitiveContains(searchText) ||
-                book.author.localizedCaseInsensitiveContains(searchText)
+                (book.author?.localizedCaseInsensitiveContains(searchText) ?? false)
             }
         }
     }

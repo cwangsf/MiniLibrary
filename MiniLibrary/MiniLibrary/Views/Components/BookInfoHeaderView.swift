@@ -17,10 +17,12 @@ struct BookInfoHeaderView: View {
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
 
-            Text(book.author)
-                .font(.title3)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+            if let author = book.author {
+                Text(author)
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
 
             if let isbn = book.isbn {
                 Text("ISBN: \(isbn)")

@@ -13,7 +13,7 @@ final class Book: Codable {
     @Attribute(.unique) var id: UUID
     var isbn: String?
     var title: String
-    var author: String
+    var author: String?
     var totalCopies: Int
     var availableCopies: Int
     var createdAt: Date
@@ -45,7 +45,7 @@ final class Book: Codable {
         id: UUID = UUID(),
         isbn: String? = nil,
         title: String,
-        author: String,
+        author: String? = nil,
         totalCopies: Int,
         availableCopies: Int? = nil,
         createdAt: Date = Date(),
@@ -105,7 +105,7 @@ final class Book: Codable {
         self.id = try container.decode(UUID.self, forKey: .id)
         self.isbn = try container.decodeIfPresent(String.self, forKey: .isbn)
         self.title = try container.decode(String.self, forKey: .title)
-        self.author = try container.decode(String.self, forKey: .author)
+        self.author = try container.decodeIfPresent(String.self, forKey: .author)
         self.totalCopies = try container.decode(Int.self, forKey: .totalCopies)
         self.availableCopies = try container.decode(Int.self, forKey: .availableCopies)
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
@@ -126,7 +126,7 @@ final class Book: Codable {
         try container.encode(id, forKey: .id)
         try container.encodeIfPresent(isbn, forKey: .isbn)
         try container.encode(title, forKey: .title)
-        try container.encode(author, forKey: .author)
+        try container.encodeIfPresent(author, forKey: .author)
         try container.encode(totalCopies, forKey: .totalCopies)
         try container.encode(availableCopies, forKey: .availableCopies)
         try container.encode(createdAt, forKey: .createdAt)
@@ -152,8 +152,9 @@ extension Book {
             // Use ISBN for most accurate results
             return URL(string: "https://books.google.com/books?isbn=\(isbn)")
         } else {
-            // Fallback to title and author search
-            let query = "\(title) \(author)"
+            // Fallback to title and author search (author is optional)
+            let authorPart = author.map { " \($0)" } ?? ""
+            let query = "\(title)\(authorPart)"
                 .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
             return URL(string: "https://books.google.com/books?q=\(query)")
         }
@@ -166,8 +167,9 @@ extension Book {
             // Use ISBN for most accurate results
             return URL(string: "https://www.amazon.com/s?k=\(isbn)")
         } else {
-            // Fallback to title and author search
-            let query = "\(title) \(author)"
+            // Fallback to title and author search (author is optional)
+            let authorPart = author.map { " \($0)" } ?? ""
+            let query = "\(title)\(authorPart)"
                 .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
             return URL(string: "https://www.amazon.com/s?k=\(query)")
         }
