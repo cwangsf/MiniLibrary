@@ -1516,6 +1516,12 @@
         }
       }
     },
+    "First Name" : {
+
+    },
+    "First Name(and Middle name, if any)" : {
+
+    },
     "Grade %lld" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1737,6 +1743,9 @@
           }
         }
       }
+    },
+    "Last Name" : {
+
     },
     "Library ID (e.g., LIB-001)" : {
       "extractionState" : "stale",
@@ -2606,6 +2615,7 @@
       }
     },
     "Student Name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2628,6 +2638,7 @@
       }
     },
     "Student Name (e.g., John Smith)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

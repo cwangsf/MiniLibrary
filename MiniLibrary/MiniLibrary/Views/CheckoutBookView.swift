@@ -16,7 +16,7 @@ struct CheckoutBookView: View {
     @Environment(\.dismiss) private var dismiss
 
     @Query(sort: \Book.title) private var books: [Book]
-    @Query(sort: \Student.libraryId) private var students: [Student]
+    @Query(sort: \Student.lastName) private var students: [Student]
 
     @State private var selectedBook: Book?
     @State private var selectedStudent: Student?
@@ -24,7 +24,8 @@ struct CheckoutBookView: View {
     @State private var showingConfirmation = false
     @State private var showingAddStudent = false
     @State private var showingStudentSelection = false
-    @State private var newStudentName = ""
+    @State private var newStudentFirstName = ""
+    @State private var newStudentLastName = ""
     @State private var newStudentClass = ""
 
     var availableBooks: [Book] {
@@ -65,7 +66,7 @@ struct CheckoutBookView: View {
                 Section("Select Student") {
                     if let student = selectedStudent {
                         HStack {
-                            Text(student.libraryId)
+                            Text(student.fullName)
                                 .font(.headline)
                             Spacer()
                             Button(action: {
@@ -162,7 +163,8 @@ struct CheckoutBookView: View {
         NavigationStack {
             Form {
                 Section("Student Information") {
-                    TextField(String(localized: "Student Name (e.g., John Smith)"), text: $newStudentName)
+                    TextField(String(localized: "First Name"), text: $newStudentFirstName)
+                    TextField(String(localized: "Last Name"), text: $newStudentLastName)
                     TextField(String(localized: "Class Code (optional)"), text: $newStudentClass)
                 }
             }
@@ -172,7 +174,8 @@ struct CheckoutBookView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         showingAddStudent = false
-                        newStudentName = ""
+                        newStudentFirstName = ""
+                        newStudentLastName = ""
                         newStudentClass = ""
                     }
                 }
@@ -181,7 +184,7 @@ struct CheckoutBookView: View {
                         addStudent()
                         showingAddStudent = false
                     }
-                    .disabled(newStudentName.isEmpty)
+                    .disabled(newStudentFirstName.isEmpty || newStudentLastName.isEmpty)
                 }
             }
         }
@@ -189,13 +192,15 @@ struct CheckoutBookView: View {
 
     private func addStudent() {
         let student = Student(
-            libraryId: newStudentName,
+            firstName: newStudentFirstName,
+            lastName: newStudentLastName,
             classCode: newStudentClass.isEmpty ? nil : newStudentClass
         )
 
         modelContext.insert(student)
         selectedStudent = student
-        newStudentName = ""
+        newStudentFirstName = ""
+        newStudentLastName = ""
         newStudentClass = ""
     }
 

@@ -48,7 +48,7 @@ struct CheckoutDetailRow: View {
             HStack {
                 Image(systemName: "person.fill")
                     .smallIcon(color: .secondary)
-                Text(checkout.student?.libraryId ?? "Unknown")
+                Text(checkout.student?.fullName ?? "Unknown")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

@@ -48,7 +48,7 @@ struct ReturnConfirmationView: View {
                             HStack {
                                 Image(systemName: "person.fill")
                                     .personIcon()
-                                Text(checkout.student?.libraryId ?? "Unknown")
+                                Text(checkout.student?.fullName ?? "Unknown")
                                     .valueText()
                             }
                         }

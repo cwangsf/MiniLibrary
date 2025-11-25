@@ -297,14 +297,11 @@ struct CSVImporter {
             return nil
         }
 
-        // Create libraryId as "FirstName LastName"
-        let libraryId = "\(firstName) \(lastName)"
-
         // Class is optional
         let classCode = csvRow["Class"]?.trimmingCharacters(in: .whitespaces).isEmpty == false ?
             csvRow["Class"]?.trimmingCharacters(in: .whitespaces) : nil
 
-        return Student(libraryId: libraryId, classCode: classCode)
+        return Student(firstName: firstName, lastName: lastName, classCode: classCode)
     }
 
 }

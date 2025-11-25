@@ -50,7 +50,7 @@ struct CheckoutConfirmationView: View {
                                 HStack {
                                     Image(systemName: "person.fill")
                                         .personIcon()
-                                    Text(student.libraryId)
+                                    Text(student.fullName)
                                         .valueText()
                                 }
                             }

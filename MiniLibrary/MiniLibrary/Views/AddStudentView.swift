@@ -13,18 +13,20 @@ struct AddStudentView: View {
     @Environment(\.dismiss) private var dismiss
     @Query private var students: [Student]
 
-    @State private var libraryId = ""
+    @State private var firstName = ""
+    @State private var lastName = ""
     @State private var classCode = ""
     @State private var editingStudent: Student?
-    @State private var editingName = ""
+    @State private var editingFirstName = ""
+    @State private var editingLastName = ""
     @State private var editingCode = ""
     @State private var showingEditSheet = false
 
     var body: some View {
         Form {
             Section("Student Information") {
-                TextField("Student Name (e.g., John Smith)", text: $libraryId)
-
+                TextField("First Name(and Middle name, if any)", text: $firstName)
+                TextField("Last Name", text: $lastName)
                 TextField("Class Code (optional)", text: $classCode)
             }
 
@@ -33,12 +35,13 @@ struct AddStudentView: View {
                     ForEach(students) { student in
                         Button(action: {
                             editingStudent = student
-                            editingName = student.libraryId
+                            editingFirstName = student.firstName
+                            editingLastName = student.lastName
                             editingCode = student.classCode ?? ""
                             showingEditSheet = true
                         }) {
                             HStack {
-                                Text(student.libraryId)
+                                Text(student.fullName)
                                 Spacer()
                                 if let code = student.classCode {
                                     Text(code)
@@ -67,10 +70,10 @@ struct AddStudentView: View {
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(libraryId.isEmpty ? .gray : .orange)
+                .background((firstName.isEmpty || lastName.isEmpty) ? .gray : .orange)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             }
-            .disabled(libraryId.isEmpty)
+            .disabled(firstName.isEmpty || lastName.isEmpty)
             .padding()
             .background(.ultraThinMaterial)
         }
@@ -84,7 +87,8 @@ struct AddStudentView: View {
         NavigationStack {
             Form {
                 Section("Edit Student") {
-                    TextField("Student Name", text: $editingName)
+                    TextField("First Name", text: $editingFirstName)
+                    TextField("Last Name", text: $editingLastName)
                     TextField("Class Code (optional)", text: $editingCode)
                 }
             }
@@ -101,7 +105,7 @@ struct AddStudentView: View {
                         saveEditedStudent()
                         showingEditSheet = false
                     }
-                    .disabled(editingName.isEmpty)
+                    .disabled(editingFirstName.isEmpty || editingLastName.isEmpty)
                 }
             }
         }
@@ -109,7 +113,8 @@ struct AddStudentView: View {
 
     private func addStudent() {
         let student = Student(
-            libraryId: libraryId,
+            firstName: firstName,
+            lastName: lastName,
             classCode: classCode.isEmpty ? nil : classCode
         )
 
@@ -120,7 +125,8 @@ struct AddStudentView: View {
     private func saveEditedStudent() {
         guard let student = editingStudent else { return }
 
-        student.libraryId = editingName
+        student.firstName = editingFirstName
+        student.lastName = editingLastName
         student.classCode = editingCode.isEmpty ? nil : editingCode
     }
 

@@ -443,7 +443,7 @@ struct AddCopyConfirmationView: View {
                                             HStack {
                                                 Image(systemName: "person.fill")
                                                     .smallIcon(color: .orange)
-                                                Text(checkout.student?.libraryId ?? "Unknown")
+                                                Text(checkout.student?.fullName ?? "Unknown")
                                                     .font(.subheadline)
                                             }
                                         }
@@ -536,7 +536,7 @@ struct AddCopyConfirmationView: View {
                     List(activeCheckouts) { checkout in
                         NavigationLink(value: checkout) {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(checkout.student?.libraryId ?? "Unknown Student")
+                                Text(checkout.student?.fullName ?? "Unknown Student")
                                     .font(.headline)
                                 Text("Due: \(checkout.dueDate.formatted(date: .abbreviated, time: .omitted))")
                                     .font(.caption)
@@ -590,7 +590,7 @@ struct AddCopyConfirmationView: View {
                                     HStack {
                                         Image(systemName: "person.fill")
                                             .personIcon()
-                                        Text(checkout.student?.libraryId ?? "Unknown")
+                                        Text(checkout.student?.fullName ?? "Unknown")
                                             .valueText()
                                     }
                                 }

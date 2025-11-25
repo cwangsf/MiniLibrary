@@ -25,7 +25,7 @@ struct BookManagementService {
             book.availableCopies += 1
 
             // Log the return activity
-            ActivityLogger.logReturn(book, studentLibraryId: checkout.student?.libraryId, modelContext: modelContext)
+            ActivityLogger.logReturn(book, studentLibraryId: checkout.student?.fullName, modelContext: modelContext)
         }
     }
 }

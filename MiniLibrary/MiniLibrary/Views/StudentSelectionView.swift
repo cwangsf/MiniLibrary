@@ -10,7 +10,7 @@ import SwiftData
 
 struct StudentSelectionView: View {
     @Environment(\.dismiss) private var dismiss
-    @Query(sort: \Student.libraryId) private var allStudents: [Student]
+    @Query(sort: \Student.lastName) private var allStudents: [Student]
 
     let onSelect: (Student) -> Void
 
@@ -21,13 +21,9 @@ struct StudentSelectionView: View {
             return allStudents
         } else {
             return allStudents.filter { student in
-                let parts = student.libraryId.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
-                let firstName = parts.count > 0 ? String(parts[0]) : ""
-                let lastName = parts.count > 1 ? String(parts[1]) : ""
-
-                return student.libraryId.localizedCaseInsensitiveContains(searchText) ||
-                       firstName.localizedCaseInsensitiveContains(searchText) ||
-                       lastName.localizedCaseInsensitiveContains(searchText)
+                return student.fullName.localizedCaseInsensitiveContains(searchText) ||
+                       student.firstName.localizedCaseInsensitiveContains(searchText) ||
+                       student.lastName.localizedCaseInsensitiveContains(searchText)
             }
         }
     }
@@ -35,9 +31,7 @@ struct StudentSelectionView: View {
     // Group students by last name initial
     private var groupedStudents: [String: [Student]] {
         let grouped = Dictionary(grouping: filteredStudents) { student in
-            let parts = student.libraryId.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
-            let lastName = parts.count > 1 ? String(parts[1]) : String(parts[0])
-            let initial = lastName.isEmpty ? "#" : String(lastName.prefix(1)).uppercased()
+            let initial = student.lastName.isEmpty ? "#" : String(student.lastName.prefix(1)).uppercased()
             return initial
         }
         return grouped
@@ -60,7 +54,7 @@ struct StudentSelectionView: View {
                                         dismiss()
                                     }) {
                                         HStack {
-                                            Text(student.libraryId)
+                                            Text(student.fullName)
                                                 .foregroundStyle(.primary)
                                             if let classCode = student.classCode {
                                                 Spacer()
@@ -104,7 +98,7 @@ struct StudentSelectionView: View {
 
 #Preview {
     StudentSelectionView { student in
-        print("Selected: \(student.libraryId)")
+        print("Selected: \(student.fullName)")
     }
     .modelContainer(for: [Student.self])
 }
