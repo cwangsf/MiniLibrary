@@ -694,6 +694,9 @@
         }
       }
     },
+    "Bulk Data Management" : {
+
+    },
     "by %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1359,6 +1362,7 @@
       }
     },
     "Export" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

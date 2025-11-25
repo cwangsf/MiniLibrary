@@ -107,70 +107,32 @@ struct AddView: View {
                     }
                 }
 
-                Section("Export") {
-                    // Export Catalog
-                    ExportCatalogRow(
-                        isExporting: isExporting,
-                        exportFileURL: exportFileURL,
-                        onExport: {
-                            Task {
-                                await exportCatalog()
-                            }
+                BulkDataManagementSection(
+                    isExporting: $isExporting,
+                    exportFileURL: $exportFileURL,
+                    isExportingWishlist: $isExportingWishlist,
+                    exportWishlistFileURL: $exportWishlistFileURL,
+                    isExportingStudents: $isExportingStudents,
+                    exportStudentsFileURL: $exportStudentsFileURL,
+                    showingDeleteConfirmation: $showingDeleteConfirmation,
+                    showingImportPicker: $showingImportPicker,
+                    importType: $importType,
+                    onExportCatalog: {
+                        Task {
+                            await exportCatalog()
                         }
-                    )
-
-                    // Export Wishlist
-                    ExportWishlistRow(
-                        isExporting: isExportingWishlist,
-                        exportFileURL: exportWishlistFileURL,
-                        onExport: {
-                            Task {
-                                await exportWishlist()
-                            }
+                    },
+                    onExportWishlist: {
+                        Task {
+                            await exportWishlist()
                         }
-                    )
-
-                    // Export Students
-                    ExportStudentsRow(
-                        isExporting: isExportingStudents,
-                        exportFileURL: exportStudentsFileURL,
-                        onExport: {
-                            Task {
-                                await exportStudents()
-                            }
-                        }
-                    )
-
-                    // Import Catalog
-                    ImportCatalogRow {
-                        importType = .catalog
-                        showingImportPicker = true
-                    }
-
-                    // Import Wishlist
-                    ImportWishlistRow {
-                        importType = .wishlist
-                        showingImportPicker = true
-                    }
-
-                    // Import Students
-                    ImportStudentsRow {
-                        importType = .students
-                        showingImportPicker = true
-                    }
-
-                    // Delete All Data
-                    Button {
-                        showingDeleteConfirmation = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "trash.fill")
-                                .foregroundStyle(.red)
-                            Text("Delete All Data")
-                                .foregroundStyle(.tint)
+                    },
+                    onExportStudents: {
+                        Task {
+                            await exportStudents()
                         }
                     }
-                }
+                )
 
                 // App Info Section
                 Section("About") {
