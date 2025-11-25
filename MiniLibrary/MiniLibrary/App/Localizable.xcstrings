@@ -2378,6 +2378,9 @@
         }
       }
     },
+    "Search by name" : {
+
+    },
     "Search Google Books" : {
       "localizations" : {
         "de" : {
@@ -2489,6 +2492,7 @@
       }
     },
     "Select a student" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2509,6 +2513,9 @@
           }
         }
       }
+    },
+    "Select a Student" : {
+
     },
     "Select Book" : {
       "localizations" : {

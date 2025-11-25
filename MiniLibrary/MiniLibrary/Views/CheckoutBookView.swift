@@ -23,6 +23,7 @@ struct CheckoutBookView: View {
     @State private var dueDate = Date().addingTimeInterval(14 * 24 * 60 * 60) // 2 weeks default
     @State private var showingConfirmation = false
     @State private var showingAddStudent = false
+    @State private var showingStudentSelection = false
     @State private var newStudentName = ""
     @State private var newStudentClass = ""
 
@@ -62,10 +63,28 @@ struct CheckoutBookView: View {
                 }
 
                 Section("Select Student") {
-                    Picker("Student", selection: $selectedStudent) {
-                        Text("Select a student").tag(nil as Student?)
-                        ForEach(students) { student in
-                            Text(student.libraryId).tag(student as Student?)
+                    if let student = selectedStudent {
+                        HStack {
+                            Text(student.libraryId)
+                                .font(.headline)
+                            Spacer()
+                            Button(action: {
+                                selectedStudent = nil
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                    } else {
+                        Button(action: {
+                            showingStudentSelection = true
+                        }) {
+                            HStack {
+                                Image(systemName: "person.text.rectangle")
+                                    .foregroundStyle(.blue)
+                                Text("Select a Student")
+                                    .foregroundStyle(.tint)
+                            }
                         }
                     }
 
@@ -125,6 +144,11 @@ struct CheckoutBookView: View {
                             checkoutBook()
                         }
                     )
+                }
+            }
+            .sheet(isPresented: $showingStudentSelection) {
+                StudentSelectionView { student in
+                    selectedStudent = student
                 }
             }
             .sheet(isPresented: $showingAddStudent) {

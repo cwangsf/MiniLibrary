@@ -67,6 +67,33 @@ class DataSeeder {
         print("Successfully seeded \(itemsCreated) wishlist items")
     }
 
+    /// Load students from CSV file and insert into SwiftData
+    /// Only seeds if no students exist yet
+    static func seedStudentsFromCSV(fileName: String, modelContext: ModelContext) throws {
+        // Check if any students already exist
+        let descriptor = FetchDescriptor<Student>()
+        let existingStudents = try modelContext.fetch(descriptor)
+
+        guard existingStudents.isEmpty else {
+            print("Students already seeded, skipping...")
+            return
+        }
+
+        // Get CSV file from bundle
+        guard let fileURL = Bundle.main.url(forResource: fileName, withExtension: "csv") else {
+            throw DataSeederError.fileNotFound
+        }
+
+        // Read CSV content
+        let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+
+        // Use CSVImporter to import students
+        let studentsCreated = try CSVImporter.importStudents(from: csvContent, modelContext: modelContext)
+
+        try modelContext.save()
+        print("Successfully seeded \(studentsCreated) students")
+    }
+
     /// Export books to JSON file (for testing or backup)
     static func exportBooksToJSON(books: [Book], to fileURL: URL) throws {
         let encoder = JSONEncoder()

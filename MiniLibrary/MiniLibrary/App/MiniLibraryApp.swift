@@ -25,7 +25,7 @@ struct MiniLibraryApp: App {
             let context = ModelContext(container)
 
             #if DEBUG
-            DataSeeder.clearLocalData(modelContext: context)
+            //DataSeeder.clearLocalData(modelContext: context)
             #endif
 
             // Seed books from CSV
@@ -41,6 +41,15 @@ struct MiniLibraryApp: App {
             } catch {
                 print("Error seeding wishlist: \(error)")
             }
+
+            #if DEBUG
+            // Seed students from CSV
+            do {
+                try DataSeeder.seedStudentsFromCSV(fileName: "sample_students", modelContext: context)
+            } catch {
+                print("Error seeding students: \(error)")
+            }
+            #endif
 
             return container
         } catch {
