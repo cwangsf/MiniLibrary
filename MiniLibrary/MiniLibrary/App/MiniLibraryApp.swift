@@ -24,7 +24,9 @@ struct MiniLibraryApp: App {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             let context = ModelContext(container)
 
-            DataSeeder.seedDebugData(modelContext: context)
+            #if !DEBUG
+            DataSeeder.clearLocalData(modelContext: context)
+            #endif
 
             // Seed books from CSV
             #if DEBUG

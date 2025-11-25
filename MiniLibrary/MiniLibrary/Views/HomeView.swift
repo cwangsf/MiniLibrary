@@ -79,25 +79,7 @@ struct HomeView: View {
                     .padding(.horizontal)
 
                     // Recent Activity Section
-                    if !activities.isEmpty {
-                        VStack(alignment: .leading) {
-                            Text("Recent Activity")
-                                .font(.headline)
-                                .padding(.horizontal)
-
-                            ForEach(activities.prefix(10)) { activity in
-                                ActivityRowView(activity: activity)
-                            }
-                        }
-                    } else {
-                        ContentUnavailableView(
-                            "No Recent Activity",
-                            systemImage: "clock",
-                            description: Text("Activity will appear here as you use the library")
-                        )
-                    }
-
-                    Spacer()
+                    RecentActivitySection(activities: activities)
                 }
                 .padding(.top)
             }

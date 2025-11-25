@@ -86,7 +86,6 @@ struct WishlistView: View {
                             proxy.scrollTo(letter, anchor: .top)
                         }
                     }
-                    .padding(.trailing)
                 }
             }
         }
@@ -109,10 +108,8 @@ struct WishlistView: View {
                     .background(.ultraThinMaterial)
             }
         }
-        .sheet(isPresented: $showingAcquireSheet) {
-            if let book = selectedBook {
-                AcquireWishlistItemView(book: book)
-            }
+        .sheet(item: $selectedBook) { book in
+            AcquireWishlistItemView(book: book)
         }
         .sheet(isPresented: $showingAddWishlistSheet) {
             AddWishlistItemView()
