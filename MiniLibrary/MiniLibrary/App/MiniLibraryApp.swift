@@ -24,7 +24,7 @@ struct MiniLibraryApp: App {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             let context = ModelContext(container)
 
-            #if !DEBUG
+            #if DEBUG
             DataSeeder.clearLocalData(modelContext: context)
             #endif
 
