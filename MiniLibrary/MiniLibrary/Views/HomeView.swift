@@ -28,57 +28,61 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                Section {
+            ScrollView {
+                VStack(spacing: 20) {
                     // Statistics Cards
-                    VStack(spacing: 15) {
-                        HStack(spacing: 15) {
+                    HStack(spacing: 15) {
+                        NavigationLink(destination: CatalogView()) {
                             StatCard(
                                 title: "Total Copies",
                                 value: "\(totalCopies)",
                                 icon: "books.vertical.fill",
                                 color: .blue
                             )
-                            .background(
-                                NavigationLink("", destination: CatalogView())
-                                    .opacity(0)
-                            )
+                        }
+                        .buttonStyle(.plain)
 
+                        NavigationLink(destination: CheckedOutBooksListView()) {
                             StatCard(
                                 title: "Checked Out",
                                 value: "\(activeCheckouts.filter { $0.isActive }.count)",
                                 icon: "book.fill",
                                 color: .orange
                             )
-                            .background(NavigationLink("", destination: CheckedOutBooksListView()).opacity(0))
                         }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.horizontal)
 
-                        // Second Row
-                        HStack(spacing: 15) {
+                    // Second Row
+                    HStack(spacing: 15) {
+                        NavigationLink(destination: WishlistView()) {
                             StatCard(
                                 title: "Wish List",
                                 value: "\(wishlistCount)",
                                 icon: "list.star",
                                 color: .green
                             )
-                            .background(NavigationLink("", destination: WishlistView()).opacity(0))
+                        }
+                        .buttonStyle(.plain)
 
+                        NavigationLink(destination: FavoritesView()) {
                             StatCard(
                                 title: "Favorites",
                                 value: "\(favoritesCount)",
                                 icon: "heart.fill",
                                 color: .pink
                             )
-                            .background(NavigationLink("", destination: FavoritesView()).opacity(0))
                         }
+                        .buttonStyle(.plain)
                     }
-                }
-                //.buttonStyle(.plain)
-                .listRowSeparator(.hidden)
+                    .padding(.horizontal)
 
-                RecentActivitySection(activities: activities)
+                    // Recent Activity Section
+                    RecentActivitySection(activities: activities)
+                }
+                .padding(.top)
             }
-            .listStyle(.plain)
             .navigationTitle("Home")
         }
     }
