@@ -60,7 +60,7 @@ struct BookDetailView: View {
                                         Text("Return Book")
                                             .fontWeight(.medium)
                                         Spacer()
-                                        Text("Student: \(checkout.student?.libraryId ?? "Unknown")")
+                                        Text("Student: \(checkout.student?.fullName ?? "Unknown")")
                                             .font(.caption)
                                     }
                                 }
@@ -136,7 +136,7 @@ struct BookDetailView: View {
 
                         ForEach(checkouts) { checkout in
                             HStack {
-                                Text(checkout.student?.libraryId ?? "Unknown")
+                                Text(checkout.student?.fullName ?? "Unknown")
                                     .font(.subheadline)
 
                                 Spacer()

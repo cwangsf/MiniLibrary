@@ -63,7 +63,7 @@ final class CheckoutRecord: Codable {
         try container.encode(dueDate, forKey: .dueDate)
         try container.encodeIfPresent(returnDate, forKey: .returnDate)
         try container.encode(checkedOutByStaffId, forKey: .checkedOutByStaffId)
-        try container.encodeIfPresent(student?.libraryId, forKey: .studentId)
+        try container.encodeIfPresent(student?.fullName, forKey: .studentId)
         try container.encodeIfPresent(book?.id, forKey: .bookId)
     }
 

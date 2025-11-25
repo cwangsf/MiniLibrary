@@ -85,7 +85,8 @@ struct CatalogView: View {
 
                         LanguageFilterPicker(selectedLanguage: $selectedLanguage)
                             .background(.ultraThinMaterial)
-                            .cornerRadius(12)
+                            .cornerRadius(8)
+                            .padding(.horizontal)
                     }
                     .allowsHitTesting(true)
                 }

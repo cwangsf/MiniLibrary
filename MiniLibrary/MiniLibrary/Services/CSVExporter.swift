@@ -46,14 +46,11 @@ enum CSVExporter {
         var csv = "First Name,Last Name,Class\n"
 
         for student in students {
-            let parts = student.libraryId.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
-            let firstName = parts.count > 0 ? String(parts[0]) : ""
-            let lastName = parts.count > 1 ? String(parts[1]) : ""
             let classCode = student.classCode ?? ""
 
             let fields = [
-                escapeCSV(firstName),
-                escapeCSV(lastName),
+                escapeCSV(student.firstName),
+                escapeCSV(student.lastName),
                 escapeCSV(classCode)
             ]
 

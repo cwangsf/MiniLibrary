@@ -57,7 +57,7 @@ struct ActivityLogger {
             type: .checkout,
             bookTitle: book.title,
             bookAuthor: book.author,
-            studentLibraryId: student.libraryId,
+            studentLibraryId: student.fullName,
             additionalInfo: "Due \(dueDate.formatted(date: .abbreviated, time: .omitted))"
         )
         modelContext.insert(activity)

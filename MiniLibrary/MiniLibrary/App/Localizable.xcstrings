@@ -896,6 +896,9 @@
         }
       }
     },
+    "Confirm New Book" : {
+
+    },
     "Confirm Return" : {
       "localizations" : {
         "de" : {
@@ -1516,6 +1519,12 @@
         }
       }
     },
+    "First Name" : {
+
+    },
+    "First Name(and Middle name, if any)" : {
+
+    },
     "Grade %lld" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1737,6 +1746,9 @@
           }
         }
       }
+    },
+    "Last Name" : {
+
     },
     "Library ID (e.g., LIB-001)" : {
       "extractionState" : "stale",
@@ -2378,6 +2390,9 @@
         }
       }
     },
+    "Search by name" : {
+
+    },
     "Search Google Books" : {
       "localizations" : {
         "de" : {
@@ -2489,6 +2504,7 @@
       }
     },
     "Select a student" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2509,6 +2525,9 @@
           }
         }
       }
+    },
+    "Select a Student" : {
+
     },
     "Select Book" : {
       "localizations" : {
@@ -2599,6 +2618,7 @@
       }
     },
     "Student Name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2621,6 +2641,7 @@
       }
     },
     "Student Name (e.g., John Smith)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

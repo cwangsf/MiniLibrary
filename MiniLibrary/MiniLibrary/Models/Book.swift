@@ -11,7 +11,7 @@ import SwiftData
 @Model
 final class Book: Codable {
     @Attribute(.unique) var id: UUID
-    var isbn: String?
+    @Attribute(.unique) var isbn: String?
     var title: String
     var author: String?
     var totalCopies: Int

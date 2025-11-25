@@ -47,8 +47,6 @@ struct LanguageFilterPicker: View {
             }
         }
         .pickerStyle(.segmented)
-        .padding(.horizontal, 0)
-        .padding(.vertical, 8)
         .listRowInsets(EdgeInsets())
     }
 }

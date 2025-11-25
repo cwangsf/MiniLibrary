@@ -41,7 +41,7 @@ struct ReturnBookView: View {
                                     .font(.headline)
                                     .foregroundStyle(.primary)
 
-                                Text("Student: \(checkout.student?.libraryId ?? "Unknown")")
+                                Text("Student: \(checkout.student?.fullName ?? "Unknown")")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }

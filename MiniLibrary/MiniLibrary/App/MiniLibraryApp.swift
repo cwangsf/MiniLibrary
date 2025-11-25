@@ -10,6 +10,9 @@ import SwiftData
 
 @main
 struct MiniLibraryApp: App {
+    @AppStorage("hasSeededBooks") private var hasSeededBooks = false
+    @AppStorage("hasSeededWishlist") private var hasSeededWishlist = false
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Book.self,
@@ -28,19 +31,14 @@ struct MiniLibraryApp: App {
             DataSeeder.clearLocalData(modelContext: context)
             #endif
 
-            // Seed books from CSV
+            #if DEBUG
+            // Seed students from CSV
             do {
-                try DataSeeder.seedBooksFromCSV(fileName: "all_books", modelContext: context)
+                try DataSeeder.seedStudentsFromCSV(fileName: "sample_students", modelContext: context)
             } catch {
-                print("Error seeding books: \(error)")
+                print("Error seeding students: \(error)")
             }
-
-            // Seed wishlist from CSV (fast - no API calls)
-            do {
-                try DataSeeder.seedWishlistFromCSV(fileName: "wish_list", modelContext: context)
-            } catch {
-                print("Error seeding wishlist: \(error)")
-            }
+            #endif
 
             return container
         } catch {
@@ -51,7 +49,37 @@ struct MiniLibraryApp: App {
     var body: some Scene {
         WindowGroup {
             MainTabView()
+                .onAppear {
+                    seedBooksIfNeeded()
+                    seedWishlistIfNeeded()
+                }
         }
         .modelContainer(sharedModelContainer)
+    }
+
+    private func seedBooksIfNeeded() {
+        guard !hasSeededBooks else { return }
+
+        let context = ModelContext(sharedModelContainer)
+        do {
+            try DataSeeder.seedBooksFromCSV(fileName: "sample_books", modelContext: context)
+            hasSeededBooks = true
+            print("Books seeded successfully on first install")
+        } catch {
+            print("Error seeding books: \(error)")
+        }
+    }
+
+    private func seedWishlistIfNeeded() {
+        guard !hasSeededWishlist else { return }
+
+        let context = ModelContext(sharedModelContainer)
+        do {
+            try DataSeeder.seedWishlistFromCSV(fileName: "wish_list", modelContext: context)
+            hasSeededWishlist = true
+            print("Wishlist seeded successfully on first install")
+        } catch {
+            print("Error seeding wishlist: \(error)")
+        }
     }
 }
