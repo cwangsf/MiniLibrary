@@ -25,25 +25,46 @@ struct BulkDataManagementSection: View {
     var body: some View {
         Section("Bulk Data Management") {
             // Export Catalog
-            ExportCatalogRow(
-                isExporting: isExporting,
-                exportFileURL: exportFileURL,
-                onExport: onExportCatalog
-            )
+            HStack {
+                ExportCatalogRow(
+                    isExporting: isExporting,
+                    exportFileURL: exportFileURL,
+                    onExport: onExportCatalog
+                )
+                if isExporting {
+                    Spacer()
+                    ProgressView()
+                        .scaleEffect(0.8)
+                }
+            }
 
             // Export Wishlist
-            ExportWishlistRow(
-                isExporting: isExportingWishlist,
-                exportFileURL: exportWishlistFileURL,
-                onExport: onExportWishlist
-            )
+            HStack {
+                ExportWishlistRow(
+                    isExporting: isExportingWishlist,
+                    exportFileURL: exportWishlistFileURL,
+                    onExport: onExportWishlist
+                )
+                if isExportingWishlist {
+                    Spacer()
+                    ProgressView()
+                        .scaleEffect(0.8)
+                }
+            }
 
             // Export Students
-            ExportStudentsRow(
-                isExporting: isExportingStudents,
-                exportFileURL: exportStudentsFileURL,
-                onExport: onExportStudents
-            )
+            HStack {
+                ExportStudentsRow(
+                    isExporting: isExportingStudents,
+                    exportFileURL: exportStudentsFileURL,
+                    onExport: onExportStudents
+                )
+                if isExportingStudents {
+                    Spacer()
+                    ProgressView()
+                        .scaleEffect(0.8)
+                }
+            }
 
             // Import Catalog
             ImportCatalogRow {
