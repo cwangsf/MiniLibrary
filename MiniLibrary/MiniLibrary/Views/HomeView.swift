@@ -28,79 +28,57 @@ struct HomeView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
+            List {
+                Section {
                     // Statistics Cards
-                    HStack(spacing: 15) {
-                        NavigationLink(destination: CatalogView()) {
+                    VStack(spacing: 15) {
+                        HStack(spacing: 15) {
                             StatCard(
                                 title: "Total Copies",
                                 value: "\(totalCopies)",
                                 icon: "books.vertical.fill",
                                 color: .blue
                             )
-                        }
-                        .buttonStyle(.plain)
+                            .background(
+                                NavigationLink("", destination: CatalogView())
+                                    .opacity(0)
+                            )
 
-                        NavigationLink(destination: CheckedOutBooksListView()) {
                             StatCard(
                                 title: "Checked Out",
                                 value: "\(activeCheckouts.filter { $0.isActive }.count)",
                                 icon: "book.fill",
                                 color: .orange
                             )
+                            .background(NavigationLink("", destination: CheckedOutBooksListView()).opacity(0))
                         }
-                        .buttonStyle(.plain)
-                    }
-                    .padding(.horizontal)
 
-                    // Second Row
-                    HStack(spacing: 15) {
-                        NavigationLink(destination: WishlistView()) {
+                        // Second Row
+                        HStack(spacing: 15) {
                             StatCard(
                                 title: "Wish List",
                                 value: "\(wishlistCount)",
                                 icon: "list.star",
                                 color: .green
                             )
-                        }
-                        .buttonStyle(.plain)
+                            .background(NavigationLink("", destination: WishlistView()).opacity(0))
 
-                        NavigationLink(destination: FavoritesView()) {
                             StatCard(
                                 title: "Favorites",
                                 value: "\(favoritesCount)",
                                 icon: "heart.fill",
                                 color: .pink
                             )
+                            .background(NavigationLink("", destination: FavoritesView()).opacity(0))
                         }
-                        .buttonStyle(.plain)
                     }
-                    .padding(.horizontal)
-
-                    // Recent Activity Section
-                    if !activities.isEmpty {
-                        VStack(alignment: .leading) {
-                            Text("Recent Activity")
-                                .font(.headline)
-                                .padding(.horizontal)
-
-                            ForEach(activities.prefix(10)) { activity in
-                                ActivityRowView(activity: activity)
-                            }
-                        }
-                    } else {
-                        ContentUnavailableView(
-                            "No Recent Activity",
-                            systemImage: "clock",
-                            description: Text("Activity will appear here as you use the library")
-                        )
-                    }
-
-                    Spacer()
                 }
-                .padding(.top)
+                //.buttonStyle(.plain)
+                .listRowSeparator(.hidden)
+
+                RecentActivitySection(activities: activities)
             }
+            .listStyle(.plain)
             .navigationTitle("Home")
         }
     }

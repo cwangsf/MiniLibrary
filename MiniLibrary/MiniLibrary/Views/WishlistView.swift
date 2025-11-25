@@ -86,7 +86,6 @@ struct WishlistView: View {
                             proxy.scrollTo(letter, anchor: .top)
                         }
                     }
-                    .padding(.trailing)
                 }
             }
         }
