@@ -23,12 +23,23 @@ struct CSVImporter {
         var importedCount = 0
         var skippedLines: [(lineNumber: Int, reason: String, row: [String: String])] = []
 
+        // Fetch existing books to check for duplicates
+        let descriptor = FetchDescriptor<Book>()
+        let existingBooks = try modelContext.fetch(descriptor)
+
         for (index, row) in rows.enumerated() {
             // Create Book from CSV row
             let result = createBook(from: row)
             if let book = result.book {
-                modelContext.insert(book)
-                importedCount += 1
+                // Check if a book with the same ISBN already exists
+                if let isbn = book.isbn,
+                   existingBooks.contains(where: { $0.isbn == isbn }) {
+                    skippedLines.append((lineNumber: index + 2, reason: "Duplicate ISBN: \(isbn)", row: row))
+                    print("Skipping line \(index + 2): Duplicate ISBN: \(isbn)")
+                } else {
+                    modelContext.insert(book)
+                    importedCount += 1
+                }
             } else {
                 skippedLines.append((lineNumber: index + 2, reason: result.reason, row: row))
                 print("Skipping line \(index + 2): \(result.reason)\n     Book info: \(row)")

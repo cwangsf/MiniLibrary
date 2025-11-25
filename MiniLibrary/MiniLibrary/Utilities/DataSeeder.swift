@@ -41,17 +41,6 @@ class DataSeeder {
     /// Only seeds if no wishlist items exist yet
     /// Uses fast import (no API calls) for instant loading
     static func seedWishlistFromCSV(fileName: String, modelContext: ModelContext) throws {
-        // Check if any wishlist items already exist
-        let descriptor = FetchDescriptor<Book>(
-            predicate: #Predicate { $0.isWishlistItem == true }
-        )
-        let existingWishlist = try modelContext.fetch(descriptor)
-
-        guard existingWishlist.isEmpty else {
-            print("Wishlist already seeded, skipping...")
-            return
-        }
-
         // Get CSV file from bundle
         guard let fileURL = Bundle.main.url(forResource: fileName, withExtension: "csv") else {
             throw DataSeederError.fileNotFound
