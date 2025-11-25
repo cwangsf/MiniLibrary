@@ -54,9 +54,7 @@ struct CatalogView: View {
                             ForEach(sortedSectionTitles, id: \.self) { letter in
                                 Section {
                                     ForEach(groupedBooks[letter] ?? []) { book in
-                                        NavigationLink(destination: BookDetailView(book: book)) {
-                                            BookRowView(book: book)
-                                        }
+                                        BookRowWithActions(book: book, onDelete: deleteBook)
                                     }
                                 } header: {
                                     Text(letter)
@@ -66,9 +64,7 @@ struct CatalogView: View {
                         } else {
                             // Flat list when searching
                             ForEach(filteredBooks) { book in
-                                NavigationLink(destination: BookDetailView(book: book)) {
-                                    BookRowView(book: book)
-                                }
+                                BookRowWithActions(book: book, onDelete: deleteBook)
                             }
                         }
                     }
@@ -97,6 +93,11 @@ struct CatalogView: View {
             .navigationTitle("Catalog")
             .searchable(text: $searchText, prompt: "Search books or authors")
         }
+    }
+
+    private func deleteBook(_ book: Book) {
+        modelContext.delete(book)
+        try? modelContext.save()
     }
 }
 

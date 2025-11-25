@@ -80,7 +80,7 @@ class DataSeeder {
 
     // MARK: - Debug Seeding
     /// Seed debug data: clear all data
-    static func seedDebugData(modelContext: ModelContext) {
+    static func clearLocalData(modelContext: ModelContext) {
         do {
             // Clear all data
             try modelContext.delete(model: Book.self)
