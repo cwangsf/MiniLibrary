@@ -12,6 +12,7 @@ import SwiftData
 struct MiniLibraryApp: App {
     @AppStorage("hasSeededBooks") private var hasSeededBooks = false
     @AppStorage("hasSeededWishlist") private var hasSeededWishlist = false
+    @AppStorage("hasCleared") private var hasCleared = false
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -26,10 +27,6 @@ struct MiniLibraryApp: App {
         do {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             let context = ModelContext(container)
-
-            #if DEBUG
-            DataSeeder.clearLocalData(modelContext: context)
-            #endif
 
             #if DEBUG
             // Seed students from CSV
@@ -50,11 +47,21 @@ struct MiniLibraryApp: App {
         WindowGroup {
             MainTabView()
                 .onAppear {
+                    clearDataIfNeeded()
                     seedBooksIfNeeded()
                     seedWishlistIfNeeded()
                 }
         }
         .modelContainer(sharedModelContainer)
+    }
+
+    private func clearDataIfNeeded() {
+        guard !hasCleared else { return }
+
+        let context = ModelContext(sharedModelContainer)
+        DataSeeder.clearLocalData(modelContext: context)
+        hasCleared = true
+        print("Local data cleared on first install")
     }
 
     private func seedBooksIfNeeded() {
@@ -75,7 +82,7 @@ struct MiniLibraryApp: App {
 
         let context = ModelContext(sharedModelContainer)
         do {
-            try DataSeeder.seedWishlistFromCSV(fileName: "wish_list", modelContext: context)
+            try DataSeeder.seedWishlistFromCSV(fileName: "sample_wish_list", modelContext: context)
             hasSeededWishlist = true
             print("Wishlist seeded successfully on first install")
         } catch {
