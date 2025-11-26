@@ -82,7 +82,7 @@ struct MiniLibraryApp: App {
 
         let context = ModelContext(sharedModelContainer)
         do {
-            try DataSeeder.seedWishlistFromCSV(fileName: "wish_list", modelContext: context)
+            try DataSeeder.seedWishlistFromCSV(fileName: "sample_wish_list", modelContext: context)
             hasSeededWishlist = true
             print("Wishlist seeded successfully on first install")
         } catch {
