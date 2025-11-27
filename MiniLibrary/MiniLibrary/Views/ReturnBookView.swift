@@ -9,6 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct ReturnBookView: View {
+    let book: Book?
+    var onReturnComplete: (() -> Void)? = nil
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
@@ -18,7 +21,15 @@ struct ReturnBookView: View {
     @State private var checkoutToReturn: CheckoutRecord?
 
     var activeCheckouts: [CheckoutRecord] {
-        checkouts.filter { $0.isActive }
+        if let book = book {
+            return checkouts.filter { $0.isActive && $0.book?.id == book.id }
+        }
+        return checkouts.filter { $0.isActive }
+    }
+
+    init(book: Book? = nil, onReturnComplete: (() -> Void)? = nil) {
+        self.book = book
+        self.onReturnComplete = onReturnComplete
     }
 
     var body: some View {
@@ -84,6 +95,7 @@ struct ReturnBookView: View {
 
     private func returnBook(_ checkout: CheckoutRecord) {
         BookManagementService.returnBook(checkout, modelContext: modelContext)
+        onReturnComplete?()
         dismiss()
     }
 }

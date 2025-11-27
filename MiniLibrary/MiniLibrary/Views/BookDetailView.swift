@@ -309,8 +309,20 @@ struct BookDetailView: View {
             return
         }
 
+        // Calculate how many copies were added
+        let copiesDifference = totalCopies - book.totalCopies
+
         book.totalCopies = totalCopies
-        book.availableCopies = availableCopies
+
+        // If total copies increased, add those new copies to available
+        if copiesDifference > 0 {
+            book.availableCopies = availableCopies + copiesDifference
+        } else {
+            book.availableCopies = availableCopies
+        }
+
+        // Save changes to database
+        try? modelContext.save()
     }
 
     private func fetchBookInfoIfNeeded() {

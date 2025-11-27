@@ -36,6 +36,16 @@
         }
       }
     },
+    "%lld %@ checked out" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld %2$@ checked out"
+          }
+        }
+      }
+    },
     "%lld available" : {
       "localizations" : {
         "de" : {
@@ -181,6 +191,12 @@
         }
       }
     },
+    "Add & Checkout" : {
+
+    },
+    "Add & Return" : {
+
+    },
     "Add %lld %@" : {
       "localizations" : {
         "en" : {
@@ -222,6 +238,9 @@
           }
         }
       }
+    },
+    "Add Book to Catalog First" : {
+
     },
     "Add Copies" : {
       "localizations" : {
@@ -830,6 +849,9 @@
         }
       }
     },
+    "Checked Out Copies" : {
+
+    },
     "Class Code (optional)" : {
       "localizations" : {
         "de" : {
@@ -1077,6 +1099,9 @@
           }
         }
       }
+    },
+    "Currently no checkout for this book" : {
+
     },
     "Delete" : {
       "localizations" : {
@@ -1774,6 +1799,7 @@
       }
     },
     "Manage Checkouts" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1794,6 +1820,9 @@
           }
         }
       }
+    },
+    "No active checkouts" : {
+
     },
     "No Active Checkouts" : {
       "localizations" : {
@@ -1838,6 +1867,9 @@
           }
         }
       }
+    },
+    "No copies available" : {
+
     },
     "No Favorite Books" : {
       "localizations" : {
@@ -2125,6 +2157,12 @@
           }
         }
       }
+    },
+    "Proceed to Checkout" : {
+
+    },
+    "Proceed to Return" : {
+
     },
     "Published: %@" : {
       "localizations" : {
@@ -2551,6 +2589,9 @@
         }
       }
     },
+    "Select Copy to Return" : {
+
+    },
     "Select Student" : {
       "localizations" : {
         "de" : {
@@ -2572,6 +2613,9 @@
           }
         }
       }
+    },
+    "Status" : {
+
     },
     "Student" : {
       "localizations" : {
