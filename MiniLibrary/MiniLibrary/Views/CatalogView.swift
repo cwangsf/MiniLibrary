@@ -55,6 +55,7 @@ struct CatalogView: View {
                                 Section {
                                     ForEach(groupedBooks[letter] ?? []) { book in
                                         BookRowWithActions(book: book, onDelete: deleteBook)
+                                            .listRowSeparator(.hidden)
                                     }
                                 } header: {
                                     Text(letter)
@@ -65,10 +66,12 @@ struct CatalogView: View {
                             // Flat list when searching
                             ForEach(filteredBooks) { book in
                                 BookRowWithActions(book: book, onDelete: deleteBook)
+                                    .listRowSeparator(.hidden)
                             }
                         }
                     }
                     .listStyle(.plain)
+                    .scrollDismissesKeyboard(.immediately)
 
                     // Section Index Titles (A-Z) on the right side
                     if searchText.isEmpty && !sortedSectionTitles.isEmpty {

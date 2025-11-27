@@ -411,6 +411,9 @@ struct ScanBookView: View {
         // Log activity
         ActivityLogger.logBookAdded(book, copies: book.totalCopies, modelContext: modelContext)
 
+        // Reset the view model to clear scanned book data
+        viewModel.reset()
+
         // Dismiss the view to go back to Add tab
         dismiss()
     }

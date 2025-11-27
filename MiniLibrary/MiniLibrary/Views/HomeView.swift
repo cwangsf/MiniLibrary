@@ -39,29 +39,7 @@ struct HomeView: View {
     }
 
     var body: some View {
-        if horizontalSizeClass == .regular {
-            // iPad Layout
-            NavigationStack {
-                HStack(spacing: 20) {
-                    // Left Column: Statistics Cards in 2x2 grid
-                    VStack(spacing: 15) {
-                        ForEach(statCards, id: \.destination) { card in
-                            statCardView(for: card)
-                        }
 
-                        Spacer()
-                    }
-                    .frame(maxWidth: 300)
-
-                    // Right Column: Recent Activity
-                    RecentActivitySection(activities: activities)
-
-                    Spacer()
-                }
-                .padding()
-                .navigationTitle("Home")
-            }
-        } else {
             // iPhone Layout
             NavigationStack {
                 ScrollView {
@@ -94,7 +72,7 @@ struct HomeView: View {
                 }
                 .navigationTitle("Home")
             }
-        }
+        
     }
 }
 
