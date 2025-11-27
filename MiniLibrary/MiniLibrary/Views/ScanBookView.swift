@@ -80,6 +80,7 @@ struct ScanBookView: View {
                     ScanResultView(
                         book: existingBook,
                         scanPurpose: scanPurpose,
+                        isExistingBook: true,
                         onConfirm: { copiesToAdd in
                             addCopyToExistingBook(existingBook, copies: copiesToAdd)
                         },

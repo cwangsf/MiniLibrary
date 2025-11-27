@@ -11,6 +11,7 @@ import SwiftData
 struct ScanResultView: View {
     let book: Book
     let scanPurpose: ScanBookViewModel.ScanPurpose
+    let isExistingBook: Bool  // true if book already exists in system, false if newly confirmed
     let onConfirm: (Int) -> Void
     let onCancel: () -> Void
     @Environment(\.dismiss) private var dismiss
@@ -18,6 +19,7 @@ struct ScanResultView: View {
 
     @State private var copiesToAdd = 1
     @State private var showingCheckoutView = false
+    @State private var showingReturnView = false
     @State private var navigationPath = NavigationPath()
 
     // Get active checkouts for this book
@@ -29,6 +31,113 @@ struct ScanResultView: View {
         !activeCheckouts.isEmpty
     }
 
+    var headerTitle: String {
+        switch scanPurpose {
+        case .addBook:
+            return "Book Already Exists"
+        case .checkout:
+            return "Ready to Checkout"
+        case .returnBook:
+            return "Ready to Return"
+        }
+    }
+
+    @ViewBuilder
+    var actionButtons: some View {
+        switch scanPurpose {
+        case .addBook:
+            // Always show "Add" option to allow adding more copies
+            Button {
+                onConfirm(copiesToAdd)
+                dismiss()
+            } label: {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Add \(copiesToAdd) \(copiesToAdd == 1 ? "Copy" : "Copies")")
+                }
+                .prominentButton(color: .blue)
+            }
+
+            Button {
+                onConfirm(copiesToAdd)
+                showingCheckoutView = true
+            } label: {
+                HStack {
+                    Image(systemName: "arrow.right.circle.fill")
+                    Text("Add & Checkout")
+                }
+                .prominentButton(color: .green)
+            }
+
+            Button {
+                onConfirm(copiesToAdd)
+                showingReturnView = true
+            } label: {
+                HStack {
+                    Image(systemName: "arrow.uturn.backward.circle.fill")
+                    Text("Add & Return")
+                }
+                .prominentButton(color: .orange)
+            }
+
+            Button {
+                book.isWishlistItem = true
+                onConfirm(copiesToAdd)
+                dismiss()
+            } label: {
+                HStack {
+                    Image(systemName: "list.star.fill")
+                    Text("Add to Wishlist")
+                }
+                .prominentButton(color: .purple)
+            }
+
+        case .checkout:
+            if book.availableCopies > 0 {
+                Button {
+                    showingCheckoutView = true
+                } label: {
+                    HStack {
+                        Image(systemName: "arrow.right.circle.fill")
+                        Text("Proceed to Checkout")
+                    }
+                    .prominentButton(color: .green)
+                }
+            } else {
+                Text("No copies available")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+            }
+
+        case .returnBook:
+            if hasActiveCheckouts {
+                if activeCheckouts.count == 1, let checkout = activeCheckouts.first {
+                    // Single checkout - direct navigation
+                    NavigationLink(value: checkout) {
+                        HStack {
+                            Image(systemName: "arrow.uturn.backward.circle.fill")
+                            Text("Proceed to Return")
+                        }
+                        .prominentButton(color: .orange)
+                    }
+                } else {
+                    // Multiple checkouts - navigate to selection list
+                    NavigationLink(value: "selectReturn") {
+                        HStack {
+                            Image(systemName: "arrow.uturn.backward.circle.fill")
+                            Text("Select Copy to Return")
+                        }
+                        .prominentButton(color: .orange)
+                    }
+                }
+            } else {
+                Text("Currently no checkout for this book")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+            }
+        }
+    }
+
     var body: some View {
         NavigationStack(path: $navigationPath) {
             ScrollView {
@@ -37,9 +146,9 @@ struct ScanResultView: View {
                     BookCoverImage(book: book, width: 120, height: 180)
                         .padding(.top, 40)
 
-                    // Message
+                    // Message and Book Info
                     VStack(spacing: 16) {
-                        Text("Book Already Exists")
+                        Text(headerTitle)
                             .sectionTitle()
 
                         VStack(spacing: 12) {
@@ -55,49 +164,51 @@ struct ScanResultView: View {
                                 }
                             }
 
-                            Divider()
-                                .padding(.horizontal, 40)
-
-                            // Current Inventory
-                            VStack(spacing: 4) {
-                                Text("Current Inventory")
-                                    .labelStyle()
-                                HStack {
-                                    Image(systemName: "books.vertical.fill")
-                                        .iconStyle(color: .blue)
-                                    Text("\(book.totalCopies) total copies")
-                                        .valueText()
-                                }
-                                Text("\(book.availableCopies) available")
-                                    .bookAuthor()
-                            }
-
-                            // Active Checkouts (if any)
-                            if hasActiveCheckouts {
+                            // Show relevant information based on scanPurpose
+                            switch scanPurpose {
+                            case .addBook:
                                 Divider()
                                     .padding(.horizontal, 40)
 
+                                // Current Inventory
                                 VStack(spacing: 4) {
-                                    Text("Currently Checked Out")
+                                    Text("Current Inventory")
                                         .labelStyle()
+                                    HStack {
+                                        Image(systemName: "books.vertical.fill")
+                                            .iconStyle(color: .blue)
+                                        Text("\(book.totalCopies) total copies")
+                                            .valueText()
+                                    }
+                                    Text("\(book.availableCopies) available")
+                                        .bookAuthor()
+                                }
+
+                                // Active Checkouts (if any)
+                                if hasActiveCheckouts {
+                                    Divider()
+                                        .padding(.horizontal, 40)
+
                                     VStack(spacing: 4) {
-                                        ForEach(activeCheckouts) { checkout in
-                                            HStack {
-                                                Image(systemName: "person.fill")
-                                                    .smallIcon(color: .orange)
-                                                Text(checkout.student?.fullName ?? "Unknown")
-                                                    .font(.subheadline)
+                                        Text("Currently Checked Out")
+                                            .labelStyle()
+                                        VStack(spacing: 4) {
+                                            ForEach(activeCheckouts) { checkout in
+                                                HStack {
+                                                    Image(systemName: "person.fill")
+                                                        .smallIcon(color: .orange)
+                                                    Text(checkout.student?.fullName ?? "Unknown")
+                                                        .font(.subheadline)
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
 
-                            Divider()
-                                .padding(.horizontal, 40)
+                                Divider()
+                                    .padding(.horizontal, 40)
 
-                            // Add Copies
-                            if scanPurpose == .addBook {
+                                // Add Copies
                                 VStack(spacing: 8) {
                                     Text("Add Copies")
                                         .labelStyle()
@@ -105,6 +216,43 @@ struct ScanResultView: View {
                                         .valueText()
                                 }
                                 .padding(.horizontal)
+
+                            case .checkout:
+                                Divider()
+                                    .padding(.horizontal, 40)
+
+                                // Available copies info
+                                VStack(spacing: 4) {
+                                    Text("Availability")
+                                        .labelStyle()
+                                    HStack {
+                                        Image(systemName: "books.vertical.fill")
+                                            .iconStyle(color: book.availableCopies > 0 ? .green : .red)
+                                        Text("\(book.availableCopies) available")
+                                            .valueText()
+                                    }
+                                }
+
+                            case .returnBook:
+                                Divider()
+                                    .padding(.horizontal, 40)
+
+                                // Active checkouts for this book
+                                if hasActiveCheckouts {
+                                    VStack(spacing: 4) {
+                                        Text("Checked Out Copies")
+                                            .labelStyle()
+                                        Text("\(activeCheckouts.count) \(activeCheckouts.count == 1 ? "copy" : "copies") checked out")
+                                            .valueText()
+                                    }
+                                } else {
+                                    VStack(spacing: 4) {
+                                        Text("Status")
+                                            .labelStyle()
+                                        Text("No active checkouts")
+                                            .valueText()
+                                    }
+                                }
                             }
                         }
                         .padding()
@@ -115,50 +263,7 @@ struct ScanResultView: View {
 
                     // Action Buttons
                     VStack(spacing: 12) {
-                        Button {
-                            onConfirm(copiesToAdd)
-                            dismiss()
-                        } label: {
-                            HStack {
-                                Image(systemName: "plus.circle.fill")
-                                Text("Add \(copiesToAdd) \(copiesToAdd == 1 ? "Copy" : "Copies")")
-                            }
-                            .prominentButton(color: .blue)
-                        }
-
-                        Button {
-                            showingCheckoutView = true
-                        } label: {
-                            HStack {
-                                Image(systemName: "arrow.right.circle.fill")
-                                Text("Check Out Book")
-                            }
-                            .prominentButton(color: .green)
-                        }
-                        .disabled(book.availableCopies == 0)
-
-                        // Return Book Button (only show if there are active checkouts)
-                        if hasActiveCheckouts {
-                            if activeCheckouts.count == 1, let checkout = activeCheckouts.first {
-                                // Single checkout - direct navigation
-                                NavigationLink(value: checkout) {
-                                    HStack {
-                                        Image(systemName: "arrow.uturn.left.circle.fill")
-                                        Text("Return Book")
-                                    }
-                                    .prominentButton(color: .orange)
-                                }
-                            } else {
-                                // Multiple checkouts - navigate to selection list
-                                NavigationLink(value: "selectReturn") {
-                                    HStack {
-                                        Image(systemName: "arrow.uturn.left.circle.fill")
-                                        Text("Return Book")
-                                    }
-                                    .prominentButton(color: .orange)
-                                }
-                            }
-                        }
+                        actionButtons
 
                         Button {
                             onCancel()
@@ -318,6 +423,13 @@ struct ScanResultView: View {
                 onCancel()
             }
         }
+        .sheet(isPresented: $showingReturnView) {
+            ReturnBookView(book: book) {
+                // After return completes, dismiss the confirmation view
+                dismiss()
+                onCancel()
+            }
+        }
     }
 
     private func returnBook(_ checkout: CheckoutRecord) {
@@ -334,7 +446,7 @@ struct ScanResultView: View {
     NavigationStack {
         ScanResultView(book: Book(title: ".Test Book",
                                   totalCopies: 1),
-                       scanPurpose: .addBook,
+                       scanPurpose: .addBook, isExistingBook: false,
                        onConfirm: { _ in },
                        onCancel: {})
             .modelContainer(for: [Book.self, CheckoutRecord.self, Student.self])
