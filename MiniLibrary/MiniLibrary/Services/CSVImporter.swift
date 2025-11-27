@@ -14,7 +14,17 @@ struct CSVImporter {
     /// Standard: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes
     /// Custom: ISBNs, Title, Primary Author, Copies
     static func importBooks(from csvContent: String, modelContext: ModelContext) throws -> Int {
-        let rows = CSVParser.parse(csvString: csvContent)
+        // Fix encoding issues: replace smart quotes and other problematic characters
+        let cleanedContent = csvContent
+            .replacingOccurrences(of: "â€™", with: "'")  // Smart quote encoding issue
+            .replacingOccurrences(of: "\u{201C}", with: "\"") // Left double quotation mark
+            .replacingOccurrences(of: "\u{201D}", with: "\"") // Right double quotation mark
+            .replacingOccurrences(of: "\u{2018}", with: "'")  // Left single quotation mark
+            .replacingOccurrences(of: "\u{2019}", with: "'")  // Right single quotation mark
+            .replacingOccurrences(of: "\u{2013}", with: "-")  // En dash
+            .replacingOccurrences(of: "\u{2014}", with: "-")  // Em dash
+
+        let rows = CSVParser.parse(csvString: cleanedContent)
 
         guard !rows.isEmpty else {
             throw CSVImportError.emptyFile
