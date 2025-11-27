@@ -58,39 +58,17 @@ struct ScanResultView: View {
                 .prominentButton(color: .blue)
             }
 
-            Button {
-                onConfirm(copiesToAdd)
-                showingCheckoutView = true
-            } label: {
-                HStack {
-                    Image(systemName: "arrow.right.circle.fill")
-                    Text("Add & Checkout")
-                }
-                .prominentButton(color: .green)
-            }
-
-            Button {
-                onConfirm(copiesToAdd)
-                showingReturnView = true
-            } label: {
-                HStack {
-                    Image(systemName: "arrow.uturn.backward.circle.fill")
-                    Text("Add & Return")
-                }
-                .prominentButton(color: .orange)
-            }
-
-            Button {
-                book.isWishlistItem = true
-                onConfirm(copiesToAdd)
-                dismiss()
-            } label: {
-                HStack {
-                    Image(systemName: "list.star.fill")
-                    Text("Add to Wishlist")
-                }
-                .prominentButton(color: .purple)
-            }
+//            Button {
+//                book.isWishlistItem = true
+//                onConfirm(copiesToAdd)
+//                dismiss()
+//            } label: {
+//                HStack {
+//                    Image(systemName: "list.star.fill")
+//                    Text("Add to Wishlist")
+//                }
+//                .prominentButton(color: .purple)
+//            }
 
         case .checkout:
             if book.availableCopies > 0 {

@@ -44,7 +44,7 @@ struct AddView: View {
                                     .font(.headline)
                                     .foregroundStyle(.primary)
 
-                                Text("Add to Catalog/Wishlist, check out, or return books instantly")
+                                Text("Add to Catalog/Wishlist instantly")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }

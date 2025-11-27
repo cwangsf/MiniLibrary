@@ -191,12 +191,6 @@
         }
       }
     },
-    "Add & Checkout" : {
-
-    },
-    "Add & Return" : {
-
-    },
     "Add %lld %@" : {
       "localizations" : {
         "en" : {
@@ -396,7 +390,11 @@
         }
       }
     },
+    "Add to Catalog/Wishlist instantly" : {
+
+    },
     "Add to Catalog/Wishlist, check out, or return books instantly" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
