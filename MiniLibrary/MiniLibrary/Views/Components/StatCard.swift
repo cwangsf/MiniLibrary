@@ -12,9 +12,15 @@ enum StatCardType {
     case checkedOut(Int)
     case wishlist(Int)
     case favorites(Int)
+    case quickCheckout
+    case quickReturn
 
     var title: String {
         switch self {
+        case .quickCheckout:
+            return "Checkout Book"
+        case .quickReturn:
+            return "Return Book"
         case .totalCopies:
             return "Total Copies"
         case .checkedOut:
@@ -33,6 +39,8 @@ enum StatCardType {
              .wishlist(let count),
              .favorites(let count):
             return "\(count)"
+        case .quickCheckout, .quickReturn:
+            return "Scan"
         }
     }
 
@@ -46,6 +54,10 @@ enum StatCardType {
             return "list.star"
         case .favorites:
             return "heart.fill"
+        case .quickCheckout:
+            return "tray.and.arrow.up"
+        case .quickReturn:
+            return "tray.and.arrow.down"
         }
     }
 
@@ -59,6 +71,10 @@ enum StatCardType {
             return .green
         case .favorites:
             return .pink
+        case .quickCheckout:
+            return .purple
+        case .quickReturn:
+            return .teal
         }
     }
 
@@ -72,6 +88,10 @@ enum StatCardType {
             return "wishlist"
         case .favorites:
             return "favorites"
+        case .quickCheckout:
+            return "quickCheckout"
+        case .quickReturn:
+            return "quickReturn"
         }
     }
 }

@@ -32,7 +32,7 @@ struct AddView: View {
             List {
                 // Quick Scan - Prominent Section
                 Section {
-                    NavigationLink(destination: ScanBookView()) {
+                    NavigationLink(destination: ScanBookView(scanPurpose: .addBook)) {
                         HStack(spacing: 16) {
                             Image(systemName: "barcode.viewfinder")
                                 .font(.system(size: 32))
@@ -82,26 +82,6 @@ struct AddView: View {
                             Image(systemName: "person.fill")
                                 .foregroundStyle(.orange)
                             Text("Add New Student")
-                                .foregroundStyle(.tint)
-                        }
-                    }
-                }
-
-                Section("Manage Checkouts") {
-                    NavigationLink(destination: CheckoutBookView()) {
-                        HStack {
-                            Image(systemName: "arrow.right.circle.fill")
-                                .foregroundStyle(.blue)
-                            Text("Check Out Book")
-                                .foregroundStyle(.tint)
-                        }
-                    }
-
-                    NavigationLink(destination: ReturnBookView()) {
-                        HStack {
-                            Image(systemName: "arrow.left.circle.fill")
-                                .foregroundStyle(.green)
-                            Text("Return Book")
                                 .foregroundStyle(.tint)
                         }
                     }

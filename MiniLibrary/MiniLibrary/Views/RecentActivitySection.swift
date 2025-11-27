@@ -18,6 +18,7 @@ struct RecentActivitySection: View {
                 Text("Recent Activity")
                     .font(.headline)
                     .tint(.accent)
+                    .padding(.vertical)
                 
                 if activities.isEmpty {
                     ContentUnavailableView(

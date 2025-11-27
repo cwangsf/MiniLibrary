@@ -223,6 +223,9 @@
         }
       }
     },
+    "Add Book to Catalog First" : {
+
+    },
     "Add Copies" : {
       "localizations" : {
         "de" : {
@@ -1774,6 +1777,7 @@
       }
     },
     "Manage Checkouts" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2125,6 +2129,12 @@
           }
         }
       }
+    },
+    "Proceed to Checkout" : {
+
+    },
+    "Proceed to Return" : {
+
     },
     "Published: %@" : {
       "localizations" : {

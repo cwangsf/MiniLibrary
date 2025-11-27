@@ -29,10 +29,12 @@ struct HomeView: View {
 
     var statCards: [StatCardType] {
         [
+            .quickCheckout,
+            .quickReturn,
             .totalCopies(totalCopies),
             .checkedOut(activeCheckouts.filter { $0.isActive }.count),
             .wishlist(wishlistCount),
-            .favorites(favoritesCount)
+            .favorites(favoritesCount),
         ]
     }
 
@@ -78,6 +80,13 @@ struct HomeView: View {
                         }
                         .padding(.horizontal)
 
+                        // Action Cards - Third Row
+                        HStack(spacing: 15) {
+                            statCardView(for: statCards[4])
+                            statCardView(for: statCards[5])
+                        }
+                        .padding(.horizontal)
+
                         // Recent Activity Section
                         RecentActivitySection(activities: activities)
                     }
@@ -111,6 +120,16 @@ extension HomeView {
             .buttonStyle(.plain)
         case .favorites:
             NavigationLink(destination: FavoritesView()) {
+                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+            }
+            .buttonStyle(.plain)
+        case .quickCheckout:
+            NavigationLink(destination: ScanBookView(scanPurpose: .checkout)) {
+                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+            }
+            .buttonStyle(.plain)
+        case .quickReturn:
+            NavigationLink(destination: ScanBookView(scanPurpose: .returnBook)) {
                 StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
