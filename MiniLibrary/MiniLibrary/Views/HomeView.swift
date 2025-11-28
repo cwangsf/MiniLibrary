@@ -24,7 +24,7 @@ struct HomeView: View {
     }
 
     var totalCopies: Int {
-        books.filter { !$0.isWishlistItem }.reduce(0) { $0 + $1.totalCopies }
+        books.filter { !$0.isWishlistItem }.count
     }
 
     var statCards: [StatCardType] {
