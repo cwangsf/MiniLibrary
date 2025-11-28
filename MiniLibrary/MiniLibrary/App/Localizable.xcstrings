@@ -123,7 +123,26 @@
       }
     },
     "About" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maidir le"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关于"
+          }
+        }
+      }
     },
     "Acquire" : {
       "localizations" : {
@@ -234,7 +253,26 @@
       }
     },
     "Add Book to Catalog First" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buch zuerst zum Katalog hinzufügen"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuir Leabhar leis an gCatalóg ar dtús"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先添加图书到目录"
+          }
+        }
+      }
     },
     "Add Copies" : {
       "localizations" : {
@@ -391,7 +429,26 @@
       }
     },
     "Add to Catalog/Wishlist instantly" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sofort zum Katalog/zur Wunschliste hinzufügen"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuir go dtí an Catalóg/Liosta Mianta ar an tóirt"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "立即添加到目录/愿望清单"
+          }
+        }
+      }
     },
     "Add to Catalog/Wishlist, check out, or return books instantly" : {
       "extractionState" : "stale",
@@ -505,7 +562,26 @@
       }
     },
     "App Version" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-Version"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leagan an Aip"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "应用版本"
+          }
+        }
+      }
     },
     "Author" : {
       "localizations" : {
@@ -574,10 +650,48 @@
       }
     },
     "Available" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verfügbar"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ar Fáil"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可借阅"
+          }
+        }
+      }
     },
     "Available:" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verfügbar:"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ar Fáil:"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可借阅："
+          }
+        }
+      }
     },
     "Book" : {
       "localizations" : {
@@ -848,7 +962,26 @@
       }
     },
     "Checked Out Copies" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgeliehene Exemplare"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cóipeanna Seiceáilte Amach"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已借出册数"
+          }
+        }
+      }
     },
     "Class Code (optional)" : {
       "localizations" : {
@@ -1074,7 +1207,26 @@
       }
     },
     "Currently Checked Out" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derzeit ausgeliehen"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seiceáilte Amach go Láthair"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前已借出"
+          }
+        }
+      }
     },
     "Currently Checked Out By" : {
       "localizations" : {
@@ -1099,7 +1251,26 @@
       }
     },
     "Currently no checkout for this book" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derzeit keine Ausleihe für dieses Buch"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gan aon seiceáil amach faoi láthair don leabhar seo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该图书目前无借阅记录"
+          }
+        }
+      }
     },
     "Delete" : {
       "localizations" : {
@@ -1543,10 +1714,48 @@
       }
     },
     "First Name" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorname"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Céad Ainm"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名字"
+          }
+        }
+      }
     },
     "First Name(and Middle name, if any)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorname (und Mittelname, falls vorhanden)"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Céad Ainm (agus Meánanm, má tá sé ann)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名字（以及中间名，如有）"
+          }
+        }
+      }
     },
     "Grade %lld" : {
       "extractionState" : "stale",
@@ -1771,7 +1980,26 @@
       }
     },
     "Last Name" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachname"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sloinne"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "姓氏"
+          }
+        }
+      }
     },
     "Library ID (e.g., LIB-001)" : {
       "extractionState" : "stale",
@@ -1820,7 +2048,26 @@
       }
     },
     "No active checkouts" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine aktiven Ausleihen"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gan aon seiceálacha gníomhacha amach"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无活动借阅"
+          }
+        }
+      }
     },
     "No Active Checkouts" : {
       "localizations" : {
@@ -1867,7 +2114,26 @@
       }
     },
     "No copies available" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Exemplare verfügbar"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gan aon chóipeanna ar fáil"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无可借阅册数"
+          }
+        }
+      }
     },
     "No Favorite Books" : {
       "localizations" : {
@@ -2157,10 +2423,48 @@
       }
     },
     "Proceed to Checkout" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Ausleihen fortfahren"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lean ar aghaidh chuig Seiceáil Amach"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续借出"
+          }
+        }
+      }
     },
     "Proceed to Return" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Zurückgeben fortfahren"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lean ar aghaidh chuig Filleadh"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "继续归还"
+          }
+        }
+      }
     },
     "Published: %@" : {
       "localizations" : {
@@ -2427,7 +2731,26 @@
       }
     },
     "Search by name" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Name suchen"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuardaigh de réir ainm"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按名字搜索"
+          }
+        }
+      }
     },
     "Search Google Books" : {
       "localizations" : {
@@ -2563,7 +2886,26 @@
       }
     },
     "Select a Student" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählen Sie einen Schüler"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roghnaigh Dalta"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择一个学生"
+          }
+        }
+      }
     },
     "Select Book" : {
       "localizations" : {
@@ -2588,7 +2930,26 @@
       }
     },
     "Select Copy to Return" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exemplar zum Zurückgeben auswählen"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roghnaigh Cóip le Cur ar Ais"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择要归还的副本"
+          }
+        }
+      }
     },
     "Select Student" : {
       "localizations" : {
@@ -2613,7 +2974,26 @@
       }
     },
     "Status" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stádas"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状态"
+          }
+        }
+      }
     },
     "Student" : {
       "localizations" : {
