@@ -104,6 +104,6 @@ struct CheckoutConfirmationView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.large])
     }
 }

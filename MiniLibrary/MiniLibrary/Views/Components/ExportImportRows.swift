@@ -213,3 +213,43 @@ struct ImportStudentsRow: View {
         }
     }
 }
+
+// MARK: - Export Checkouts Row
+struct ExportCheckoutsRow: View {
+    let isExporting: Bool
+    let exportFileURL: URL?
+    let onExport: () -> Void
+
+    var body: some View {
+        if isExporting {
+            HStack {
+                HStack {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundStyle(.purple)
+                    Text("Export Checkout Records to CSV")
+                        .foregroundStyle(.tint)
+                }
+                Spacer()
+                ProgressView()
+            }
+        } else if let url = exportFileURL {
+            ShareLink(item: url) {
+                HStack {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundStyle(.purple)
+                    Text("Export Checkout Records to CSV")
+                        .foregroundStyle(.tint)
+                }
+            }
+        } else {
+            Button(action: onExport) {
+                HStack {
+                    Image(systemName: "square.and.arrow.up")
+                        .foregroundStyle(.purple)
+                    Text("Export Checkout Records to CSV")
+                        .foregroundStyle(.tint)
+                }
+            }
+        }
+    }
+}

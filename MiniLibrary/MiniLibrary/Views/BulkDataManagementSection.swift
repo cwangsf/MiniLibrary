@@ -14,6 +14,8 @@ struct BulkDataManagementSection: View {
     @Binding var exportWishlistFileURL: URL?
     @Binding var isExportingStudents: Bool
     @Binding var exportStudentsFileURL: URL?
+    @Binding var isExportingCheckouts: Bool
+    @Binding var exportCheckoutsFileURL: URL?
     @Binding var showingDeleteConfirmation: Bool
     @Binding var showingImportPicker: Bool
     @Binding var importType: ImportType?
@@ -21,6 +23,7 @@ struct BulkDataManagementSection: View {
     var onExportCatalog: () -> Void
     var onExportWishlist: () -> Void
     var onExportStudents: () -> Void
+    var onExportCheckouts: () -> Void
 
     var body: some View {
         Section("Bulk Data Management") {
@@ -60,6 +63,20 @@ struct BulkDataManagementSection: View {
                     onExport: onExportStudents
                 )
                 if isExportingStudents {
+                    Spacer()
+                    ProgressView()
+                        .scaleEffect(0.8)
+                }
+            }
+
+            // Export Checkouts
+            HStack {
+                ExportCheckoutsRow(
+                    isExporting: isExportingCheckouts,
+                    exportFileURL: exportCheckoutsFileURL,
+                    onExport: onExportCheckouts
+                )
+                if isExportingCheckouts {
                     Spacer()
                     ProgressView()
                         .scaleEffect(0.8)

@@ -14,6 +14,37 @@ struct CheckedOutBooksListView: View {
            sort: \CheckoutRecord.dueDate)
     private var activeCheckouts: [CheckoutRecord]
 
+    // Group checkouts by student class
+    private var groupedCheckouts: [String: [CheckoutRecord]] {
+        var grouped: [String: [CheckoutRecord]] = [:]
+
+        for checkout in activeCheckouts {
+            if let classCode = checkout.student?.classCode, !classCode.isEmpty {
+                if grouped[classCode] == nil {
+                    grouped[classCode] = []
+                }
+                grouped[classCode]?.append(checkout)
+            } else {
+                // Group checkouts without class under "No Class"
+                if grouped[""] == nil {
+                    grouped[""] = []
+                }
+                grouped[""]?.append(checkout)
+            }
+        }
+
+        return grouped
+    }
+
+    private var sortedSectionTitles: [String] {
+        let titles = groupedCheckouts.keys.filter { !$0.isEmpty }.sorted()
+        // Add "No Class" at the end if there are checkouts without a class
+        if groupedCheckouts[""] != nil && !(groupedCheckouts[""]?.isEmpty ?? true) {
+            return titles + [""]
+        }
+        return titles
+    }
+
     var body: some View {
         List {
             if activeCheckouts.isEmpty {
@@ -23,8 +54,17 @@ struct CheckedOutBooksListView: View {
                     description: Text("All books are currently available")
                 )
             } else {
-                ForEach(activeCheckouts) { checkout in
-                    CheckoutDetailRow(checkout: checkout)
+                ForEach(sortedSectionTitles, id: \.self) { classCode in
+                    Section {
+                        ForEach(groupedCheckouts[classCode] ?? []) { checkout in
+                            CheckoutDetailRow(checkout: checkout)
+                        }
+                    } header: {
+                        Text(classCode.isEmpty ? "No Class" : classCode)
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                    }
                 }
             }
         }
