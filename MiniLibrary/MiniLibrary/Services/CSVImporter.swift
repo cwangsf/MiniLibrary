@@ -23,6 +23,14 @@ struct CSVImporter {
             .replacingOccurrences(of: "\u{2019}", with: "'")  // Right single quotation mark
             .replacingOccurrences(of: "\u{2013}", with: "-")  // En dash
             .replacingOccurrences(of: "\u{2014}", with: "-")  // Em dash
+            // Fix UTF-8 mojibake (double-encoded German umlauts and special characters)
+            .replacingOccurrences(of: "Ã¤", with: "ä")  // ä
+            .replacingOccurrences(of: "Ã¶", with: "ö")  // ö
+            .replacingOccurrences(of: "Ã¼", with: "ü")  // ü
+            .replacingOccurrences(of: "Ã„", with: "Ä")  // Ä
+            .replacingOccurrences(of: "Ã–", with: "Ö")  // Ö
+            .replacingOccurrences(of: "Ãœ", with: "Ü")  // Ü
+            .replacingOccurrences(of: "ÃŸ", with: "ß")  // ß
 
         let rows = CSVParser.parse(csvString: cleanedContent)
 
@@ -123,10 +131,11 @@ struct CSVImporter {
             // ISBNs are in format "1406312207, 9781406312201" or "[1406312207]"
             let cleaned = isbns.replacingOccurrences(of: "[", with: "")
                                .replacingOccurrences(of: "]", with: "")
+                               .replacingOccurrences(of: "-", with: "")
             isbn = cleaned.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces)
         } else if let singleISBN = csvRow["ISBN"]?.trimmingCharacters(in: .whitespaces),
                   !singleISBN.isEmpty {
-            isbn = singleISBN
+            isbn = singleISBN.replacingOccurrences(of: "-", with: "")
         }
 
         // Get copies (try both "Copies" and "Total Copies")
