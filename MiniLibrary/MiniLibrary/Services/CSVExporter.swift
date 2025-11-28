@@ -60,16 +60,65 @@ enum CSVExporter {
         return csv
     }
 
+    /// Export checkout records to CSV format
+    static func exportCheckoutRecords(_ checkouts: [CheckoutRecord]) -> String {
+        var csv = "Book Title,Author,ISBN,Student Name,Checkout Date,Due Date,Return Date,Status\n"
+
+        if checkouts.isEmpty {
+            // Add a note if there are no checkouts
+            csv += "No checkout records available\n"
+            return csv
+        }
+
+        for checkout in checkouts {
+            let bookTitle = checkout.book?.title ?? "Unknown"
+            let bookAuthor = checkout.book?.author ?? ""
+            let bookISBN = checkout.book?.isbn ?? ""
+            let studentName = checkout.student?.fullName ?? "Unknown"
+            let checkoutDate = checkout.checkoutDate.formatted(date: .abbreviated, time: .omitted)
+            let dueDate = checkout.dueDate.formatted(date: .abbreviated, time: .omitted)
+            let returnDate = checkout.returnDate?.formatted(date: .abbreviated, time: .omitted) ?? ""
+            let status = checkout.isActive ? "Active" : "Returned"
+
+            let fields = [
+                escapeCSV(bookTitle),
+                escapeCSV(bookAuthor),
+                escapeCSV(bookISBN),
+                escapeCSV(studentName),
+                checkoutDate,
+                dueDate,
+                returnDate,
+                status
+            ]
+
+            csv += fields.joined(separator: ",") + "\n"
+        }
+
+        return csv
+    }
+
     /// Save CSV string to temporary file and return URL
     static func saveToTemporaryFile(_ csvContent: String, filename: String = "library_catalog.csv") -> URL? {
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory
         let fileURL = temporaryDirectoryURL.appendingPathComponent(filename)
 
         do {
+            // Remove existing file if it exists
+            try? FileManager.default.removeItem(at: fileURL)
+
+            // Write the CSV content
             try csvContent.write(to: fileURL, atomically: true, encoding: .utf8)
+
+            // Verify the file was created
+            guard FileManager.default.fileExists(atPath: fileURL.path) else {
+                print("Error: CSV file was not created at \(fileURL.path)")
+                return nil
+            }
+
+            print("✓ CSV file saved: \(fileURL.lastPathComponent)")
             return fileURL
         } catch {
-            print("Error saving CSV file: \(error)")
+            print("Error saving CSV file '\(filename)': \(error.localizedDescription)")
             return nil
         }
     }

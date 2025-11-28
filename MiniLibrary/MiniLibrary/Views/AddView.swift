@@ -11,7 +11,7 @@ internal import UniformTypeIdentifiers
 
 struct AddView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Book.title) private var books: [Book]
+    @Query private var books: [Book]
     @Query private var students: [Student]
     @Query private var checkouts: [CheckoutRecord]
     @Query private var activities: [Activity]
@@ -21,6 +21,8 @@ struct AddView: View {
     @State private var isExportingWishlist = false
     @State private var exportStudentsFileURL: URL?
     @State private var isExportingStudents = false
+    @State private var exportCheckoutsFileURL: URL?
+    @State private var isExportingCheckouts = false
     @State private var showingDeleteConfirmation = false
     @State private var showingImportPicker = false
     @State private var importResult: ImportResult?
@@ -94,6 +96,8 @@ struct AddView: View {
                     exportWishlistFileURL: $exportWishlistFileURL,
                     isExportingStudents: $isExportingStudents,
                     exportStudentsFileURL: $exportStudentsFileURL,
+                    isExportingCheckouts: $isExportingCheckouts,
+                    exportCheckoutsFileURL: $exportCheckoutsFileURL,
                     showingDeleteConfirmation: $showingDeleteConfirmation,
                     showingImportPicker: $showingImportPicker,
                     importType: $importType,
@@ -110,6 +114,11 @@ struct AddView: View {
                     onExportStudents: {
                         Task {
                             await exportStudents()
+                        }
+                    },
+                    onExportCheckouts: {
+                        Task {
+                            await exportCheckouts()
                         }
                     }
                 )
@@ -162,6 +171,7 @@ struct AddView: View {
                 await exportCatalog()
                 await exportWishlist()
                 await exportStudents()
+                await exportCheckouts()
             }
         }
     }
@@ -217,6 +227,24 @@ struct AddView: View {
         await MainActor.run {
             exportStudentsFileURL = url
             isExportingStudents = false
+        }
+    }
+
+    private func exportCheckouts() async {
+        isExportingCheckouts = true
+
+        // Capture checkouts to avoid cross-context issues
+        let checkoutList = checkouts
+
+        // Run export in background
+        let url = await Task.detached {
+            let csvContent = CSVExporter.exportCheckoutRecords(checkoutList)
+            return CSVExporter.saveToTemporaryFile(csvContent, filename: "library_checkouts.csv")
+        }.value
+
+        await MainActor.run {
+            exportCheckoutsFileURL = url
+            isExportingCheckouts = false
         }
     }
 
