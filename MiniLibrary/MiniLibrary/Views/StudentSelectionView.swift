@@ -28,17 +28,35 @@ struct StudentSelectionView: View {
         }
     }
 
-    // Group students by last name initial
+    // Group students by class code (with students without class at the end)
     private var groupedStudents: [String: [Student]] {
-        let grouped = Dictionary(grouping: filteredStudents) { student in
-            let initial = student.lastName.isEmpty ? "#" : String(student.lastName.prefix(1)).uppercased()
-            return initial
+        var grouped: [String: [Student]] = [:]
+
+        for student in filteredStudents {
+            if let classCode = student.classCode, !classCode.isEmpty {
+                if grouped[classCode] == nil {
+                    grouped[classCode] = []
+                }
+                grouped[classCode]?.append(student)
+            } else {
+                // Group students without class code under "No Class"
+                if grouped[""] == nil {
+                    grouped[""] = []
+                }
+                grouped[""]?.append(student)
+            }
         }
+
         return grouped
     }
 
     private var sortedSectionTitles: [String] {
-        groupedStudents.keys.sorted()
+        let titles = groupedStudents.keys.filter { !$0.isEmpty }.sorted()
+        // Add "No Class" at the end if there are students without a class
+        if groupedStudents[""] != nil && !(groupedStudents[""]?.isEmpty ?? true) {
+            return titles + [""]
+        }
+        return titles
     }
 
     var body: some View {
@@ -66,7 +84,7 @@ struct StudentSelectionView: View {
                                     }
                                 }
                             } header: {
-                                Text(letter)
+                                Text(letter.isEmpty ? "No Class" : letter)
                             }
                             .id(letter)
                         }
@@ -74,12 +92,11 @@ struct StudentSelectionView: View {
 
                     // Section Index Titles (A-Z) on the right side
                     if !sortedSectionTitles.isEmpty && searchText.isEmpty {
-                        SectionIndexTitles(titles: sortedSectionTitles) { letter in
-                            withAnimation {
-                                proxy.scrollTo(letter, anchor: .top)
-                            }
-                        }
-                    }
+                        SectionIndexTitles(titles: sortedSectionTitles, itemWidth: 35) { letter in
+                              withAnimation {
+                                  proxy.scrollTo(letter, anchor: .top)
+                              }
+                          }                    }
                 }
             }
             .navigationTitle("Select Student")
