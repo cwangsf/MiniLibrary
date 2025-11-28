@@ -10,6 +10,7 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Query private var books: [Book]
     @Query private var activeCheckouts: [CheckoutRecord]
     @Query(sort: \Activity.timestamp, order: .reverse) private var activities: [Activity]
@@ -23,72 +24,96 @@ struct HomeView: View {
     }
 
     var totalCopies: Int {
-        books.filter { !$0.isWishlistItem }.reduce(0) { $0 + $1.totalCopies }
+        books.filter { !$0.isWishlistItem }.count
+    }
+
+    var statCards: [StatCardType] {
+        [
+            .quickCheckout,
+            .quickReturn,
+            .totalCopies(totalCopies),
+            .checkedOut(activeCheckouts.filter { $0.isActive }.count),
+            .wishlist(wishlistCount),
+            .favorites(favoritesCount),
+        ]
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Statistics Cards
-                    HStack(spacing: 15) {
-                        NavigationLink(destination: CatalogView()) {
-                            StatCard(
-                                title: "Total Copies",
-                                value: "\(totalCopies)",
-                                icon: "books.vertical.fill",
-                                color: .blue
-                            )
-                        }
-                        .buttonStyle(.plain)
 
-                        NavigationLink(destination: CheckedOutBooksListView()) {
-                            StatCard(
-                                title: "Checked Out",
-                                value: "\(activeCheckouts.filter { $0.isActive }.count)",
-                                icon: "book.fill",
-                                color: .orange
-                            )
+            // iPhone Layout
+            NavigationStack {
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Statistics Cards - First Row
+                        HStack(spacing: 15) {
+                            statCardView(for: statCards[0])
+                            statCardView(for: statCards[1])
                         }
-                        .buttonStyle(.plain)
+                        .padding(.horizontal)
+
+                        // Statistics Cards - Second Row
+                        HStack(spacing: 15) {
+                            statCardView(for: statCards[2])
+                            statCardView(for: statCards[3])
+                        }
+                        .padding(.horizontal)
+
+                        // Action Cards - Third Row
+                        HStack(spacing: 15) {
+                            statCardView(for: statCards[4])
+                            statCardView(for: statCards[5])
+                        }
+                        .padding(.horizontal)
+
+                        // Recent Activity Section
+                        RecentActivitySection(activities: activities)
                     }
-                    .padding(.horizontal)
-
-                    // Second Row
-                    HStack(spacing: 15) {
-                        NavigationLink(destination: WishlistView()) {
-                            StatCard(
-                                title: "Wish List",
-                                value: "\(wishlistCount)",
-                                icon: "list.star",
-                                color: .green
-                            )
-                        }
-                        .buttonStyle(.plain)
-
-                        NavigationLink(destination: FavoritesView()) {
-                            StatCard(
-                                title: "Favorites",
-                                value: "\(favoritesCount)",
-                                icon: "heart.fill",
-                                color: .pink
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    .padding(.horizontal)
-
-                    // Recent Activity Section
-                    RecentActivitySection(activities: activities)
+                    .padding(.top)
                 }
-                .padding(.top)
+                .navigationTitle("Home")
             }
-            .navigationTitle("Home")
-        }
+        
     }
 }
 
-
+// MARK: - Helper Methods
+extension HomeView {
+    @ViewBuilder
+    func statCardView(for cardType: StatCardType) -> some View {
+        switch cardType {
+        case .totalCopies:
+            NavigationLink(destination: CatalogView()) {
+                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+            }
+            .buttonStyle(.plain)
+        case .checkedOut:
+            NavigationLink(destination: CheckedOutBooksListView()) {
+                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+            }
+            .buttonStyle(.plain)
+        case .wishlist:
+            NavigationLink(destination: WishlistView()) {
+                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+            }
+            .buttonStyle(.plain)
+        case .favorites:
+            NavigationLink(destination: FavoritesView()) {
+                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+            }
+            .buttonStyle(.plain)
+        case .quickCheckout:
+            NavigationLink(destination: ScanBookView(scanPurpose: .checkout)) {
+                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+            }
+            .buttonStyle(.plain)
+        case .quickReturn:
+            NavigationLink(destination: ScanBookView(scanPurpose: .returnBook)) {
+                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+}
 
 #Preview {
     HomeView()

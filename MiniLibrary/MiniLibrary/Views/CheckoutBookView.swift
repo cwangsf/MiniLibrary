@@ -16,14 +16,16 @@ struct CheckoutBookView: View {
     @Environment(\.dismiss) private var dismiss
 
     @Query(sort: \Book.title) private var books: [Book]
-    @Query(sort: \Student.libraryId) private var students: [Student]
+    @Query(sort: \Student.lastName) private var students: [Student]
 
     @State private var selectedBook: Book?
     @State private var selectedStudent: Student?
     @State private var dueDate = Date().addingTimeInterval(14 * 24 * 60 * 60) // 2 weeks default
     @State private var showingConfirmation = false
     @State private var showingAddStudent = false
-    @State private var newStudentName = ""
+    @State private var showingStudentSelection = false
+    @State private var newStudentFirstName = ""
+    @State private var newStudentLastName = ""
     @State private var newStudentClass = ""
 
     var availableBooks: [Book] {
@@ -62,10 +64,28 @@ struct CheckoutBookView: View {
                 }
 
                 Section("Select Student") {
-                    Picker("Student", selection: $selectedStudent) {
-                        Text("Select a student").tag(nil as Student?)
-                        ForEach(students) { student in
-                            Text(student.libraryId).tag(student as Student?)
+                    if let student = selectedStudent {
+                        HStack {
+                            Text(student.fullName)
+                                .font(.headline)
+                            Spacer()
+                            Button(action: {
+                                selectedStudent = nil
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                    } else {
+                        Button(action: {
+                            showingStudentSelection = true
+                        }) {
+                            HStack {
+                                Image(systemName: "person.text.rectangle")
+                                    .foregroundStyle(.blue)
+                                Text("Select a Student")
+                                    .foregroundStyle(.tint)
+                            }
                         }
                     }
 
@@ -127,6 +147,11 @@ struct CheckoutBookView: View {
                     )
                 }
             }
+            .sheet(isPresented: $showingStudentSelection) {
+                StudentSelectionView { student in
+                    selectedStudent = student
+                }
+            }
             .sheet(isPresented: $showingAddStudent) {
                 addStudentSheet
             }
@@ -138,7 +163,8 @@ struct CheckoutBookView: View {
         NavigationStack {
             Form {
                 Section("Student Information") {
-                    TextField(String(localized: "Student Name (e.g., John Smith)"), text: $newStudentName)
+                    TextField(String(localized: "First Name"), text: $newStudentFirstName)
+                    TextField(String(localized: "Last Name"), text: $newStudentLastName)
                     TextField(String(localized: "Class Code (optional)"), text: $newStudentClass)
                 }
             }
@@ -148,7 +174,8 @@ struct CheckoutBookView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         showingAddStudent = false
-                        newStudentName = ""
+                        newStudentFirstName = ""
+                        newStudentLastName = ""
                         newStudentClass = ""
                     }
                 }
@@ -157,7 +184,7 @@ struct CheckoutBookView: View {
                         addStudent()
                         showingAddStudent = false
                     }
-                    .disabled(newStudentName.isEmpty)
+                    .disabled(newStudentFirstName.isEmpty || newStudentLastName.isEmpty)
                 }
             }
         }
@@ -165,13 +192,15 @@ struct CheckoutBookView: View {
 
     private func addStudent() {
         let student = Student(
-            libraryId: newStudentName,
+            firstName: newStudentFirstName,
+            lastName: newStudentLastName,
             classCode: newStudentClass.isEmpty ? nil : newStudentClass
         )
 
         modelContext.insert(student)
         selectedStudent = student
-        newStudentName = ""
+        newStudentFirstName = ""
+        newStudentLastName = ""
         newStudentClass = ""
     }
 

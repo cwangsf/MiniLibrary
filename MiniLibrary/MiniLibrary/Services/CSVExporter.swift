@@ -46,15 +46,49 @@ enum CSVExporter {
         var csv = "First Name,Last Name,Class\n"
 
         for student in students {
-            let parts = student.libraryId.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: false)
-            let firstName = parts.count > 0 ? String(parts[0]) : ""
-            let lastName = parts.count > 1 ? String(parts[1]) : ""
             let classCode = student.classCode ?? ""
 
             let fields = [
-                escapeCSV(firstName),
-                escapeCSV(lastName),
+                escapeCSV(student.firstName),
+                escapeCSV(student.lastName),
                 escapeCSV(classCode)
+            ]
+
+            csv += fields.joined(separator: ",") + "\n"
+        }
+
+        return csv
+    }
+
+    /// Export checkout records to CSV format
+    static func exportCheckoutRecords(_ checkouts: [CheckoutRecord]) -> String {
+        var csv = "Book Title,Author,ISBN,Student Name,Checkout Date,Due Date,Return Date,Status\n"
+
+        if checkouts.isEmpty {
+            // Add a note if there are no checkouts
+            csv += "No checkout records available\n"
+            return csv
+        }
+
+        for checkout in checkouts {
+            let bookTitle = checkout.book?.title ?? "Unknown"
+            let bookAuthor = checkout.book?.author ?? ""
+            let bookISBN = checkout.book?.isbn ?? ""
+            let studentName = checkout.student?.fullName ?? "Unknown"
+            let checkoutDate = checkout.checkoutDate.formatted(date: .abbreviated, time: .omitted)
+            let dueDate = checkout.dueDate.formatted(date: .abbreviated, time: .omitted)
+            let returnDate = checkout.returnDate?.formatted(date: .abbreviated, time: .omitted) ?? ""
+            let status = checkout.isActive ? "Active" : "Returned"
+
+            let fields = [
+                escapeCSV(bookTitle),
+                escapeCSV(bookAuthor),
+                escapeCSV(bookISBN),
+                escapeCSV(studentName),
+                checkoutDate,
+                dueDate,
+                returnDate,
+                status
             ]
 
             csv += fields.joined(separator: ",") + "\n"
@@ -69,10 +103,22 @@ enum CSVExporter {
         let fileURL = temporaryDirectoryURL.appendingPathComponent(filename)
 
         do {
+            // Remove existing file if it exists
+            try? FileManager.default.removeItem(at: fileURL)
+
+            // Write the CSV content
             try csvContent.write(to: fileURL, atomically: true, encoding: .utf8)
+
+            // Verify the file was created
+            guard FileManager.default.fileExists(atPath: fileURL.path) else {
+                print("Error: CSV file was not created at \(fileURL.path)")
+                return nil
+            }
+
+            print("✓ CSV file saved: \(fileURL.lastPathComponent)")
             return fileURL
         } catch {
-            print("Error saving CSV file: \(error)")
+            print("Error saving CSV file '\(filename)': \(error.localizedDescription)")
             return nil
         }
     }

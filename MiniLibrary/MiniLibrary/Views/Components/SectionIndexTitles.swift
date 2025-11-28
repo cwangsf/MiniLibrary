@@ -10,6 +10,7 @@ import SwiftUI
 struct SectionIndexTitles: View {
     let titles: [String]
     let onTap: (String) -> Void
+    var itemWidth: CGFloat = 28
 
     @State private var selectedLetter: String?
     @State private var hapticFeedback = UIImpactFeedbackGenerator(style: .light)
@@ -20,7 +21,7 @@ struct SectionIndexTitles: View {
                 Text(letter)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(selectedLetter == letter ? .white : .blue)
-                    .frame(width: 28, height: 22)
+                    .frame(width: itemWidth, height: 22)
                     .background(
                         Circle()
                             .fill(selectedLetter == letter ? Color.blue : Color.clear)

@@ -10,6 +10,12 @@ import Observation
 
 @Observable
 class ScanBookViewModel {
+    enum ScanPurpose {
+        case addBook
+        case checkout
+        case returnBook
+    }
+    
     enum ScanState: Equatable {
         case scanning
         case loading(isbn: String)
@@ -38,6 +44,7 @@ class ScanBookViewModel {
         }
     }
 
+    var scanPurpose: ScanPurpose = .addBook
     var state: ScanState = .scanning
     var scannedBook: Book?
     var existingBook: Book?
@@ -73,7 +80,7 @@ class ScanBookViewModel {
             author = book.author ?? ""
             self.isbn = book.isbn ?? isbn
 
-            print("Debug: Fetched book - Title: \(book.title), Author: \(book.author), ISBN: \(book.isbn ?? "nil")")
+            print("Debug: Fetched book - Title: \(book.title), Author: \(String(describing: book.author)), ISBN: \(book.isbn ?? "nil")")
             print("Debug: ViewModel - Title: \(title), Author: \(author), ISBN: \(self.isbn)")
 
             state = .confirming(book: book)

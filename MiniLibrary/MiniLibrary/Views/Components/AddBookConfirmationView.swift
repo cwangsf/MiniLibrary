@@ -1,16 +1,18 @@
 //
-//  CheckoutConfirmationView.swift
+//  AddBookConfirmationView.swift
 //  MiniLibrary
 //
-//  Created by Cynthia Wang on 10/10/25.
+//  Created by Claude Code
 //
 
 import SwiftUI
 
-struct CheckoutConfirmationView: View {
-    let book: Book
-    let student: Student
-    let dueDate: Date
+struct AddBookConfirmationView: View {
+    let title: String
+    let author: String
+    let isbn: String
+    let totalCopies: Int
+    let notes: String
     let onConfirm: () -> Void
     @Environment(\.dismiss) private var dismiss
 
@@ -18,56 +20,52 @@ struct CheckoutConfirmationView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    Text("Confirm Checkout")
+                    Text("Confirm New Book")
                         .sectionTitle()
                         .padding(.top, 20)
-                    
-                    // Book Cover
-                    BookCoverImage(book: book, width: 120, height: 180)
-                        .padding(.top, 40)
 
-                    // Confirmation Message
                     VStack(spacing: 16) {
-                        VStack{
-                            // Book Info
-                            VStack {
-                                Text(book.title)
-                                    .bookTitle()
-                                if let author = book.author {
-                                    Text(author)
-                                        .bookAuthor()
-                                }
-                            }
-
-                            Divider()
-                                .padding(.horizontal, 40)
-
-                            // Student Info
+                        VStack(alignment: .leading, spacing: 12) {
                             HStack {
-                                Text("Student")
+                                Text("Title")
                                     .labelStyle()
                                 Spacer()
+                                Text(title.isEmpty ? "No Title" : title)
+                                    .valueText()
+                            }
+
+                            HStack {
+                                Text("Author")
+                                    .labelStyle()
+                                Spacer()
+                                Text(author.isEmpty ? "Unknown Author" : author)
+                                    .valueText()
+                            }
+
+                            if !isbn.isEmpty {
                                 HStack {
-                                    Image(systemName: "person.fill")
-                                        .personIcon()
-                                    Text(student.fullName)
+                                    Text("ISBN")
+                                        .labelStyle()
+                                    Spacer()
+                                    Text(isbn)
                                         .valueText()
                                 }
                             }
 
-                            Divider()
-                                .padding(.horizontal, 40)
-
-                            // Due Date
                             HStack {
-                                Text("Due Date")
+                                Text("Copies")
                                     .labelStyle()
                                 Spacer()
-                                HStack {
-                                    Image(systemName: "calendar")
-                                        .warningIcon()
-                                    Text(dueDate.formatted(date: .long, time: .omitted))
-                                        .valueText()
+                                Text(String(totalCopies))
+                                    .valueText()
+                            }
+
+                            if !notes.isEmpty {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Notes")
+                                        .labelStyle()
+                                    Text(notes)
+                                        .font(.caption)
                                 }
                             }
                         }
@@ -85,7 +83,7 @@ struct CheckoutConfirmationView: View {
                         } label: {
                             HStack {
                                 Image(systemName: "checkmark.circle.fill")
-                                Text("Confirm Checkout")
+                                Text("Add Book")
                             }
                             .prominentButton(color: .blue)
                         }
@@ -104,6 +102,6 @@ struct CheckoutConfirmationView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
         }
-        .presentationDetents([.large])
+        .presentationDetents([.medium, .large])
     }
 }

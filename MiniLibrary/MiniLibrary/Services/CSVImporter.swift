@@ -14,7 +14,25 @@ struct CSVImporter {
     /// Standard: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes
     /// Custom: ISBNs, Title, Primary Author, Copies
     static func importBooks(from csvContent: String, modelContext: ModelContext) throws -> Int {
-        let rows = CSVParser.parse(csvString: csvContent)
+        // Fix encoding issues: replace smart quotes and other problematic characters
+        let cleanedContent = csvContent
+            .replacingOccurrences(of: "â€™", with: "'")  // Smart quote encoding issue
+            .replacingOccurrences(of: "\u{201C}", with: "\"") // Left double quotation mark
+            .replacingOccurrences(of: "\u{201D}", with: "\"") // Right double quotation mark
+            .replacingOccurrences(of: "\u{2018}", with: "'")  // Left single quotation mark
+            .replacingOccurrences(of: "\u{2019}", with: "'")  // Right single quotation mark
+            .replacingOccurrences(of: "\u{2013}", with: "-")  // En dash
+            .replacingOccurrences(of: "\u{2014}", with: "-")  // Em dash
+            // Fix UTF-8 mojibake (double-encoded German umlauts and special characters)
+            .replacingOccurrences(of: "Ã¤", with: "ä")  // ä
+            .replacingOccurrences(of: "Ã¶", with: "ö")  // ö
+            .replacingOccurrences(of: "Ã¼", with: "ü")  // ü
+            .replacingOccurrences(of: "Ã„", with: "Ä")  // Ä
+            .replacingOccurrences(of: "Ã–", with: "Ö")  // Ö
+            .replacingOccurrences(of: "Ãœ", with: "Ü")  // Ü
+            .replacingOccurrences(of: "ÃŸ", with: "ß")  // ß
+
+        let rows = CSVParser.parse(csvString: cleanedContent)
 
         guard !rows.isEmpty else {
             throw CSVImportError.emptyFile
@@ -22,16 +40,60 @@ struct CSVImporter {
 
         var importedCount = 0
         var skippedLines: [(lineNumber: Int, reason: String, row: [String: String])] = []
+        var seenBooks: Set<String> = [] // Track unique books by their identity key
+
+        // Fetch existing books to check for duplicates
+        let descriptor = FetchDescriptor<Book>()
+        let existingBooks = try modelContext.fetch(descriptor)
 
         for (index, row) in rows.enumerated() {
+            let lineNumber = index + 2 // CSV line numbers start at 2 (after header)
+
             // Create Book from CSV row
             let result = createBook(from: row)
             if let book = result.book {
+                // Create a unique key for this book (ISBN if available, otherwise title + author)
+                let bookKey: String
+                if let isbn = book.isbn, !isbn.isEmpty {
+                    bookKey = "isbn:\(isbn)"
+                } else {
+                    bookKey = "title:\(book.title)|author:\(book.author ?? "")"
+                }
+
+                // Check if we've already seen this book in the CSV
+                if seenBooks.contains(bookKey) {
+                    let reason = "Duplicate in CSV (same as earlier line): \(book.title) by \(book.author ?? "Unknown")"
+                    skippedLines.append((lineNumber: lineNumber, reason: reason, row: row))
+                    print("Skipping line \(lineNumber): \(reason)")
+                    continue
+                }
+
+                // Check if a book with the same ISBN already exists in database
+                if let isbn = book.isbn,
+                   existingBooks.contains(where: { $0.isbn == isbn }) {
+                    skippedLines.append((lineNumber: lineNumber, reason: "Duplicate ISBN in database: \(isbn)", row: row))
+                    print("Skipping line \(lineNumber): Duplicate ISBN in database: \(isbn)")
+                    continue
+                }
+
+                // Check if a book with same title and author already exists in database
+                if book.isbn == nil,
+                   existingBooks.contains(where: {
+                       $0.title == book.title && $0.author == book.author
+                   }) {
+                    let reason = "Duplicate in database: \(book.title) by \(book.author ?? "Unknown")"
+                    skippedLines.append((lineNumber: lineNumber, reason: reason, row: row))
+                    print("Skipping line \(lineNumber): \(reason)")
+                    continue
+                }
+
+                // Mark this book as seen and import it
+                seenBooks.insert(bookKey)
                 modelContext.insert(book)
                 importedCount += 1
             } else {
-                skippedLines.append((lineNumber: index + 2, reason: result.reason, row: row))
-                print("Skipping line \(index + 2): \(result.reason)\n     Book info: \(row)")
+                skippedLines.append((lineNumber: lineNumber, reason: result.reason, row: row))
+                print("Skipping line \(lineNumber): \(result.reason)\n     Book info: \(row)")
             }
         }
 
@@ -69,10 +131,11 @@ struct CSVImporter {
             // ISBNs are in format "1406312207, 9781406312201" or "[1406312207]"
             let cleaned = isbns.replacingOccurrences(of: "[", with: "")
                                .replacingOccurrences(of: "]", with: "")
+                               .replacingOccurrences(of: "-", with: "")
             isbn = cleaned.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces)
         } else if let singleISBN = csvRow["ISBN"]?.trimmingCharacters(in: .whitespaces),
                   !singleISBN.isEmpty {
-            isbn = singleISBN
+            isbn = singleISBN.replacingOccurrences(of: "-", with: "")
         }
 
         // Get copies (try both "Copies" and "Total Copies")
@@ -297,14 +360,11 @@ struct CSVImporter {
             return nil
         }
 
-        // Create libraryId as "FirstName LastName"
-        let libraryId = "\(firstName) \(lastName)"
-
         // Class is optional
         let classCode = csvRow["Class"]?.trimmingCharacters(in: .whitespaces).isEmpty == false ?
             csvRow["Class"]?.trimmingCharacters(in: .whitespaces) : nil
 
-        return Student(libraryId: libraryId, classCode: classCode)
+        return Student(firstName: firstName, lastName: lastName, classCode: classCode)
     }
 
 }

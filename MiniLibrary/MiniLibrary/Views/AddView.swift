@@ -11,7 +11,7 @@ internal import UniformTypeIdentifiers
 
 struct AddView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Book.title) private var books: [Book]
+    @Query private var books: [Book]
     @Query private var students: [Student]
     @Query private var checkouts: [CheckoutRecord]
     @Query private var activities: [Activity]
@@ -21,6 +21,8 @@ struct AddView: View {
     @State private var isExportingWishlist = false
     @State private var exportStudentsFileURL: URL?
     @State private var isExportingStudents = false
+    @State private var exportCheckoutsFileURL: URL?
+    @State private var isExportingCheckouts = false
     @State private var showingDeleteConfirmation = false
     @State private var showingImportPicker = false
     @State private var importResult: ImportResult?
@@ -32,7 +34,7 @@ struct AddView: View {
             List {
                 // Quick Scan - Prominent Section
                 Section {
-                    NavigationLink(destination: ScanBookView()) {
+                    NavigationLink(destination: ScanBookView(scanPurpose: .addBook)) {
                         HStack(spacing: 16) {
                             Image(systemName: "barcode.viewfinder")
                                 .font(.system(size: 32))
@@ -44,7 +46,7 @@ struct AddView: View {
                                     .font(.headline)
                                     .foregroundStyle(.primary)
 
-                                Text("Add to Catalog/Wishlist, check out, or return books instantly")
+                                Text("Add to Catalog/Wishlist instantly")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -87,90 +89,39 @@ struct AddView: View {
                     }
                 }
 
-                Section("Manage Checkouts") {
-                    NavigationLink(destination: CheckoutBookView()) {
-                        HStack {
-                            Image(systemName: "arrow.right.circle.fill")
-                                .foregroundStyle(.blue)
-                            Text("Check Out Book")
-                                .foregroundStyle(.tint)
+                BulkDataManagementSection(
+                    isExporting: $isExporting,
+                    exportFileURL: $exportFileURL,
+                    isExportingWishlist: $isExportingWishlist,
+                    exportWishlistFileURL: $exportWishlistFileURL,
+                    isExportingStudents: $isExportingStudents,
+                    exportStudentsFileURL: $exportStudentsFileURL,
+                    isExportingCheckouts: $isExportingCheckouts,
+                    exportCheckoutsFileURL: $exportCheckoutsFileURL,
+                    showingDeleteConfirmation: $showingDeleteConfirmation,
+                    showingImportPicker: $showingImportPicker,
+                    importType: $importType,
+                    onExportCatalog: {
+                        Task {
+                            await exportCatalog()
+                        }
+                    },
+                    onExportWishlist: {
+                        Task {
+                            await exportWishlist()
+                        }
+                    },
+                    onExportStudents: {
+                        Task {
+                            await exportStudents()
+                        }
+                    },
+                    onExportCheckouts: {
+                        Task {
+                            await exportCheckouts()
                         }
                     }
-
-                    NavigationLink(destination: ReturnBookView()) {
-                        HStack {
-                            Image(systemName: "arrow.left.circle.fill")
-                                .foregroundStyle(.green)
-                            Text("Return Book")
-                                .foregroundStyle(.tint)
-                        }
-                    }
-                }
-
-                Section("Export") {
-                    // Export Catalog
-                    ExportCatalogRow(
-                        isExporting: isExporting,
-                        exportFileURL: exportFileURL,
-                        onExport: {
-                            Task {
-                                await exportCatalog()
-                            }
-                        }
-                    )
-
-                    // Export Wishlist
-                    ExportWishlistRow(
-                        isExporting: isExportingWishlist,
-                        exportFileURL: exportWishlistFileURL,
-                        onExport: {
-                            Task {
-                                await exportWishlist()
-                            }
-                        }
-                    )
-
-                    // Export Students
-                    ExportStudentsRow(
-                        isExporting: isExportingStudents,
-                        exportFileURL: exportStudentsFileURL,
-                        onExport: {
-                            Task {
-                                await exportStudents()
-                            }
-                        }
-                    )
-
-                    // Import Catalog
-                    ImportCatalogRow {
-                        importType = .catalog
-                        showingImportPicker = true
-                    }
-
-                    // Import Wishlist
-                    ImportWishlistRow {
-                        importType = .wishlist
-                        showingImportPicker = true
-                    }
-
-                    // Import Students
-                    ImportStudentsRow {
-                        importType = .students
-                        showingImportPicker = true
-                    }
-
-                    // Delete All Data
-                    Button {
-                        showingDeleteConfirmation = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "trash.fill")
-                                .foregroundStyle(.red)
-                            Text("Delete All Data")
-                                .foregroundStyle(.tint)
-                        }
-                    }
-                }
+                )
 
                 // App Info Section
                 Section("About") {
@@ -220,6 +171,7 @@ struct AddView: View {
                 await exportCatalog()
                 await exportWishlist()
                 await exportStudents()
+                await exportCheckouts()
             }
         }
     }
@@ -275,6 +227,24 @@ struct AddView: View {
         await MainActor.run {
             exportStudentsFileURL = url
             isExportingStudents = false
+        }
+    }
+
+    private func exportCheckouts() async {
+        isExportingCheckouts = true
+
+        // Capture checkouts to avoid cross-context issues
+        let checkoutList = checkouts
+
+        // Run export in background
+        let url = await Task.detached {
+            let csvContent = CSVExporter.exportCheckoutRecords(checkoutList)
+            return CSVExporter.saveToTemporaryFile(csvContent, filename: "library_checkouts.csv")
+        }.value
+
+        await MainActor.run {
+            exportCheckoutsFileURL = url
+            isExportingCheckouts = false
         }
     }
 
