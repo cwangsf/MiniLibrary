@@ -417,7 +417,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "MiniLibrary/App/sample_books.csv MiniLibrary/App/sample_wish_list.csv";
+				DEVELOPMENT_ASSET_PATHS = MiniLibrary/App/sample_students.csv;
 				DEVELOPMENT_TEAM = 83869ZY58J;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -465,7 +465,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "MiniLibrary/App/sample_books.csv MiniLibrary/App/sample_wish_list.csv";
+				DEVELOPMENT_ASSET_PATHS = MiniLibrary/App/sample_students.csv;
 				DEVELOPMENT_TEAM = 83869ZY58J;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;

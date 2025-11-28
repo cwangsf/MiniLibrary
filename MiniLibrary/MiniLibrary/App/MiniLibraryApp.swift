@@ -28,14 +28,12 @@ struct MiniLibraryApp: App {
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             let context = ModelContext(container)
 
-            #if DEBUG
             // Seed students from CSV
             do {
                 try DataSeeder.seedStudentsFromCSV(fileName: "sample_students", modelContext: context)
             } catch {
                 print("Error seeding students: \(error)")
             }
-            #endif
 
             return container
         } catch {
