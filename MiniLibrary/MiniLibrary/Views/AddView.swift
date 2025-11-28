@@ -253,44 +253,14 @@ struct AddView: View {
             book.isbn != nil && book.coverImageURL == nil && !book.isWishlistItem
         }
 
-        print("Fetching cover images for \(booksNeedingCovers.count) books in background...")
+        print("Fetching and updating book data from Google Books for \(booksNeedingCovers.count) books in background...")
 
-        // Fetch covers for each book
+        // Fetch complete data for each book from Google Books
         for book in booksNeedingCovers {
-            guard let isbn = book.isbn else { continue }
-
-            do {
-                let fetchedBook = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
-
-                // Update the book with fetched metadata on main actor
-                await MainActor.run {
-                    if book.coverImageURL == nil {
-                        book.coverImageURL = fetchedBook.coverImageURL
-                    }
-                    if book.bookDescription == nil {
-                        book.bookDescription = fetchedBook.bookDescription
-                    }
-                    if book.pageCount == nil {
-                        book.pageCount = fetchedBook.pageCount
-                    }
-                    if book.publishedDate == nil {
-                        book.publishedDate = fetchedBook.publishedDate
-                    }
-                    if book.publisher == nil {
-                        book.publisher = fetchedBook.publisher
-                    }
-                    if book.languageCode == nil {
-                        book.languageCode = fetchedBook.languageCode
-                    }
-                }
-
-                print("✓ Fetched cover for: \(book.title)")
-            } catch {
-                print("✗ Failed to fetch cover for \(book.title): \(error.localizedDescription)")
-            }
+            await BookAPIService.shared.replaceWithGoogleBookData(book)
         }
 
-        print("Finished fetching cover images")
+        print("Finished updating books with Google Books data")
     }
 
     private func handleImportResult(_ result: Result<[URL], Error>) {

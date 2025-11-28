@@ -172,6 +172,74 @@ struct BookAPIService {
 
     // MARK: - Cover Image Methods
 
+    /// Replace book metadata with Google Books data
+    /// Fetches complete book information from Google Books API and updates the book
+    /// Preserves totalCopies and availableCopies from the original book
+    func replaceWithGoogleBookData(_ book: Book) async {
+        do {
+            var googleItem: GoogleBookItem?
+
+            // Try ISBN search first if available
+            if let isbn = book.isbn {
+                let items = try await searchBooksByISBN(isbn)
+                googleItem = items.first
+            }
+
+            // Fall back to title/author search if no ISBN or ISBN search failed
+            if googleItem == nil {
+                let searchAuthor = book.author ?? ""
+                let items = try await searchBooksByTitleAndAuthor(
+                    title: book.title,
+                    author: searchAuthor
+                )
+                googleItem = items.first
+            }
+
+            // Update book with Google Books data
+            if let googleItem = googleItem {
+                let volumeInfo = googleItem.volumeInfo
+
+                // Update title and author from Google Books
+                book.title = volumeInfo.title
+                if let authors = volumeInfo.authors, !authors.isEmpty {
+                    book.author = authors.joined(separator: ", ")
+                }
+
+                // Update description
+                book.bookDescription = volumeInfo.description
+
+                // Update other metadata
+                book.pageCount = volumeInfo.pageCount
+                book.publishedDate = volumeInfo.publishedDate
+                book.publisher = volumeInfo.publisher
+                book.languageCode = volumeInfo.language
+
+                // Update ISBN if it was missing from CSV
+                if book.isbn == nil,
+                   let isbn = volumeInfo.industryIdentifiers?.first(where: { $0.type == "ISBN_13" || $0.type == "ISBN_10" })?.identifier {
+                    book.isbn = isbn
+                }
+
+                // Download and cache cover image
+                if let coverURL = volumeInfo.imageLinks?.thumbnail {
+                    book.coverImageURL = coverURL
+                    let secureURL = coverURL.replacingOccurrences(of: "http://", with: "https://")
+
+                    if let cachedFilename = try await ImageCacheService.shared.cacheImage(
+                        from: secureURL,
+                        for: book.id.uuidString
+                    ) {
+                        book.cachedCoverImage = cachedFilename
+                        print("✓ Updated with Google Books data: \(book.title)")
+                    }
+                }
+            }
+        } catch {
+            let authorInfo = book.author.map { " by \($0)" } ?? ""
+            print("Failed to fetch Google Books data for '\(book.title)'\(authorInfo): \(error)")
+        }
+    }
+
     /// Update book with cover image and metadata if not present
     /// Downloads and caches the cover image locally
     /// Works with ISBN or title/author search
