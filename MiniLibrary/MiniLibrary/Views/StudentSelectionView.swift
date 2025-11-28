@@ -92,7 +92,7 @@ struct StudentSelectionView: View {
 
                     // Section Index Titles (A-Z) on the right side
                     if !sortedSectionTitles.isEmpty && searchText.isEmpty {
-                        SectionIndexTitles(titles: sortedSectionTitles, itemWidth: 35) { letter in
+                        SectionIndexTitles(titles: sortedSectionTitles, itemWidth: 80) { letter in
                               withAnimation {
                                   proxy.scrollTo(letter, anchor: .top)
                               }
