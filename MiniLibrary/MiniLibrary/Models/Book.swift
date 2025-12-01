@@ -46,7 +46,7 @@ final class Book: Codable {
         isbn: String? = nil,
         title: String,
         author: String? = nil,
-        totalCopies: Int,
+        totalCopies: Int = 1,
         availableCopies: Int? = nil,
         createdAt: Date = Date(),
         bookDescription: String? = nil,
