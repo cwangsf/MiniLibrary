@@ -182,16 +182,12 @@ struct AddView: View {
         // Capture books array to avoid cross-context issues
         let catalogBooks = books.filter { !$0.isWishlistItem }
 
-        // Run export in background
-        let url = await Task.detached {
-            let csvContent = CSVExporter.exportBooks(catalogBooks)
-            return CSVExporter.saveToTemporaryFile(csvContent, filename: "library_catalog.csv")
-        }.value
+        // Export CSV
+        let csvContent = CSVExporter.exportBooks(catalogBooks)
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_catalog.csv")
 
-        await MainActor.run {
-            exportFileURL = url
-            isExporting = false
-        }
+        exportFileURL = url
+        isExporting = false
     }
 
     private func exportWishlist() async {
@@ -200,16 +196,12 @@ struct AddView: View {
         // Capture wishlist books to avoid cross-context issues
         let wishlistBooks = books.filter { $0.isWishlistItem }
 
-        // Run export in background
-        let url = await Task.detached {
-            let csvContent = CSVExporter.exportBooks(wishlistBooks)
-            return CSVExporter.saveToTemporaryFile(csvContent, filename: "library_wishlist.csv")
-        }.value
+        // Export CSV
+        let csvContent = CSVExporter.exportBooks(wishlistBooks)
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_wishlist.csv")
 
-        await MainActor.run {
-            exportWishlistFileURL = url
-            isExportingWishlist = false
-        }
+        exportWishlistFileURL = url
+        isExportingWishlist = false
     }
 
     private func exportStudents() async {
@@ -218,16 +210,12 @@ struct AddView: View {
         // Capture students to avoid cross-context issues
         let studentList = students
 
-        // Run export in background
-        let url = await Task.detached {
-            let csvContent = CSVExporter.exportStudents(studentList)
-            return CSVExporter.saveToTemporaryFile(csvContent, filename: "library_students.csv")
-        }.value
+        // Export CSV
+        let csvContent = CSVExporter.exportStudents(studentList)
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_students.csv")
 
-        await MainActor.run {
-            exportStudentsFileURL = url
-            isExportingStudents = false
-        }
+        exportStudentsFileURL = url
+        isExportingStudents = false
     }
 
     private func exportCheckouts() async {
@@ -236,16 +224,12 @@ struct AddView: View {
         // Capture checkouts to avoid cross-context issues
         let checkoutList = checkouts
 
-        // Run export in background
-        let url = await Task.detached {
-            let csvContent = CSVExporter.exportCheckoutRecords(checkoutList)
-            return CSVExporter.saveToTemporaryFile(csvContent, filename: "library_checkouts.csv")
-        }.value
+        // Export CSV
+        let csvContent = CSVExporter.exportCheckoutRecords(checkoutList)
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_checkouts.csv")
 
-        await MainActor.run {
-            exportCheckoutsFileURL = url
-            isExportingCheckouts = false
-        }
+        exportCheckoutsFileURL = url
+        isExportingCheckouts = false
     }
 
     private func deleteAllData() {
