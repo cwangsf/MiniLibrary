@@ -2004,52 +2004,6 @@
         }
       }
     },
-    "Library ID (e.g., LIB-001)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bibliotheks-ID (z.B. LIB-001)"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aitheantas Leabharlainne (m.sh. LIB-001)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "图书馆ID（如 LIB-001）"
-          }
-        }
-      }
-    },
-    "Manage Checkouts" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausleihen verwalten"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bainistigh Seiceálacha Amach"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "管理借阅"
-          }
-        }
-      }
-    },
     "No active checkouts" : {
       "localizations" : {
         "de" : {
@@ -2244,29 +2198,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无愿望清单项目"
-          }
-        }
-      }
-    },
-    "Not specified" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nicht angegeben"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan sonrú"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未指定"
           }
         }
       }
@@ -2865,29 +2796,6 @@
         }
       }
     },
-    "Select a student" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wählen Sie einen Schüler"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Roghnaigh dalta"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择一个学生"
-          }
-        }
-      }
-    },
     "Select a Student" : {
       "localizations" : {
         "de" : {
@@ -3038,52 +2946,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "学生信息"
-          }
-        }
-      }
-    },
-    "Student Name" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schülername"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ainm an Dalta"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "学生姓名"
-          }
-        }
-      }
-    },
-    "Student Name (e.g., John Smith)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schülername (z.B. John Smith)"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ainm an Dalta (m.sh. John Smith)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "学生姓名（例如 John Smith）"
           }
         }
       }
