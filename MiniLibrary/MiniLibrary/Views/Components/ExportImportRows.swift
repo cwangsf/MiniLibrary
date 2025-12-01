@@ -103,11 +103,11 @@ struct ImportCatalogRow: View {
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("CSV format: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes")
+                Text("CSV format: Title, Author, ISBN")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
 
-                Text("Required: Title, Author, Total Copies, Available Copies. All other fields are optional.")
+                Text("Required: ISBN, Title.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
