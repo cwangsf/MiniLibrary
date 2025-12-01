@@ -9,9 +9,9 @@ import SwiftUI
 
 struct SectionIndexTitles: View {
     let titles: [String]
-    let onTap: (String) -> Void
     var itemWidth: CGFloat = 28
-
+    let onTap: (String) -> Void
+  
     @State private var selectedLetter: String?
     @State private var hapticFeedback = UIImpactFeedbackGenerator(style: .light)
 
