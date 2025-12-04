@@ -1,4 +1,4 @@
-# Privacy Policy for Mini Library
+# Privacy Policy for Library Manager
 
 This app is for personal library or School to manage library inventory and book checkouts.
 
