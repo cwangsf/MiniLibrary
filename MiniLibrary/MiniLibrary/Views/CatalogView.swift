@@ -81,17 +81,6 @@ struct CatalogView: View {
                             }
                         }
                     }
-
-                    // Floating language filter at bottom
-                    VStack {
-                        Spacer()
-
-                        LanguageFilterPicker(selectedLanguage: $selectedLanguage)
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(8)
-                            .padding(.horizontal)
-                    }
-                    .allowsHitTesting(true)
                 }
             }
             .navigationTitle("Catalog")
