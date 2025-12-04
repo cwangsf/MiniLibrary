@@ -1,9 +1,8 @@
 # Privacy Policy for Mini Library
 
-This app is used by St. Kilian German School to manage library inventory and book checkouts.
+This app is for personal library or School to manage library inventory and book checkouts.
 
 ## Information We Collect:
-- Student ID for checkout tracking
 - Book inventory data
 - Checkout and return dates
 
@@ -19,4 +18,4 @@ This app is used by St. Kilian German School to manage library inventory and boo
 
 Contact: cynthiazw@gmail.com
 
-Last Updated: October 16, 2025
+Last Updated: December 4, 2025
