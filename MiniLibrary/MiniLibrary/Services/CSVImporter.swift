@@ -46,6 +46,15 @@ struct CSVImporter {
         let descriptor = FetchDescriptor<Book>()
         let existingBooks = try modelContext.fetch(descriptor)
 
+        // Pre-populate seenBooks with existing database books
+        for existingBook in existingBooks {
+            if let isbn = existingBook.isbn, !isbn.isEmpty {
+                seenBooks.insert("isbn:\(isbn)")
+            } else {
+                seenBooks.insert("title:\(existingBook.title)|author:\(existingBook.author ?? "")")
+            }
+        }
+
         for (index, row) in rows.enumerated() {
             let lineNumber = index + 2 // CSV line numbers start at 2 (after header)
 

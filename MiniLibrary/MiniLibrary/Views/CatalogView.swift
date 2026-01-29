@@ -46,7 +46,6 @@ struct CatalogView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollViewReader { proxy in
                 ZStack(alignment: .trailing) {
                     List {
                         if searchText.isEmpty {
@@ -73,15 +72,6 @@ struct CatalogView: View {
                     .listStyle(.plain)
                     .scrollDismissesKeyboard(.immediately)
 
-                    // Section Index Titles (A-Z) on the right side
-                    if searchText.isEmpty && !sortedSectionTitles.isEmpty {
-                        SectionIndexTitles(titles: sortedSectionTitles) { letter in
-                            withAnimation {
-                                proxy.scrollTo(letter, anchor: .top)
-                            }
-                        }
-                    }
-
                     // Floating language filter at bottom
                     VStack {
                         Spacer()
@@ -93,7 +83,6 @@ struct CatalogView: View {
                     }
                     .allowsHitTesting(true)
                 }
-            }
             .navigationTitle("Catalog")
             .searchable(text: $searchText, prompt: "Search books or authors")
         }

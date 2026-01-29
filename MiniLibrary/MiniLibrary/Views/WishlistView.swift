@@ -39,7 +39,6 @@ struct WishlistView: View {
     }
 
     var body: some View {
-        ScrollViewReader { proxy in
             ZStack(alignment: .trailing) {
                 List {
                     if wishlistBooks.isEmpty {
@@ -79,16 +78,7 @@ struct WishlistView: View {
                 }
                 .listStyle(.plain)
 
-                // Section Index Titles (A-Z) on the right side
-                if !filteredWishlistBooks.isEmpty && !sortedSectionTitles.isEmpty {
-                    SectionIndexTitles(titles: sortedSectionTitles) { letter in
-                        withAnimation {
-                            proxy.scrollTo(letter, anchor: .top)
-                        }
-                    }
-                }
             }
-        }
         .navigationTitle("Wish List")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
