@@ -21,6 +21,7 @@ struct AddStudentView: View {
     @State private var editingLastName = ""
     @State private var editingCode = ""
     @State private var showingEditSheet = false
+    @State private var showingDeleteAllConfirmation = false
 
     var body: some View {
         Form {
@@ -77,6 +78,25 @@ struct AddStudentView: View {
             .padding()
             .background(.ultraThinMaterial)
         }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(role: .destructive) {
+                    showingDeleteAllConfirmation = true
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.red)
+                }
+                .disabled(students.isEmpty)
+            }
+        }
+        .alert("Remove All Students?", isPresented: $showingDeleteAllConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Remove All", role: .destructive) {
+                deleteAllStudents()
+            }
+        } message: {
+            Text("This will permanently delete all \(students.count) student\(students.count == 1 ? "" : "s"). This action cannot be undone.")
+        }
         .sheet(isPresented: $showingEditSheet) {
             editStudentSheet
         }
@@ -128,6 +148,12 @@ struct AddStudentView: View {
         student.firstName = editingFirstName
         student.lastName = editingLastName
         student.classCode = editingCode.isEmpty ? nil : editingCode
+    }
+
+    private func deleteAllStudents() {
+        for student in students {
+            modelContext.delete(student)
+        }
     }
 
     private func deleteStudents(at offsets: IndexSet) {

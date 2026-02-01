@@ -2705,6 +2705,12 @@
         }
       }
     },
+    "Remove All" : {
+
+    },
+    "Remove All Students?" : {
+
+    },
     "Required: First Name, Last Name. Class is optional." : {
       "localizations" : {
         "de" : {
@@ -3299,6 +3305,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "目前没有图书被借出"
+          }
+        }
+      }
+    },
+    "This will permanently delete all %lld student%@. This action cannot be undone." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This will permanently delete all %1$lld student%2$@. This action cannot be undone."
           }
         }
       }
