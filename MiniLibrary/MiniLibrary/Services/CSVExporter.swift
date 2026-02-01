@@ -98,7 +98,7 @@ enum CSVExporter {
     }
 
     /// Save CSV string to temporary file and return URL
-    static func saveToTemporaryFile(_ csvContent: String, filename: String = "library_catalog.csv") -> URL? {
+    static func saveToTemporaryFile(_ csvContent: String, filename: String) -> URL? {
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory
         let fileURL = temporaryDirectoryURL.appendingPathComponent(filename)
 

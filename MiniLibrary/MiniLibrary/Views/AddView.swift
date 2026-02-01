@@ -184,7 +184,8 @@ struct AddView: View {
 
         // Export CSV
         let csvContent = CSVExporter.exportBooks(catalogBooks)
-        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_catalog.csv")
+        let filename = "library_catalog\(dateSuffix()).csv"
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: filename)
 
         exportFileURL = url
         isExporting = false
@@ -198,7 +199,7 @@ struct AddView: View {
 
         // Export CSV
         let csvContent = CSVExporter.exportBooks(wishlistBooks)
-        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_wishlist.csv")
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_wishlist\(dateSuffix()).csv")
 
         exportWishlistFileURL = url
         isExportingWishlist = false
@@ -212,7 +213,7 @@ struct AddView: View {
 
         // Export CSV
         let csvContent = CSVExporter.exportStudents(studentList)
-        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_students.csv")
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_students\(dateSuffix()).csv")
 
         exportStudentsFileURL = url
         isExportingStudents = false
@@ -226,7 +227,7 @@ struct AddView: View {
 
         // Export CSV
         let csvContent = CSVExporter.exportCheckoutRecords(checkoutList)
-        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_checkouts.csv")
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_checkouts\(dateSuffix()).csv")
 
         exportCheckoutsFileURL = url
         isExportingCheckouts = false
@@ -485,6 +486,17 @@ struct AddView: View {
             )
             showingImportResult = true
         }
+    }
+
+    // MARK: - Date Suffix for Export Filenames
+
+    private func dateSuffix() -> String {
+        let now = Date()
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: now)
+        let month = calendar.shortMonthSymbols[calendar.component(.month, from: now) - 1]
+        let day = calendar.component(.day, from: now)
+        return "_\(year)_\(month)_\(day)"
     }
 
     // MARK: - App Version Info
