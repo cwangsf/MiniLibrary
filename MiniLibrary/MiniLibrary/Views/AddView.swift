@@ -157,6 +157,8 @@ struct AddView: View {
                     handleImportWishlistResult(result)
                 } else if importType == .students {
                     handleImportStudentsResult(result)
+                } else if importType == .checkouts {
+                    handleImportCheckoutsResult(result)
                 }
             }
             .alert(importResult?.title ?? "Import Result", isPresented: $showingImportResult) {
@@ -488,6 +490,65 @@ struct AddView: View {
         }
     }
 
+    private func handleImportCheckoutsResult(_ result: Result<[URL], Error>) {
+        switch result {
+        case .success(let urls):
+            guard let fileURL = urls.first else {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: "No file selected",
+                    isSuccess: false
+                )
+                showingImportResult = true
+                return
+            }
+
+            // Start accessing security-scoped resource
+            guard fileURL.startAccessingSecurityScopedResource() else {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: "Unable to access the selected file",
+                    isSuccess: false
+                )
+                showingImportResult = true
+                return
+            }
+
+            do {
+                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                let importedCount = try CSVImporter.importCheckoutRecords(from: csvContent, modelContext: modelContext)
+
+                importResult = ImportResult(
+                    title: "Import Successful",
+                    message: "Successfully imported \(importedCount) checkout record\(importedCount == 1 ? "" : "s") from the CSV file.",
+                    isSuccess: true
+                )
+
+                // Log activity
+                ActivityLogger.logCheckoutCSVImport(count: importedCount, modelContext: modelContext)
+
+                showingImportResult = true
+            } catch {
+                importResult = ImportResult(
+                    title: "Import Failed",
+                    message: error.localizedDescription,
+                    isSuccess: false
+                )
+                showingImportResult = true
+            }
+
+            fileURL.stopAccessingSecurityScopedResource()
+
+        case .failure(let error):
+            importResult = ImportResult(
+                title: "Import Failed",
+                message: error.localizedDescription,
+                isSuccess: false
+            )
+            showingImportResult = true
+        }
+    }
+
     // MARK: - Date Suffix for Export Filenames
 
     private func dateSuffix() -> String {
@@ -528,6 +589,7 @@ enum ImportType {
     case catalog
     case wishlist
     case students
+    case checkouts
 }
 
 #Preview {

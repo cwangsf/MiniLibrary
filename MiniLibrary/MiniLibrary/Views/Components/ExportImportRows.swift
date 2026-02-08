@@ -253,3 +253,32 @@ struct ExportCheckoutsRow: View {
         }
     }
 }
+
+// MARK: - Import Checkout Records Row
+struct ImportCheckoutRecordsRow: View {
+    let onImport: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Button(action: onImport) {
+                HStack {
+                    Image(systemName: "square.and.arrow.down")
+                        .foregroundStyle(.purple)
+                    Text("Import Checkout Records from CSV")
+                        .foregroundStyle(.tint)
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("CSV format: Book Title, Student Name, Checkout Date, Due Date")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+
+                Text("Required: Book Title, Student Name. Dates are optional.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.leading, 28)
+        }
+    }
+}

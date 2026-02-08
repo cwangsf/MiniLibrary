@@ -183,4 +183,18 @@ struct ActivityLogger {
         )
         modelContext.insert(activity)
     }
+
+    /// Logs when checkout records are imported from CSV
+    /// - Parameters:
+    ///   - count: Number of checkout records imported
+    ///   - modelContext: The SwiftData model context
+    static func logCheckoutCSVImport(count: Int, modelContext: ModelContext) {
+        let activity = Activity(
+            type: .checkout,
+            bookTitle: "Checkout Import",
+            bookAuthor: "CSV Import",
+            additionalInfo: "\(count) record\(count == 1 ? "" : "s") imported"
+        )
+        modelContext.insert(activity)
+    }
 }

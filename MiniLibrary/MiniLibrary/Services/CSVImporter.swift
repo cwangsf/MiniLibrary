@@ -376,6 +376,148 @@ struct CSVImporter {
         return Student(firstName: firstName, lastName: lastName, classCode: classCode)
     }
 
+    /// Import checkout records from CSV format
+    /// Expected format: Book Title, Student Name, Checkout Date, Due Date
+    /// Book Title and Student Name are required, dates are optional (defaults to today and 2 weeks from today)
+    static func importCheckoutRecords(from csvContent: String, modelContext: ModelContext) throws -> Int {
+        let rows = CSVParser.parse(csvString: csvContent)
+
+        guard !rows.isEmpty else {
+            throw CSVImportError.emptyFile
+        }
+
+        // Fetch existing books and students for matching
+        let bookDescriptor = FetchDescriptor<Book>()
+        let existingBooks = try modelContext.fetch(bookDescriptor)
+
+        let studentDescriptor = FetchDescriptor<Student>()
+        let existingStudents = try modelContext.fetch(studentDescriptor)
+
+        var importedCount = 0
+
+        for (index, row) in rows.enumerated() {
+            // Create CheckoutRecord from CSV row
+            if let checkout = createCheckoutRecord(from: row, books: existingBooks, students: existingStudents) {
+                modelContext.insert(checkout)
+
+                // Update the book's available copies
+                if let book = checkout.book, book.availableCopies > 0 {
+                    book.availableCopies -= 1
+                }
+
+                importedCount += 1
+            } else {
+                print("Skipping line \(index + 2): invalid checkout data - Book Title and Student Name are required, and must match existing records")
+            }
+        }
+
+        return importedCount
+    }
+
+    /// Create a CheckoutRecord instance from CSV row
+    /// Format: Book Title, Student Name, Checkout Date, Due Date
+    private static func createCheckoutRecord(from csvRow: [String: String], books: [Book], students: [Student]) -> CheckoutRecord? {
+        // Book Title is required
+        guard let bookTitle = csvRow["Book Title"]?.trimmingCharacters(in: .whitespaces),
+              !bookTitle.isEmpty else {
+            return nil
+        }
+
+        // Student Name is required
+        guard let studentName = csvRow["Student Name"]?.trimmingCharacters(in: .whitespaces),
+              !studentName.isEmpty else {
+            return nil
+        }
+
+        // Find matching book (case-insensitive)
+        guard let book = books.first(where: {
+            $0.title.lowercased() == bookTitle.lowercased() && !$0.isWishlistItem
+        }) else {
+            print("No matching book found for: \(bookTitle)")
+            return nil
+        }
+
+        // Check if book has available copies
+        guard book.availableCopies > 0 else {
+            print("No available copies for: \(bookTitle)")
+            return nil
+        }
+
+        // Find matching student (case-insensitive, match full name)
+        guard let student = students.first(where: {
+            $0.fullName.lowercased() == studentName.lowercased()
+        }) else {
+            print("No matching student found for: \(studentName)")
+            return nil
+        }
+
+        // Parse checkout date (optional, defaults to today)
+        let checkoutDate: Date
+        if let checkoutDateStr = csvRow["Checkout Date"]?.trimmingCharacters(in: .whitespaces),
+           !checkoutDateStr.isEmpty,
+           let parsedDate = parseDate(checkoutDateStr) {
+            checkoutDate = parsedDate
+        } else {
+            checkoutDate = Date()
+        }
+
+        // Parse due date (optional, defaults to 2 weeks from checkout date)
+        let dueDate: Date
+        if let dueDateStr = csvRow["Due Date"]?.trimmingCharacters(in: .whitespaces),
+           !dueDateStr.isEmpty,
+           let parsedDate = parseDate(dueDateStr) {
+            dueDate = parsedDate
+        } else {
+            dueDate = Calendar.current.date(byAdding: .day, value: 14, to: checkoutDate) ?? checkoutDate
+        }
+
+        return CheckoutRecord(
+            book: book,
+            student: student,
+            checkoutDate: checkoutDate,
+            dueDate: dueDate
+        )
+    }
+
+    /// Parse a date string in common formats
+    private static func parseDate(_ dateString: String) -> Date? {
+        let formatters: [DateFormatter] = [
+            {
+                let f = DateFormatter()
+                f.dateFormat = "yyyy-MM-dd"
+                return f
+            }(),
+            {
+                let f = DateFormatter()
+                f.dateFormat = "MM/dd/yyyy"
+                return f
+            }(),
+            {
+                let f = DateFormatter()
+                f.dateFormat = "dd/MM/yyyy"
+                return f
+            }(),
+            {
+                let f = DateFormatter()
+                f.dateStyle = .short
+                return f
+            }(),
+            {
+                let f = DateFormatter()
+                f.dateStyle = .medium
+                return f
+            }()
+        ]
+
+        for formatter in formatters {
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+        }
+
+        return nil
+    }
+
 }
 
 enum CSVImportError: LocalizedError {

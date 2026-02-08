@@ -101,6 +101,12 @@ struct BulkDataManagementSection: View {
                 showingImportPicker = true
             }
 
+            // Import Checkout Records
+            ImportCheckoutRecordsRow {
+                importType = .checkouts
+                showingImportPicker = true
+            }
+
             // Delete All Data
             Button {
                 showingDeleteConfirmation = true

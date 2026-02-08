@@ -1246,6 +1246,28 @@
         }
       }
     },
+    "CSV format: Book Title, Student Name, Checkout Date, Due Date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSV-Format: Buchtitel, Schülername, Ausleihdatum, Rückgabedatum"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formáid CSV: Teideal Leabhair, Ainm Dalta, Dáta Seiceála Amach, Dáta Dlite"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSV格式：书名、学生姓名、借出日期、归还日期"
+          }
+        }
+      }
+    },
     "CSV format: First Name, Last Name, Class" : {
       "localizations" : {
         "de" : {
@@ -2020,6 +2042,28 @@
         }
       }
     },
+    "Import Checkout Records from CSV" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausleihdatensätze aus CSV importieren"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iompórtáil Taifid Seiceála Amach ó CSV"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从CSV导入借阅记录"
+          }
+        }
+      }
+    },
     "Import Students from CSV" : {
       "localizations" : {
         "de" : {
@@ -2754,6 +2798,28 @@
     },
     "Remove All Students?" : {
 
+    },
+    "Required: Book Title, Student Name. Dates are optional." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erforderlich: Buchtitel, Schülername. Datumsangaben sind optional."
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Riachtanach: Teideal Leabhair, Ainm Dalta. Tá dátaí roghnach."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "必填：书名、学生姓名。日期为可选。"
+          }
+        }
+      }
     },
     "Required: First Name, Last Name. Class is optional." : {
       "localizations" : {
