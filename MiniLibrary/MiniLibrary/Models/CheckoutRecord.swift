@@ -14,7 +14,6 @@ final class CheckoutRecord: Codable {
     var checkoutDate: Date
     var dueDate: Date
     var returnDate: Date?
-    var checkedOutByStaffId: String
 
     @Relationship var student: Student?
     @Relationship var book: Book?
@@ -24,15 +23,13 @@ final class CheckoutRecord: Codable {
         student: Student,
         book: Book,
         checkoutDate: Date = Date(),
-        dueDate: Date,
-        checkedOutByStaffId: String
+        dueDate: Date
     ) {
         self.id = id
         self.student = student
         self.book = book
         self.checkoutDate = checkoutDate
         self.dueDate = dueDate
-        self.checkedOutByStaffId = checkedOutByStaffId
     }
 
     // MARK: - Codable
@@ -41,7 +38,6 @@ final class CheckoutRecord: Codable {
         case checkoutDate = "checkout_date"
         case dueDate = "due_date"
         case returnDate = "return_date"
-        case checkedOutByStaffId = "checked_out_by_staff_id"
         case studentId = "library_id"
         case bookId = "book_id"
     }
@@ -52,7 +48,6 @@ final class CheckoutRecord: Codable {
         self.checkoutDate = try container.decode(Date.self, forKey: .checkoutDate)
         self.dueDate = try container.decode(Date.self, forKey: .dueDate)
         self.returnDate = try container.decodeIfPresent(Date.self, forKey: .returnDate)
-        self.checkedOutByStaffId = try container.decode(String.self, forKey: .checkedOutByStaffId)
         // Note: student and book relationships will need to be resolved separately
     }
 
@@ -62,7 +57,6 @@ final class CheckoutRecord: Codable {
         try container.encode(checkoutDate, forKey: .checkoutDate)
         try container.encode(dueDate, forKey: .dueDate)
         try container.encodeIfPresent(returnDate, forKey: .returnDate)
-        try container.encode(checkedOutByStaffId, forKey: .checkedOutByStaffId)
         try container.encodeIfPresent(student?.fullName, forKey: .studentId)
         try container.encodeIfPresent(book?.id, forKey: .bookId)
     }

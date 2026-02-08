@@ -210,8 +210,7 @@ struct CheckoutBookView: View {
         let checkout = CheckoutRecord(
             student: student,
             book: book,
-            dueDate: dueDate,
-            checkedOutByStaffId: "ADMIN" // TODO: Get actual staff ID
+            dueDate: dueDate
         )
 
         book.availableCopies -= 1

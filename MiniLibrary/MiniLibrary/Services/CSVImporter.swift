@@ -472,8 +472,8 @@ struct CSVImporter {
         }
 
         return CheckoutRecord(
-            book: book,
             student: student,
+            book: book,
             checkoutDate: checkoutDate,
             dueDate: dueDate
         )
