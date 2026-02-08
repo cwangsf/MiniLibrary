@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import UserNotifications
 
 @main
 struct MiniLibraryApp: App {
@@ -48,9 +49,23 @@ struct MiniLibraryApp: App {
                     clearDataIfNeeded()
                     seedBooksIfNeeded()
                     seedWishlistIfNeeded()
+                    setupNotifications()
                 }
         }
         .modelContainer(sharedModelContainer)
+    }
+
+    private func setupNotifications() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .notDetermined:
+                NotificationService.requestAuthorization()
+            case .authorized, .provisional:
+                NotificationService.scheduleWeeklyExportReminder()
+            default:
+                break
+            }
+        }
     }
 
     private func clearDataIfNeeded() {

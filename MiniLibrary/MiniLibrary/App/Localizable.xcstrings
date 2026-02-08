@@ -1710,6 +1710,28 @@
         }
       }
     },
+    "Export Reminder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export-Erinnerung"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meabhruchán Easpórtála"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出提醒"
+          }
+        }
+      }
+    },
     "Export Catalog to CSV" : {
       "localizations" : {
         "de" : {
@@ -2104,6 +2126,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ISBN：%1$@"
+          }
+        }
+      }
+    },
+    "It's been a week! Export your library data to keep a backup." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Woche ist vergangen! Exportieren Sie Ihre Bibliotheksdaten, um ein Backup zu erstellen."
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tá seachtain caite! Easpórtáil do shonraí leabharlainne chun cóip chúltaca a choinneáil."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已经一周了！导出您的图书馆数据以保留备份。"
           }
         }
       }
