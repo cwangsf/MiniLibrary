@@ -186,7 +186,7 @@ struct AddView: View {
 
         // Export CSV
         let csvContent = CSVExporter.exportBooks(catalogBooks)
-        let filename = "library_catalog\(dateSuffix()).csv"
+        let filename = "book_catalog\(dateSuffix()).csv"
         let url = CSVExporter.saveToTemporaryFile(csvContent, filename: filename)
 
         exportFileURL = url
@@ -201,7 +201,7 @@ struct AddView: View {
 
         // Export CSV
         let csvContent = CSVExporter.exportBooks(wishlistBooks)
-        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_wishlist\(dateSuffix()).csv")
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "wishlist\(dateSuffix()).csv")
 
         exportWishlistFileURL = url
         isExportingWishlist = false
@@ -215,7 +215,7 @@ struct AddView: View {
 
         // Export CSV
         let csvContent = CSVExporter.exportStudents(studentList)
-        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_students\(dateSuffix()).csv")
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "students\(dateSuffix()).csv")
 
         exportStudentsFileURL = url
         isExportingStudents = false
@@ -229,7 +229,7 @@ struct AddView: View {
 
         // Export CSV
         let csvContent = CSVExporter.exportCheckoutRecords(checkoutList)
-        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "library_checkouts\(dateSuffix()).csv")
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "checkouts\(dateSuffix()).csv")
 
         exportCheckoutsFileURL = url
         isExportingCheckouts = false
