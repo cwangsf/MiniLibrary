@@ -37,7 +37,7 @@ enum NotificationService {
 
         // Tuesday at 9:00 AM
         var dateComponents = DateComponents()
-        dateComponents.weekday = 1 // Sunday
+        dateComponents.weekday = 3 // Tuesday
         dateComponents.hour = 9
         dateComponents.minute = 0
 
