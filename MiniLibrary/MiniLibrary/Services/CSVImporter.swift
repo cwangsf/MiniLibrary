@@ -7,6 +7,9 @@
 
 import Foundation
 import SwiftData
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "CSVImporter")
 
 struct CSVImporter {
     /// Import books from CSV format
@@ -73,7 +76,7 @@ struct CSVImporter {
                 if seenBooks.contains(bookKey) {
                     let reason = "Duplicate in CSV (same as earlier line): \(book.title) by \(book.author ?? "Unknown")"
                     skippedLines.append((lineNumber: lineNumber, reason: reason, row: row))
-                    print("Skipping line \(lineNumber): \(reason)")
+                    logger.info("Skipping line \(lineNumber): \(reason)")
                     continue
                 }
 
@@ -81,7 +84,7 @@ struct CSVImporter {
                 if let isbn = book.isbn,
                    existingBooks.contains(where: { $0.isbn == isbn }) {
                     skippedLines.append((lineNumber: lineNumber, reason: "Duplicate ISBN in database: \(isbn)", row: row))
-                    print("Skipping line \(lineNumber): Duplicate ISBN in database: \(isbn)")
+                    logger.info("Skipping line \(lineNumber): Duplicate ISBN in database: \(isbn)")
                     continue
                 }
 
@@ -92,7 +95,7 @@ struct CSVImporter {
                    }) {
                     let reason = "Duplicate in database: \(book.title) by \(book.author ?? "Unknown")"
                     skippedLines.append((lineNumber: lineNumber, reason: reason, row: row))
-                    print("Skipping line \(lineNumber): \(reason)")
+                    logger.info("Skipping line \(lineNumber): \(reason)")
                     continue
                 }
 
@@ -102,7 +105,7 @@ struct CSVImporter {
                 importedCount += 1
             } else {
                 skippedLines.append((lineNumber: lineNumber, reason: result.reason, row: row))
-                print("Skipping line \(lineNumber): \(result.reason)\n     Book info: \(row)")
+                logger.info("Skipping line \(lineNumber): \(result.reason) Book info: \(row)")
             }
         }
 
@@ -215,7 +218,7 @@ struct CSVImporter {
                 modelContext.insert(book)
                 importedCount += 1
             } else {
-                print("Skipping line \(index + 2): invalid wishlist data - Title is required")
+                logger.info("Skipping line \(index + 2): invalid wishlist data - Title is required")
             }
         }
 
@@ -287,7 +290,7 @@ struct CSVImporter {
     /// Save skipped lines to a CSV file in the Documents directory
     private static func saveSkippedLines(_ skippedLines: [(lineNumber: Int, reason: String, row: [String: String])], fileName: String) {
         guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Unable to access Documents directory")
+            logger.error("Unable to access Documents directory")
             return
         }
 
@@ -324,9 +327,9 @@ struct CSVImporter {
         // Write to file
         do {
             try csvContent.write(to: fileURL, atomically: true, encoding: .utf8)
-            print("Skipped lines saved to: \(fileURL.path)")
+            logger.info("Skipped lines saved to: \(fileURL.path)")
         } catch {
-            print("Error saving skipped lines: \(error.localizedDescription)")
+            logger.error("Error saving skipped lines: \(error.localizedDescription)")
         }
     }
 
@@ -348,7 +351,7 @@ struct CSVImporter {
                 modelContext.insert(student)
                 importedCount += 1
             } else {
-                print("Skipping line \(index + 2): invalid student data - First Name and Last Name are required")
+                logger.info("Skipping line \(index + 2): invalid student data - First Name and Last Name are required")
             }
         }
 
@@ -407,7 +410,7 @@ struct CSVImporter {
 
                 importedCount += 1
             } else {
-                print("Skipping line \(index + 2): invalid checkout data - Book Title and Student Name are required, and must match existing records")
+                logger.info("Skipping line \(index + 2): invalid checkout data - Book Title and Student Name are required, and must match existing records")
             }
         }
 
@@ -433,13 +436,13 @@ struct CSVImporter {
         guard let book = books.first(where: {
             $0.title.lowercased() == bookTitle.lowercased() && !$0.isWishlistItem
         }) else {
-            print("No matching book found for: \(bookTitle)")
+            logger.warning("No matching book found for: \(bookTitle)")
             return nil
         }
 
         // Check if book has available copies
         guard book.availableCopies > 0 else {
-            print("No available copies for: \(bookTitle)")
+            logger.warning("No available copies for: \(bookTitle)")
             return nil
         }
 
@@ -447,7 +450,7 @@ struct CSVImporter {
         guard let student = students.first(where: {
             $0.fullName.lowercased() == studentName.lowercased()
         }) else {
-            print("No matching student found for: \(studentName)")
+            logger.warning("No matching student found for: \(studentName)")
             return nil
         }
 

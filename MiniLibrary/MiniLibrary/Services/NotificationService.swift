@@ -6,6 +6,9 @@
 //
 
 import UserNotifications
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "NotificationService")
 
 enum NotificationService {
     private static let weeklyExportReminderID = "weekly-export-reminder"
@@ -13,7 +16,7 @@ enum NotificationService {
     static func requestAuthorization() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error {
-                print("Notification authorization error: \(error.localizedDescription)")
+                logger.error("Notification authorization error: \(error.localizedDescription)")
                 return
             }
             if granted {
@@ -46,7 +49,7 @@ enum NotificationService {
 
         center.add(request) { error in
             if let error {
-                print("Failed to schedule export reminder: \(error.localizedDescription)")
+                logger.error("Failed to schedule export reminder: \(error.localizedDescription)")
             }
         }
     }

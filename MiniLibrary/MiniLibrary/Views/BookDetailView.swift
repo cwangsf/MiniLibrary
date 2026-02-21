@@ -7,6 +7,9 @@
 
 import SwiftUI
 import SwiftData
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "BookDetailView")
 
 struct BookDetailView: View {
     let book: Book
@@ -370,7 +373,7 @@ struct BookDetailView: View {
                 }
             } catch {
                 // Silently fail - this is a background enhancement
-                print("Failed to fetch book info: \(error.localizedDescription)")
+                logger.error("Failed to fetch book info: \(error.localizedDescription)")
                 await MainActor.run {
                     isFetchingBookInfo = false
                 }

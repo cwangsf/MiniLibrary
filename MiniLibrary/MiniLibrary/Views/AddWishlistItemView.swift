@@ -7,6 +7,9 @@
 
 import SwiftUI
 import SwiftData
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "AddWishlistItemView")
 
 // MARK: - Add Wishlist Item View
 struct AddWishlistItemView: View {
@@ -198,7 +201,7 @@ struct AddWishlistItemView: View {
                     results = try await BookAPIService.shared.searchBooksByISBN(isbn)
                 } catch {
                     // ISBN search failed, fall back to title/author search if title is provided
-                    print("ISBN search failed, falling back to title/author search: \(error.localizedDescription)")
+                    logger.info("ISBN search failed, falling back to title/author search: \(error.localizedDescription)")
                     if !title.isEmpty || !author.isEmpty {
                         results = try await BookAPIService.shared.searchBooksByTitleAndAuthor(
                             title: title,

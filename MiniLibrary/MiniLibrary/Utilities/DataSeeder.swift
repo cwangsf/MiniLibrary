@@ -7,6 +7,9 @@
 
 import Foundation
 import SwiftData
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "DataSeeder")
 
 class DataSeeder {
 
@@ -18,7 +21,7 @@ class DataSeeder {
         let existingBooks = try modelContext.fetch(descriptor)
 
         guard existingBooks.isEmpty else {
-            print("Books already seeded, skipping...")
+            logger.info("Books already seeded, skipping...")
             return
         }
 
@@ -34,7 +37,7 @@ class DataSeeder {
         let booksCreated = try CSVImporter.importBooks(from: csvContent, modelContext: modelContext)
 
         try modelContext.save()
-        print("Successfully seeded \(booksCreated) books")
+        logger.info("Successfully seeded \(booksCreated) books")
     }
 
     /// Load wishlist items from CSV file and insert into SwiftData
@@ -53,7 +56,7 @@ class DataSeeder {
         let itemsCreated = try CSVImporter.importWishlist(from: csvContent, modelContext: modelContext)
 
         try modelContext.save()
-        print("Successfully seeded \(itemsCreated) wishlist items")
+        logger.info("Successfully seeded \(itemsCreated) wishlist items")
     }
 
     /// Load students from CSV file and insert into SwiftData
@@ -64,7 +67,7 @@ class DataSeeder {
         let existingStudents = try modelContext.fetch(descriptor)
 
         guard existingStudents.isEmpty else {
-            print("Students already seeded, skipping...")
+            logger.info("Students already seeded, skipping...")
             return
         }
 
@@ -80,7 +83,7 @@ class DataSeeder {
         let studentsCreated = try CSVImporter.importStudents(from: csvContent, modelContext: modelContext)
 
         try modelContext.save()
-        print("Successfully seeded \(studentsCreated) students")
+        logger.info("Successfully seeded \(studentsCreated) students")
     }
 
     /// Export books to JSON file (for testing or backup)
@@ -91,7 +94,7 @@ class DataSeeder {
 
         let data = try encoder.encode(books)
         try data.write(to: fileURL)
-        print("Exported \(books.count) books to \(fileURL.path)")
+        logger.info("Exported \(books.count) books to \(fileURL.path)")
     }
 
     // MARK: - Debug Seeding
@@ -105,9 +108,9 @@ class DataSeeder {
             try modelContext.delete(model: User.self)
             try modelContext.delete(model: Activity.self)
             try modelContext.save()
-            print("Debug: Cleared all SwiftData")
+            logger.debug("Cleared all SwiftData")
         } catch {
-            print("Debug: Error seeding debug data: \(error)")
+            logger.error("Error clearing local data: \(error)")
         }
     }
 }

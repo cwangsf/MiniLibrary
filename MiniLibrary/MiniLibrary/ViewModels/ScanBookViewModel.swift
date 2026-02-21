@@ -7,6 +7,9 @@
 
 import Foundation
 import Observation
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "ScanBookViewModel")
 
 @Observable
 class ScanBookViewModel {
@@ -80,13 +83,13 @@ class ScanBookViewModel {
             author = book.author ?? ""
             self.isbn = book.isbn ?? isbn
 
-            print("Debug: Fetched book - Title: \(book.title), Author: \(String(describing: book.author)), ISBN: \(book.isbn ?? "nil")")
-            print("Debug: ViewModel - Title: \(title), Author: \(author), ISBN: \(self.isbn)")
+            logger.debug("Fetched book - Title: \(book.title), Author: \(String(describing: book.author)), ISBN: \(book.isbn ?? "nil")")
+            logger.debug("ViewModel state - Title: \(self.title), Author: \(self.author), ISBN: \(self.isbn)")
 
             state = .confirming(book: book)
         } catch {
             let errorMsg = "Could not fetch book info: \(error.localizedDescription)"
-            print("Debug: API Error - \(error)")
+            logger.error("API Error - \(error)")
             state = .error(message: errorMsg)
         }
     }

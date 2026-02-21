@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "BookAPIService")
 
 // MARK: - API Service (Stateless)
 struct BookAPIService {
@@ -223,7 +226,7 @@ struct BookAPIService {
                     for: book.id.uuidString
                 ) {
                     book.cachedCoverImage = cachedFilename
-                    print("✓ Cached cover for: \(book.title)")
+                    logger.info("Cached cover for: \(book.title)")
                 }
             }
 
@@ -265,7 +268,7 @@ struct BookAPIService {
             }
         } catch {
             let authorInfo = book.author.map { " by \($0)" } ?? ""
-            print("Failed to fetch/cache cover for '\(book.title)'\(authorInfo): \(error)")
+            logger.error("Failed to fetch/cache cover for '\(book.title)'\(authorInfo): \(error)")
         }
     }
 }

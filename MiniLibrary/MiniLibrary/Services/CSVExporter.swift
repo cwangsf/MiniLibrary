@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "CSVExporter")
 
 enum CSVExporter {
     /// Export books to CSV format
@@ -111,14 +114,14 @@ enum CSVExporter {
 
             // Verify the file was created
             guard FileManager.default.fileExists(atPath: fileURL.path) else {
-                print("Error: CSV file was not created at \(fileURL.path)")
+                logger.error("CSV file was not created at \(fileURL.path)")
                 return nil
             }
 
-            print("✓ CSV file saved: \(fileURL.lastPathComponent)")
+            logger.info("CSV file saved: \(fileURL.lastPathComponent)")
             return fileURL
         } catch {
-            print("Error saving CSV file '\(filename)': \(error.localizedDescription)")
+            logger.error("Error saving CSV file '\(filename)': \(error.localizedDescription)")
             return nil
         }
     }

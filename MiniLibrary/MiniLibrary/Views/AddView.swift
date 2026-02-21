@@ -7,7 +7,10 @@
 
 import SwiftUI
 import SwiftData
+import os
 internal import UniformTypeIdentifiers
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "AddView")
 
 struct AddView: View {
     @Environment(\.modelContext) private var modelContext
@@ -268,7 +271,7 @@ struct AddView: View {
             book.isbn != nil && book.coverImageURL == nil && !book.isWishlistItem
         }
 
-        print("Fetching cover images for \(booksNeedingCovers.count) books in background...")
+        logger.info("Fetching cover images for \(booksNeedingCovers.count) books in background...")
 
         // Fetch covers for each book
         for book in booksNeedingCovers {
@@ -299,13 +302,13 @@ struct AddView: View {
                     }
                 }
 
-                print("✓ Fetched cover for: \(book.title)")
+                logger.info("Fetched cover for: \(book.title)")
             } catch {
-                print("✗ Failed to fetch cover for \(book.title): \(error.localizedDescription)")
+                logger.error("Failed to fetch cover for \(book.title): \(error.localizedDescription)")
             }
         }
 
-        print("Finished fetching cover images")
+        logger.info("Finished fetching cover images")
     }
 
     private func handleImportResult(_ result: Result<[URL], Error>) {

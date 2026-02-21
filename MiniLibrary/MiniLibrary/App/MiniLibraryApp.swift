@@ -8,6 +8,9 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "MiniLibraryApp")
 
 @main
 struct MiniLibraryApp: App {
@@ -33,7 +36,7 @@ struct MiniLibraryApp: App {
             do {
                 try DataSeeder.seedStudentsFromCSV(fileName: "sample_students", modelContext: context)
             } catch {
-                print("Error seeding students: \(error)")
+                logger.error("Error seeding students: \(error)")
             }
 
             return container
@@ -74,7 +77,7 @@ struct MiniLibraryApp: App {
         let context = ModelContext(sharedModelContainer)
         DataSeeder.clearLocalData(modelContext: context)
         hasCleared = true
-        print("Local data cleared on first install")
+        logger.info("Local data cleared on first install")
     }
 
     private func seedBooksIfNeeded() {
@@ -84,9 +87,9 @@ struct MiniLibraryApp: App {
         do {
             try DataSeeder.seedBooksFromCSV(fileName: "sample_books", modelContext: context)
             hasSeededBooks = true
-            print("Books seeded successfully on first install")
+            logger.info("Books seeded successfully on first install")
         } catch {
-            print("Error seeding books: \(error)")
+            logger.error("Error seeding books: \(error)")
         }
     }
 
@@ -97,9 +100,9 @@ struct MiniLibraryApp: App {
         do {
             try DataSeeder.seedWishlistFromCSV(fileName: "sample_wish_list", modelContext: context)
             hasSeededWishlist = true
-            print("Wishlist seeded successfully on first install")
+            logger.info("Wishlist seeded successfully on first install")
         } catch {
-            print("Error seeding wishlist: \(error)")
+            logger.error("Error seeding wishlist: \(error)")
         }
     }
 }
