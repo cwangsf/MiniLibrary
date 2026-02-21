@@ -32,6 +32,16 @@
         }
       }
     },
+    "%@ already has %lld book%@ checked out, which is the maximum allowed. Please ask them to return a book before borrowing another." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ already has %2$lld book%3$@ checked out, which is the maximum allowed. Please ask them to return a book before borrowing another."
+          }
+        }
+      }
+    },
     "%lld" : {
       "localizations" : {
         "de" : {
@@ -872,6 +882,7 @@
       }
     },
     "Books you mark as favorites will appear here" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -914,6 +925,12 @@
           }
         }
       }
+    },
+    "Borrowing Limit Reached" : {
+
+    },
+    "Borrowing Limits" : {
+
     },
     "Bulk Data Management" : {
       "localizations" : {
@@ -1732,28 +1749,6 @@
         }
       }
     },
-    "Export Reminder" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Export-Erinnerung"
-          }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meabhruchán Easpórtála"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导出提醒"
-          }
-        }
-      }
-    },
     "Export Catalog to CSV" : {
       "localizations" : {
         "de" : {
@@ -1794,6 +1789,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "将借阅记录导出为CSV"
+          }
+        }
+      }
+    },
+    "Export Reminder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export-Erinnerung"
+          }
+        },
+        "ga" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meabhruchán Easpórtála"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出提醒"
           }
         }
       }
@@ -1843,6 +1860,7 @@
       }
     },
     "Favorites" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2286,6 +2304,9 @@
         }
       }
     },
+    "Maximum books per student: %lld" : {
+
+    },
     "No active checkouts" : {
       "localizations" : {
         "de" : {
@@ -2375,6 +2396,7 @@
       }
     },
     "No Favorite Books" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3263,6 +3285,9 @@
         }
       }
     },
+    "Settings" : {
+
+    },
     "Status" : {
       "localizations" : {
         "de" : {
@@ -3393,6 +3418,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "学生：%1$@"
+          }
+        }
+      }
+    },
+    "Students will not be allowed to check out more than %lld book%@ at a time." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Students will not be allowed to check out more than %1$lld book%2$@ at a time."
           }
         }
       }

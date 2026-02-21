@@ -11,7 +11,7 @@ enum StatCardType {
     case totalCopies(Int)
     case checkedOut(Int)
     case wishlist(Int)
-    case favorites(Int)
+    case settings(Int)
     case quickCheckout
     case quickReturn
 
@@ -27,8 +27,8 @@ enum StatCardType {
             return "Checked Out"
         case .wishlist:
             return "Wish List"
-        case .favorites:
-            return "Favorites"
+        case .settings:
+            return "Settings"
         }
     }
 
@@ -37,7 +37,7 @@ enum StatCardType {
         case .totalCopies(let count),
              .checkedOut(let count),
              .wishlist(let count),
-             .favorites(let count):
+             .settings(let count):
             return "\(count)"
         case .quickCheckout, .quickReturn:
             return "Scan"
@@ -52,8 +52,8 @@ enum StatCardType {
             return "book.fill"
         case .wishlist:
             return "list.star"
-        case .favorites:
-            return "heart.fill"
+        case .settings:
+            return "gearshape.fill"
         case .quickCheckout:
             return "tray.and.arrow.up"
         case .quickReturn:
@@ -69,8 +69,8 @@ enum StatCardType {
             return .orange
         case .wishlist:
             return .green
-        case .favorites:
-            return .pink
+        case .settings:
+            return .indigo
         case .quickCheckout:
             return .purple
         case .quickReturn:
@@ -86,8 +86,8 @@ enum StatCardType {
             return "checkedOut"
         case .wishlist:
             return "wishlist"
-        case .favorites:
-            return "favorites"
+        case .settings:
+            return "settings"
         case .quickCheckout:
             return "quickCheckout"
         case .quickReturn:

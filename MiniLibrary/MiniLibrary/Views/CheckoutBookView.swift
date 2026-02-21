@@ -18,10 +18,13 @@ struct CheckoutBookView: View {
     @Query(sort: \Book.title) private var books: [Book]
     @Query(sort: \Student.lastName) private var students: [Student]
 
+    @AppStorage("maxBooksPerStudent") private var maxBooksAllowed: Int = 3
+
     @State private var selectedBook: Book?
     @State private var selectedStudent: Student?
     @State private var dueDate = Date().addingTimeInterval(14 * 24 * 60 * 60) // 2 weeks default
     @State private var showingConfirmation = false
+    @State private var showingMaxBooksAlert = false
     @State private var showingAddStudent = false
     @State private var showingStudentSelection = false
     @State private var newStudentFirstName = ""
@@ -107,7 +110,12 @@ struct CheckoutBookView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 Button {
-                    showingConfirmation = true
+                    let activeCheckoutCount = selectedStudent?.checkouts?.filter { $0.isActive }.count ?? 0
+                    if activeCheckoutCount >= maxBooksAllowed {
+                        showingMaxBooksAlert = true
+                    } else {
+                        showingConfirmation = true
+                    }
                 } label: {
                     HStack {
                         Image(systemName: "arrow.right.circle.fill")
@@ -154,6 +162,12 @@ struct CheckoutBookView: View {
             }
             .sheet(isPresented: $showingAddStudent) {
                 addStudentSheet
+            }
+            .alert("Borrowing Limit Reached", isPresented: $showingMaxBooksAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                let studentName = selectedStudent?.fullName ?? "This student"
+                Text("\(studentName) already has \(maxBooksAllowed) book\(maxBooksAllowed == 1 ? "" : "s") checked out, which is the maximum allowed. Please ask them to return a book before borrowing another.")
             }
         }
     }

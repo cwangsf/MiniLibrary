@@ -15,12 +15,10 @@ struct HomeView: View {
     @Query private var activeCheckouts: [CheckoutRecord]
     @Query(sort: \Activity.timestamp, order: .reverse) private var activities: [Activity]
 
+    @AppStorage("maxBooksPerStudent") private var maxBooksAllowed: Int = 3
+
     var wishlistCount: Int {
         books.filter { $0.isWishlistItem }.count
-    }
-
-    var favoritesCount: Int {
-        books.filter { $0.isFavorite && !$0.isWishlistItem }.count
     }
 
     var totalCopies: Int {
@@ -34,7 +32,7 @@ struct HomeView: View {
             .totalCopies(totalCopies),
             .checkedOut(activeCheckouts.filter { $0.isActive }.count),
             .wishlist(wishlistCount),
-            .favorites(favoritesCount),
+            .settings(maxBooksAllowed),
         ]
     }
 
@@ -96,8 +94,8 @@ extension HomeView {
                 StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
-        case .favorites:
-            NavigationLink(destination: FavoritesView()) {
+        case .settings:
+            NavigationLink(destination: SettingsView()) {
                 StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
