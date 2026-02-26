@@ -265,51 +265,7 @@ struct AddView: View {
         exportStudentsFileURL = nil
     }
 
-    private func fetchCoverImagesForImportedBooks() async {
-        // Find all books with ISBN but no cover image
-        let booksNeedingCovers = books.filter { book in
-            book.isbn != nil && book.coverImageURL == nil && !book.isWishlistItem
-        }
 
-        logger.info("Fetching cover images for \(booksNeedingCovers.count) books in background...")
-
-        // Fetch covers for each book
-        for book in booksNeedingCovers {
-            guard let isbn = book.isbn else { continue }
-
-            do {
-                let fetchedBook = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
-
-                // Update the book with fetched metadata on main actor
-                await MainActor.run {
-                    if book.coverImageURL == nil {
-                        book.coverImageURL = fetchedBook.coverImageURL
-                    }
-                    if book.bookDescription == nil {
-                        book.bookDescription = fetchedBook.bookDescription
-                    }
-                    if book.pageCount == nil {
-                        book.pageCount = fetchedBook.pageCount
-                    }
-                    if book.publishedDate == nil {
-                        book.publishedDate = fetchedBook.publishedDate
-                    }
-                    if book.publisher == nil {
-                        book.publisher = fetchedBook.publisher
-                    }
-                    if book.languageCode == nil {
-                        book.languageCode = fetchedBook.languageCode
-                    }
-                }
-
-                logger.info("Fetched cover for: \(book.title)")
-            } catch {
-                logger.error("Failed to fetch cover for \(book.title): \(error.localizedDescription)")
-            }
-        }
-
-        logger.info("Finished fetching cover images")
-    }
 
     private func handleImportResult(_ result: Result<[URL], Error>) {
         switch result {
@@ -349,11 +305,6 @@ struct AddView: View {
                 ActivityLogger.logCatalogCSVImport(count: importedCount, modelContext: modelContext)
 
                 showingImportResult = true
-
-                // Fetch cover images in background
-                Task {
-                    await fetchCoverImagesForImportedBooks()
-                }
             } catch {
                 importResult = ImportResult(
                     title: "Import Failed",
