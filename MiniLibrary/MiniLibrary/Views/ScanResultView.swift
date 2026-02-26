@@ -34,11 +34,11 @@ struct ScanResultView: View {
     var headerTitle: String {
         switch scanPurpose {
         case .addBook:
-            return "Book Already Exists"
+            return String(localized: "Book Already Exists")
         case .checkout:
-            return "Ready to Checkout"
+            return String(localized: "Ready to Checkout")
         case .returnBook:
-            return "Ready to Return"
+            return String(localized: "Ready to Return")
         }
     }
 

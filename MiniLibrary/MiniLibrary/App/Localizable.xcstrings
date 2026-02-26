@@ -1,3711 +1,3704 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "" : {
-
-    },
-    "%@ - %lld available" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ - %2$lld verfügbar"
+  "sourceLanguage": "en",
+  "strings": {
+    "": {},
+    "%@ - %lld available": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ - %2$lld verfügbar"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ - %2$lld available"
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ - %2$lld available"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ - %2$lld ar fáil"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ - %2$lld ar fáil"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ - %2$lld 可借阅"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ - %2$lld 可借阅"
           }
         }
       }
     },
-    "%@ already has %lld book%@ checked out, which is the maximum allowed. Please ask them to return a book before borrowing another." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ already has %2$lld book%3$@ checked out, which is the maximum allowed. Please ask them to return a book before borrowing another."
+    "%@ already has %lld book%@ checked out, which is the maximum allowed. Please ask them to return a book before borrowing another.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ already has %2$lld book%3$@ checked out, which is the maximum allowed. Please ask them to return a book before borrowing another."
           }
         }
       }
     },
-    "%lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld"
+    "%lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld"
           }
         }
       }
     },
-    "%lld %@ checked out" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld %2$@ ausgeliehen"
+    "%lld %@ checked out": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld %2$@ ausgeliehen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld %2$@ checked out"
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld %2$@ checked out"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld %2$@ ar iasacht"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld %2$@ ar iasacht"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld %2$@ 已借出"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld %2$@ 已借出"
           }
         }
       }
     },
-    "%lld available" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld verfügbar"
+    "%lld available": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld verfügbar"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld ar fáil"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld ar fáil"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld 可借阅"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld 可借阅"
           }
         }
       }
     },
-    "%lld selected" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld ausgewählt"
+    "%lld selected": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld ausgewählt"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld roghnaithe"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld roghnaithe"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld 已选择"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld 已选择"
           }
         }
       }
     },
-    "%lld total copies" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld Gesamtexemplare"
+    "%lld total copies": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld Gesamtexemplare"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld cóipeanna ar fad"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld cóipeanna ar fad"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld 总册数"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld 总册数"
           }
         }
       }
     },
-    "%lld/%lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld/%2$lld"
+    "%lld/%lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld/%2$lld"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld/%2$lld"
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld/%2$lld"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld/%2$lld"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld/%2$lld"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld/%2$lld"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld/%2$lld"
           }
         }
       }
     },
-    "About" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Über"
+    "About": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Über"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Maidir le"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maidir le"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "关于"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关于"
           }
         }
       }
     },
-    "Acquire" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erwerben"
+    "Acquire": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erwerben"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Faigh"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faigh"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "获取"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "获取"
           }
         }
       }
     },
-    "Activity will appear here as you use the library" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktivitäten werden hier angezeigt, wenn Sie die Bibliothek nutzen"
+    "Activity will appear here as you use the library": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktivitäten werden hier angezeigt, wenn Sie die Bibliothek nutzen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beidh gníomhaíochta le feiceáil anseo agus tú ag úsáid an leabharlann"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beidh gníomhaíochta le feiceáil anseo agus tú ag úsáid an leabharlann"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "使用图书馆时活动将显示在此处"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用图书馆时活动将显示在此处"
           }
         }
       }
     },
-    "Add" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hinzufügen"
+    "Add": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加"
           }
         }
       }
     },
-    "Add %lld %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld %2$@ hinzufügen"
+    "Add %lld %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld %2$@ hinzufügen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Add %1$lld %2$@"
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Add %1$lld %2$@"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir %1$lld %2$@ leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir %1$lld %2$@ leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加 %1$lld %2$@"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加 %1$lld %2$@"
           }
         }
       }
     },
-    "Add %lld Book%@ to Wishlist" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld Buch%2$@ zur Wunschliste hinzufügen"
+    "Add %lld Book%@ to Wishlist": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld Buch%2$@ zur Wunschliste hinzufügen"
           }
         },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Add %1$lld Book%2$@ to Wishlist"
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Add %1$lld Book%2$@ to Wishlist"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir %1$lld Leabhar%2$@ le Liosta Mianta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir %1$lld Leabhar%2$@ le Liosta Mianta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "将 %1$lld 本书%2$@添加到愿望清单"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将 %1$lld 本书%2$@添加到愿望清单"
           }
         }
       }
     },
-    "Add Book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buch hinzufügen"
+    "Add Book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Leabhar Leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Leabhar Leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加图书"
           }
         }
       }
     },
-    "Add Book to Catalog First" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buch zuerst zum Katalog hinzufügen"
+    "Add Book to Catalog First": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch zuerst zum Katalog hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Leabhar leis an gCatalóg ar dtús"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Leabhar leis an gCatalóg ar dtús"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "先添加图书到目录"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "先添加图书到目录"
           }
         }
       }
     },
-    "Add Copies" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exemplare hinzufügen"
+    "Add Copies": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exemplare hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Cóipeanna Leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Cóipeanna Leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加册数"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加册数"
           }
         }
       }
     },
-    "Add Items" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elemente hinzufügen"
+    "Add Items": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elemente hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Míreanna Leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Míreanna Leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加项目"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加项目"
           }
         }
       }
     },
-    "Add New Book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neues Buch hinzufügen"
+    "Add New Book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neues Buch hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Leabhar Nua Leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Leabhar Nua Leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加新图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加新图书"
           }
         }
       }
     },
-    "Add New Book Manually" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neues Buch manuell hinzufügen"
+    "Add New Book Manually": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neues Buch manuell hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Leabhar Nua Leis de Láimh"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Leabhar Nua Leis de Láimh"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "手动添加新图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手动添加新图书"
           }
         }
       }
     },
-    "Add New Student" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neuen Schüler hinzufügen"
+    "Add New Student": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neuen Schüler hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Dalta Nua Leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Dalta Nua Leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加新学生"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加新学生"
           }
         }
       }
     },
-    "Add Student" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schüler hinzufügen"
+    "Add Student": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schüler hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Dalta Leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Dalta Leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加学生"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加学生"
           }
         }
       }
     },
-    "Add to Catalog" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zum Katalog hinzufügen"
+    "Add to Catalog": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zum Katalog hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir leis an gCatalóg"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir leis an gCatalóg"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加到目录"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加到目录"
           }
         }
       }
     },
-    "Add to Catalog/Wishlist instantly" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sofort zum Katalog/zur Wunschliste hinzufügen"
+    "Add to Catalog/Wishlist instantly": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sofort zum Katalog/zur Wunschliste hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir go dtí an Catalóg/Liosta Mianta ar an tóirt"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir go dtí an Catalóg/Liosta Mianta ar an tóirt"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "立即添加到目录/愿望清单"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "立即添加到目录/愿望清单"
           }
         }
       }
     },
-    "Add to Catalog/Wishlist, check out, or return books instantly" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fügen Sie sofort zum Katalog/zur Wunschliste hinzu, leihen Sie aus oder geben Sie Bücher zurück"
+    "Add to Catalog/Wishlist, check out, or return books instantly": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fügen Sie sofort zum Katalog/zur Wunschliste hinzu, leihen Sie aus oder geben Sie Bücher zurück"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir go dtí an Catalóg/Liosta Mianta, Seiceáil Amach, nó Cuir Leabhair ar ais ar an tóirt"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir go dtí an Catalóg/Liosta Mianta, Seiceáil Amach, nó Cuir Leabhair ar ais ar an tóirt"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "立即添加到目录/愿望清单、签出或归还图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "立即添加到目录/愿望清单、签出或归还图书"
           }
         }
       }
     },
-    "Add to Wishlist" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zur Wunschliste hinzufügen"
+    "Add to Wishlist": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zur Wunschliste hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir le Liosta Mianta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir le Liosta Mianta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加到愿望清单"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加到愿望清单"
           }
         }
       }
     },
-    "Add to Wishlist Manually" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manuell zur Wunschliste hinzufügen"
+    "Add to Wishlist Manually": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manuell zur Wunschliste hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir ar Liosta Mianta go Manual"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir ar Liosta Mianta go Manual"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "手动添加到愿望清单"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手动添加到愿望清单"
           }
         }
       }
     },
-    "Add to Wishlist?" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zur Wunschliste hinzufügen?"
+    "Add to Wishlist?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zur Wunschliste hinzufügen?"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir ar Liosta Mianta?"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir ar Liosta Mianta?"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "添加到愿望清单？"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加到愿望清单？"
           }
         }
       }
     },
-    "All books are currently available" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Bücher sind derzeit verfügbar"
+    "All books are currently available": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Bücher sind derzeit verfügbar"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tá gach leabhar ar fáil faoi láthair"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tá gach leabhar ar fáil faoi láthair"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "所有图书目前都可借阅"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "所有图书目前都可借阅"
           }
         }
       }
     },
-    "App Version" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App-Version"
+    "App Version": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App-Version"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leagan an Aip"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leagan an Aip"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "应用版本"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "应用版本"
           }
         }
       }
     },
-    "Author" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autor"
+    "Author": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autor"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Údar"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Údar"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作者"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作者"
           }
         }
       }
     },
-    "Author (optional)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autor (optional)"
+    "Author (optional)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autor (optional)"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Údar (roghnach)"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Údar (roghnach)"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作者（可选）"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作者（可选）"
           }
         }
       }
     },
-    "Availability" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verfügbarkeit"
+    "Availability": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verfügbarkeit"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Infhaighteacht"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Infhaighteacht"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "可用性"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可用性"
           }
         }
       }
     },
-    "Available" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verfügbar"
+    "Available": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verfügbar"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ar Fáil"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ar Fáil"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "可借阅"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可借阅"
           }
         }
       }
     },
-    "Available:" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verfügbar:"
+    "Available:": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verfügbar:"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ar Fáil:"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ar Fáil:"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "可借阅："
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可借阅："
           }
         }
       }
     },
-    "Book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buch"
+    "Book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leabhar"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leabhar"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图书"
           }
         }
       }
     },
-    "Book Already Exists" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buch existiert bereits"
+    "Book Already Exists": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch existiert bereits"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tá an Leabhar Ann Cheana"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tá an Leabhar Ann Cheana"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "图书已存在"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图书已存在"
           }
         }
       }
     },
-    "Book Details" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buchdetails"
+    "Book Details": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buchdetails"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sonraí Leabhair"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sonraí Leabhair"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "图书详情"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图书详情"
           }
         }
       }
     },
-    "Book Information" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buchinformationen"
+    "Book Information": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buchinformationen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eolas Leabhair"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eolas Leabhair"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "图书信息"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图书信息"
           }
         }
       }
     },
-    "Books you mark as favorites will appear here" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bücher, die Sie als Favoriten markieren, werden hier angezeigt"
+    "Books you mark as favorites will appear here": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bücher, die Sie als Favoriten markieren, werden hier angezeigt"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beidh leabhair a bhreacann tú mar bhreall ansa le feiceáil anseo"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beidh leabhair a bhreacann tú mar bhreall ansa le feiceáil anseo"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "您标记为收藏的图书将显示在此处"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "您标记为收藏的图书将显示在此处"
           }
         }
       }
     },
-    "Books you want to add to your library will appear here" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bücher, die Sie Ihrer Bibliothek hinzufügen möchten, erscheinen hier"
+    "Books you want to add to your library will appear here": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bücher, die Sie Ihrer Bibliothek hinzufügen möchten, erscheinen hier"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beidh leabhair ar mhaith leat a chur le do leabharlann le feiceáil anseo"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beidh leabhair ar mhaith leat a chur le do leabharlann le feiceáil anseo"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "您想添加到图书馆的图书将显示在这里"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "您想添加到图书馆的图书将显示在这里"
           }
         }
       }
-    },
-    "Borrowing Limit Reached" : {
-
-    },
-    "Borrowing Limits" : {
-
     },
-    "Bulk Data Management" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Massendatenverwaltung"
+    "Borrowing Limit Reached": {},
+    "Borrowing Limits": {},
+    "Bulk Data Management": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Massendatenverwaltung"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bainistíocht Sonraí Mór"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bainistíocht Sonraí Mór"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "批量数据管理"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "批量数据管理"
           }
         }
       }
     },
-    "by %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "von %1$@"
+    "CSV format: Book Title, Student Name, Checkout Date, Due Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV-Format: Buchtitel, Schülername, Ausleihdatum, Rückgabedatum"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "de %1$@"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formáid CSV: Teideal Leabhair, Ainm Dalta, Dáta Seiceála Amach, Dáta Dlite"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "由%1$@"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV格式：书名、学生姓名、借出日期、归还日期"
           }
         }
       }
     },
-    "Cancel" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abbrechen"
+    "CSV format: First Name, Last Name, Class": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV-Format: Vorname, Nachname, Klasse"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cealaigh"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formáid CSV: Ainm, Sloinne, Aicme"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "取消"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV格式：名字、姓氏、班级"
           }
         }
       }
     },
-    "Catalog" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Katalog"
+    "CSV format: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV-Format: ISBN, Titel, Autor, Gesamtexemplare, Verfügbare Exemplare, Sprache, Verlag, Veröffentlichungsdatum, Seitenzahl, Notizen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Catalóg"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formáid CSV: ISBN, Teideal, Údar, Cóipeanna Iomlána, Cóipeanna Ar Fáil, Teanga, Foilsitheoir, Dáta Fhoilsithe, Líon Leathanach, Nótaí"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "目录"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV格式：ISBN、标题、作者、总册数、可借阅册数、语言、出版社、出版日期、页数、备注"
           }
         }
       }
     },
-    "Check Out Book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buch ausleihen"
+    "CSV format: Title, Author, ISBN": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV-Format: Titel, Autor, ISBN"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seiceáil Amach Leabhar"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formáid CSV: Teideal, Údar, ISBN"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "借出图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV格式：标题、作者、ISBN"
           }
         }
       }
     },
-    "Checked Out" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgeliehen"
+    "Cancel": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abbrechen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seiceáilte Amach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cealaigh"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已借出"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消"
           }
         }
       }
     },
-    "Checked Out Books" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgeliehene Bücher"
+    "Catalog": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katalog"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leabhair Seiceáilte Amach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catalóg"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已借出图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "目录"
           }
         }
       }
     },
-    "Checked Out Copies" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgeliehene Exemplare"
+    "Check Out Book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch ausleihen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cóipeanna Seiceáilte Amach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seiceáil Amach Leabhar"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已借出册数"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "借出图书"
           }
         }
       }
     },
-    "Class Code (optional)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Klassencode (optional)"
+    "Checked Out": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausgeliehen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cód Aicme (roghnach)"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seiceáilte Amach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "班级代码（可选）"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已借出"
           }
         }
       }
     },
-    "Confirm & Add Book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bestätigen & Buch hinzufügen"
+    "Checked Out Books": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausgeliehene Bücher"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deimhnigh & Cuir Leabhar Leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leabhair Seiceáilte Amach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "确认并添加图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已借出图书"
           }
         }
       }
     },
-    "Confirm Checkout" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausleihe bestätigen"
+    "Checked Out Copies": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausgeliehene Exemplare"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deimhnigh Seiceáil Amach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cóipeanna Seiceáilte Amach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "确认借出"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已借出册数"
           }
         }
       }
     },
-    "Confirm New Book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neues Buch bestätigen"
+    "Class Code (optional)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klassencode (optional)"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deimhnigh Leabhar Nua"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cód Aicme (roghnach)"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "确认新图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "班级代码（可选）"
           }
         }
       }
     },
-    "Confirm Return" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rückgabe bestätigen"
+    "Confirm & Add Book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestätigen & Buch hinzufügen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deimhnigh Filleadh"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deimhnigh & Cuir Leabhar Leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "确认归还"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认并添加图书"
           }
         }
       }
     },
-    "Copies" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exemplare"
+    "Confirm Book": {},
+    "Confirm Checkout": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausleihe bestätigen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cóipeanna"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deimhnigh Seiceáil Amach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "册数"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认借出"
           }
         }
       }
     },
-    "Copies to Add" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hinzuzufügende Exemplare"
+    "Confirm New Book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neues Buch bestätigen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cóipeanna le Cur Leis"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deimhnigh Leabhar Nua"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "要添加的册数"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认新图书"
           }
         }
       }
     },
-    "CSV format: Book Title, Student Name, Checkout Date, Due Date" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CSV-Format: Buchtitel, Schülername, Ausleihdatum, Rückgabedatum"
+    "Confirm Return": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rückgabe bestätigen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Formáid CSV: Teideal Leabhair, Ainm Dalta, Dáta Seiceála Amach, Dáta Dlite"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deimhnigh Filleadh"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CSV格式：书名、学生姓名、借出日期、归还日期"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认归还"
           }
         }
       }
     },
-    "CSV format: First Name, Last Name, Class" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CSV-Format: Vorname, Nachname, Klasse"
+    "Copies": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exemplare"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Formáid CSV: Ainm, Sloinne, Aicme"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cóipeanna"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CSV格式：名字、姓氏、班级"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "册数"
           }
         }
       }
     },
-    "CSV format: ISBN, Title, Author, Total Copies, Available Copies, Language, Publisher, Published Date, Page Count, Notes" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CSV-Format: ISBN, Titel, Autor, Gesamtexemplare, Verfügbare Exemplare, Sprache, Verlag, Veröffentlichungsdatum, Seitenzahl, Notizen"
+    "Copies to Add": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinzuzufügende Exemplare"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Formáid CSV: ISBN, Teideal, Údar, Cóipeanna Iomlána, Cóipeanna Ar Fáil, Teanga, Foilsitheoir, Dáta Fhoilsithe, Líon Leathanach, Nótaí"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cóipeanna le Cur Leis"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CSV格式：ISBN、标题、作者、总册数、可借阅册数、语言、出版社、出版日期、页数、备注"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "要添加的册数"
           }
         }
       }
     },
-    "CSV format: Title, Author, ISBN" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CSV-Format: Titel, Autor, ISBN"
+    "Current Inventory": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktueller Bestand"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Formáid CSV: Teideal, Údar, ISBN"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fardal Reatha"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CSV格式：标题、作者、ISBN"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前库存"
           }
         }
       }
     },
-    "Current Inventory" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aktueller Bestand"
+    "Currently Checked Out": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Derzeit ausgeliehen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fardal Reatha"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seiceáilte Amach go Láthair"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "当前库存"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前已借出"
           }
         }
       }
     },
-    "Currently Checked Out" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derzeit ausgeliehen"
+    "Currently Checked Out By": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Derzeit ausgeliehen von"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seiceáilte Amach go Láthair"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seiceáilte Amach ag"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "当前已借出"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前借阅者"
           }
         }
       }
     },
-    "Currently Checked Out By" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derzeit ausgeliehen von"
+    "Currently no checkout for this book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Derzeit keine Ausleihe für dieses Buch"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seiceáilte Amach ag"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan aon seiceáil amach faoi láthair don leabhar seo"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "当前借阅者"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该图书目前无借阅记录"
           }
         }
       }
     },
-    "Currently no checkout for this book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derzeit keine Ausleihe für dieses Buch"
+    "Delete": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Löschen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan aon seiceáil amach faoi láthair don leabhar seo"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scrios"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "该图书目前无借阅记录"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除"
           }
         }
       }
     },
-    "Delete" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Löschen"
+    "Delete All": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alles löschen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scrios"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scrios Iomlán"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "删除"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "全部删除"
           }
         }
       }
     },
-    "Delete All" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alles löschen"
+    "Delete All Data": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Daten löschen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scrios Iomlán"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scrios Gach Sonra"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "全部删除"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除所有数据"
           }
         }
       }
     },
-    "Delete All Data" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Daten löschen"
+    "Delete All Data?": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle Daten löschen?"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scrios Gach Sonra"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scrios Gach Sonra?"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "删除所有数据"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除所有数据？"
           }
         }
       }
     },
-    "Delete All Data?" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alle Daten löschen?"
+    "Description": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beschreibung"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scrios Gach Sonra?"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cur Síos"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "删除所有数据？"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "描述"
           }
         }
       }
     },
-    "Description" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beschreibung"
+    "Done": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fertig"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cur Síos"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Déanta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "描述"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成"
           }
         }
       }
     },
-    "Done" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fertig"
+    "Due Date": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rückgabedatum"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Déanta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dáta Dlite"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "完成"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "归还日期"
           }
         }
       }
     },
-    "Due Date" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rückgabedatum"
+    "Due: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fällig: %1$@"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dáta Dlite"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dlite: %1$@"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "归还日期"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "归还日期：%1$@"
           }
         }
       }
     },
-    "Due: %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fällig: %1$@"
+    "Edit": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearbeiten"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dlite: %1$@"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir in Eagar"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "归还日期：%1$@"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "编辑"
           }
         }
       }
     },
-    "Edit" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bearbeiten"
+    "Edit Book Details": {},
+    "Edit Details": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details bearbeiten"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir in Eagar"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Sonraí in Eagar"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "编辑"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "编辑详情"
           }
         }
       }
     },
-    "Edit Details" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Details bearbeiten"
+    "Edit Student": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schüler bearbeiten"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Sonraí in Eagar"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Dalta in Eagar"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "编辑详情"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "编辑学生"
           }
         }
       }
     },
-    "Edit Student" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schüler bearbeiten"
+    "Enter ISBN Manually": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN manuell eingeben"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Dalta in Eagar"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir isteach ISBN de Láimh"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "编辑学生"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手动输入ISBN"
           }
         }
       }
     },
-    "Enter ISBN Manually" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN manuell eingeben"
+    "Existing Students": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestehende Schüler"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir isteach ISBN de Láimh"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daltaí Atá Ann"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "手动输入ISBN"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "现有学生"
           }
         }
       }
     },
-    "Existing Students" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bestehende Schüler"
+    "Export": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Daltaí Atá Ann"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easpórtáil"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "现有学生"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出"
           }
         }
       }
     },
-    "Export" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exportieren"
+    "Export Catalog to CSV": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katalog als CSV exportieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Easpórtáil"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easpórtáil Catalóg go CSV"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导出"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出目录为CSV"
           }
         }
       }
     },
-    "Export Catalog to CSV" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Katalog als CSV exportieren"
+    "Export Checkout Records to CSV": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausleihdatensätze als CSV exportieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Easpórtáil Catalóg go CSV"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easpórtáil Taifid Seiceála Amach go CSV"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导出目录为CSV"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将借阅记录导出为CSV"
           }
         }
       }
     },
-    "Export Checkout Records to CSV" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausleihdatensätze als CSV exportieren"
+    "Export Reminder": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export-Erinnerung"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Easpórtáil Taifid Seiceála Amach go CSV"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meabhruchán Easpórtála"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "将借阅记录导出为CSV"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出提醒"
           }
         }
       }
     },
-    "Export Reminder" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Export-Erinnerung"
+    "Export Students to CSV": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schüler als CSV exportieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Meabhruchán Easpórtála"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easpórtáil Daltaí go CSV"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导出提醒"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出学生为CSV"
           }
         }
       }
     },
-    "Export Students to CSV" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schüler als CSV exportieren"
+    "Export Wishlist to CSV": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wunschliste als CSV exportieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Easpórtáil Daltaí go CSV"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Easpórtáil Liosta Mianta go CSV"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导出学生为CSV"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出愿望清单为CSV"
           }
         }
       }
     },
-    "Export Wishlist to CSV" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wunschliste als CSV exportieren"
+    "Favorites": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favoriten"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Easpórtáil Liosta Mianta go CSV"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Breall Ansa"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导出愿望清单为CSV"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "收藏"
           }
         }
       }
     },
-    "Favorites" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favoriten"
+    "Fetching book information...": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buchinformationen werden abgerufen..."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Breall Ansa"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eolas leabhair á fháil..."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "收藏"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在获取图书信息..."
           }
         }
       }
     },
-    "Fetching book information..." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buchinformationen werden abgerufen..."
+    "Find on Amazon": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auf Amazon suchen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eolas leabhair á fháil..."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faigh ar Amazon"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在获取图书信息..."
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在Amazon上查找"
           }
         }
       }
     },
-    "Find on Amazon" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auf Amazon suchen"
+    "First Name": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorname"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Faigh ar Amazon"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Céad Ainm"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在Amazon上查找"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "名字"
           }
         }
       }
     },
-    "First Name" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vorname"
+    "First Name(and Middle name, if any)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vorname (und Mittelname, falls vorhanden)"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Céad Ainm"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Céad Ainm (agus Meánanm, má tá sé ann)"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名字"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "名字（以及中间名，如有）"
           }
         }
       }
     },
-    "First Name(and Middle name, if any)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vorname (und Mittelname, falls vorhanden)"
+    "Grade %lld": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klasse %1$lld"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Céad Ainm (agus Meánanm, má tá sé ann)"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grád %1$lld"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "名字（以及中间名，如有）"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "年级 %1$lld"
           }
         }
       }
     },
-    "Grade %lld" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Klasse %1$lld"
+    "Grade Level (optional)": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klassenstufe (optional)"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grád %1$lld"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leibhéal Grád (roghnach)"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "年级 %1$lld"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "年级（可选）"
           }
         }
       }
     },
-    "Grade Level (optional)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Klassenstufe (optional)"
+    "Home": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Startseite"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leibhéal Grád (roghnach)"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Baile"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "年级（可选）"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "主页"
           }
         }
       }
     },
-    "Home" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Startseite"
+    "ISBN": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Baile"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "主页"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN"
           }
         }
       }
     },
-    "Import Catalog from CSV" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Katalog aus CSV importieren"
+    "ISBN (optional)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN (optional)"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iompórtáil Catalóg ó CSV"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN (roghnach)"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从CSV导入目录"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN（可选）"
           }
         }
       }
     },
-    "Import Checkout Records from CSV" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausleihdatensätze aus CSV importieren"
+    "ISBN: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN: %1$@"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iompórtáil Taifid Seiceála Amach ó CSV"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN: %1$@"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从CSV导入借阅记录"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ISBN：%1$@"
           }
         }
       }
     },
-    "Import Students from CSV" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schüler aus CSV importieren"
+    "Import Catalog from CSV": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katalog aus CSV importieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iompórtáil Daltaí ó CSV"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iompórtáil Catalóg ó CSV"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从CSV导入学生"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从CSV导入目录"
           }
         }
       }
     },
-    "Import Wishlist from CSV" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wunschliste aus CSV importieren"
+    "Import Checkout Records from CSV": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausleihdatensätze aus CSV importieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iompórtáil Liosta Mianta ó CSV"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iompórtáil Taifid Seiceála Amach ó CSV"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "从CSV导入愿望清单"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从CSV导入借阅记录"
           }
         }
       }
     },
-    "ISBN" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN"
+    "Import Students from CSV": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schüler aus CSV importieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iompórtáil Daltaí ó CSV"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从CSV导入学生"
           }
         }
       }
     },
-    "ISBN (optional)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN (optional)"
+    "Import Wishlist from CSV": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wunschliste aus CSV importieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN (roghnach)"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iompórtáil Liosta Mianta ó CSV"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN（可选）"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从CSV导入愿望清单"
           }
         }
       }
     },
-    "ISBN: %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN: %1$@"
+    "It's been a week! Export your library data to keep a backup.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Woche ist vergangen! Exportieren Sie Ihre Bibliotheksdaten, um ein Backup zu erstellen."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN: %1$@"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tá seachtain caite! Easpórtáil do shonraí leabharlainne chun cóip chúltaca a choinneáil."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ISBN：%1$@"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已经一周了！导出您的图书馆数据以保留备份。"
           }
         }
       }
     },
-    "It's been a week! Export your library data to keep a backup." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eine Woche ist vergangen! Exportieren Sie Ihre Bibliotheksdaten, um ein Backup zu erstellen."
+    "Language": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprache"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tá seachtain caite! Easpórtáil do shonraí leabharlainne chun cóip chúltaca a choinneáil."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teanga"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已经一周了！导出您的图书馆数据以保留备份。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "语言"
           }
         }
       }
     },
-    "Language" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sprache"
+    "Last Name": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nachname"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teanga"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sloinne"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "语言"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "姓氏"
           }
         }
       }
     },
-    "Last Name" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nachname"
+    "Library ID (e.g., LIB-001)": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bibliotheks-ID (z.B. LIB-001)"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sloinne"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aitheantas Leabharlainne (m.sh. LIB-001)"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "姓氏"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图书馆ID（如 LIB-001）"
           }
         }
       }
     },
-    "Library ID (e.g., LIB-001)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bibliotheks-ID (z.B. LIB-001)"
+    "Manage Checkouts": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ausleihen verwalten"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aitheantas Leabharlainne (m.sh. LIB-001)"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bainistigh Seiceálacha Amach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "图书馆ID（如 LIB-001）"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "管理借阅"
           }
         }
       }
     },
-    "Manage Checkouts" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausleihen verwalten"
+    "Maximum books per student: %lld": {},
+    "No Active Checkouts": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine aktiven Ausleihen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bainistigh Seiceálacha Amach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan Seiceálacha Amach Ghníomhacha"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "管理借阅"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无活动借阅"
           }
         }
       }
     },
-    "Maximum books per student: %lld" : {
-
-    },
-    "No active checkouts" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine aktiven Ausleihen"
+    "No Checked Out Books": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine ausgeliehenen Bücher"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan aon seiceálacha gníomhacha amach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan Leabhair Seiceáilte Amach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无活动借阅"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无已借出图书"
           }
         }
       }
     },
-    "No Active Checkouts" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine aktiven Ausleihen"
+    "No Favorite Books": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Lieblingsbücher"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan Seiceálacha Amach Ghníomhacha"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan Leabhair Bhreall Ansa"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无活动借阅"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无收藏的图书"
           }
         }
       }
     },
-    "No Checked Out Books" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine ausgeliehenen Bücher"
+    "No Recent Activity": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine neuere Aktivität"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan Leabhair Seiceáilte Amach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan Gníomhaíochta Dhéanach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无已借出图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无最近活动"
           }
         }
       }
     },
-    "No copies available" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Exemplare verfügbar"
+    "No Results": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Ergebnisse"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan aon chóipeanna ar fáil"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan Torthaí"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无可借阅册数"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无结果"
           }
         }
       }
     },
-    "No Favorite Books" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Lieblingsbücher"
+    "No Wishlist Items": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Wunschlisteneinträge"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan Leabhair Bhreall Ansa"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan Míreanna Liosta Mianta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无收藏的图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无愿望清单项目"
           }
         }
       }
     },
-    "No notes yet. Tap Edit to add notes." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Noch keine Notizen. Tippen Sie auf Bearbeiten, um Notizen hinzuzufügen."
+    "No active checkouts": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine aktiven Ausleihen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan nótaí fós. Tapáil Cuir in Eagar chun nótaí a chur leis."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan aon seiceálacha gníomhacha amach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "尚无备注。点击编辑以添加备注。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无活动借阅"
           }
         }
       }
     },
-    "No Recent Activity" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine neuere Aktivität"
+    "No copies available": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Exemplare verfügbar"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan Gníomhaíochta Dhéanach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan aon chóipeanna ar fáil"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无最近活动"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无可借阅册数"
           }
         }
       }
     },
-    "No Results" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Ergebnisse"
+    "No notes yet. Tap Edit to add notes.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch keine Notizen. Tippen Sie auf Bearbeiten, um Notizen hinzuzufügen."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan Torthaí"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan nótaí fós. Tapáil Cuir in Eagar chun nótaí a chur leis."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无结果"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚无备注。点击编辑以添加备注。"
           }
         }
       }
     },
-    "No Wishlist Items" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Wunschlisteneinträge"
+    "Not specified": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht angegeben"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan Míreanna Liosta Mianta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gan sonrú"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无愿望清单项目"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未指定"
           }
         }
       }
     },
-    "Not specified" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nicht angegeben"
+    "Note: Available copies cannot exceed total copies": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hinweis: Verfügbare Exemplare dürfen Gesamtexemplare nicht überschreiten"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gan sonrú"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nóta: Ní féidir le chóipeanna ar fáil a bheith níos mó ná cóipeanna iomlána"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未指定"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "注意：可借阅册数不能超过总册数"
           }
         }
       }
     },
-    "Note: Available copies cannot exceed total copies" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hinweis: Verfügbare Exemplare dürfen Gesamtexemplare nicht überschreiten"
+    "Notes": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notizen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nóta: Ní féidir le chóipeanna ar fáil a bheith níos mó ná cóipeanna iomlána"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nótaí"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "注意：可借阅册数不能超过总册数"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "备注"
           }
         }
       }
     },
-    "Notes" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notizen"
+    "OK": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nótaí"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "备注"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确定"
           }
         }
       }
     },
-    "of %lld total" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "von %1$lld insgesamt"
+    "OVERDUE": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ÜBERFÄLLIG"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "as %1$lld ar fad"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "THAR AM"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "共%1$lld个中"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "逾期"
           }
         }
       }
     },
-    "OK" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
+    "Point camera at ISBN barcode": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kamera auf ISBN-Barcode richten"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dírígh ceamara ar bharcód ISBN"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "确定"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将相机对准ISBN条形码"
           }
         }
       }
     },
-    "OVERDUE" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ÜBERFÄLLIG"
+    "Position barcode here": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barcode hier positionieren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "THAR AM"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barcód a shuíomh anseo"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "逾期"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将条形码放在此处"
           }
         }
       }
     },
-    "Point camera at ISBN barcode" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kamera auf ISBN-Barcode richten"
+    "Proceed to Checkout": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zum Ausleihen fortfahren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dírígh ceamara ar bharcód ISBN"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lean ar aghaidh chuig Seiceáil Amach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "将相机对准ISBN条形码"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "继续借出"
           }
         }
       }
     },
-    "Position barcode here" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Barcode hier positionieren"
+    "Proceed to Return": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zum Zurückgeben fortfahren"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Barcód a shuíomh anseo"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lean ar aghaidh chuig Filleadh"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "将条形码放在此处"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "继续归还"
           }
         }
       }
     },
-    "Proceed to Checkout" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zum Ausleihen fortfahren"
+    "Published: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veröffentlicht: %1$@"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lean ar aghaidh chuig Seiceáil Amach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foilsithe: %1$@"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "继续借出"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发布日期：%1$@"
           }
         }
       }
     },
-    "Proceed to Return" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Zum Zurückgeben fortfahren"
+    "Publisher (optional)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verlag (optional)"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lean ar aghaidh chuig Filleadh"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foilsitheoir (roghnach)"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "继续归还"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "出版社（可选）"
           }
         }
       }
     },
-    "Published: %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Veröffentlicht: %1$@"
+    "Quick Actions": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schnellaktionen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Foilsithe: %1$@"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gníomhartha Tapa"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "发布日期：%1$@"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "快捷操作"
           }
         }
       }
     },
-    "Publisher (optional)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verlag (optional)"
+    "Ready to Checkout": {},
+    "Ready to Return": {},
+    "Recent Activity": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neueste Aktivität"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Foilsitheoir (roghnach)"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gníomhaíochta Dhéanach"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "出版社（可选）"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最近活动"
           }
         }
       }
     },
-    "Quick Actions" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schnellaktionen"
+    "Remove All": {},
+    "Remove All Students?": {},
+    "Required: Book Title, Student Name. Dates are optional.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erforderlich: Buchtitel, Schülername. Datumsangaben sind optional."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gníomhartha Tapa"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riachtanach: Teideal Leabhair, Ainm Dalta. Tá dátaí roghnach."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "快捷操作"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "必填：书名、学生姓名。日期为可选。"
           }
         }
       }
     },
-    "Recent Activity" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Neueste Aktivität"
+    "Required: First Name, Last Name. Class is optional.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erforderlich: Vorname, Nachname. Klasse ist optional."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gníomhaíochta Dhéanach"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riachtanach: Ainm, Sloinne. Tá Aicme roghnach."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最近活动"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "必填项：名字、姓氏。班级为可选。"
           }
         }
       }
-    },
-    "Remove All" : {
-
     },
-    "Remove All Students?" : {
-
-    },
-    "Required: Book Title, Student Name. Dates are optional." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erforderlich: Buchtitel, Schülername. Datumsangaben sind optional."
+    "Required: ISBN, Title.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erforderlich: ISBN, Titel."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Riachtanach: Teideal Leabhair, Ainm Dalta. Tá dátaí roghnach."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riachtanach: ISBN, Teideal."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "必填：书名、学生姓名。日期为可选。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "必填：ISBN、书名。"
           }
         }
       }
     },
-    "Required: First Name, Last Name. Class is optional." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erforderlich: Vorname, Nachname. Klasse ist optional."
+    "Required: Title, Author, Total Copies, Available Copies. All other fields are optional.": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erforderlich: Titel, Autor, Gesamtexemplare, Verfügbare Exemplare. Alle anderen Felder sind optional."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Riachtanach: Ainm, Sloinne. Tá Aicme roghnach."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riachtanach: Teideal, Údar, Cóipeanna Iomlána, Cóipeanna Ar Fáil. Tá gach réimse eile roghnach."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "必填项：名字、姓氏。班级为可选。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "必填项：标题、作者、总册数、可借阅册数。所有其他字段为可选。"
           }
         }
       }
     },
-    "Required: ISBN, Title." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erforderlich: ISBN, Titel."
+    "Required: Title. Author and ISBN are optional but improve search accuracy.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erforderlich: Titel. Autor und ISBN sind optional, verbessern aber die Suchgenauigkeit."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Riachtanach: ISBN, Teideal."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riachtanach: Teideal. Tá Údar agus ISBN roghnach ach feabhsaíonn siad cruinneas an chuardaigh."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "必填：ISBN、书名。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "必填项：标题。作者和ISBN为可选，但可提高搜索准确性。"
           }
         }
       }
     },
-    "Required: Title, Author, Total Copies, Available Copies. All other fields are optional." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erforderlich: Titel, Autor, Gesamtexemplare, Verfügbare Exemplare. Alle anderen Felder sind optional."
+    "Return Book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch zurückgeben"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Riachtanach: Teideal, Údar, Cóipeanna Iomlána, Cóipeanna Ar Fáil. Tá gach réimse eile roghnach."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuir Leabhar ar Ais"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "必填项：标题、作者、总册数、可借阅册数。所有其他字段为可选。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "归还图书"
           }
         }
       }
     },
-    "Required: Title. Author and ISBN are optional but improve search accuracy." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erforderlich: Titel. Autor und ISBN sind optional, verbessern aber die Suchgenauigkeit."
+    "Save": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speichern"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Riachtanach: Teideal. Tá Údar agus ISBN roghnach ach feabhsaíonn siad cruinneas an chuardaigh."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sábháil"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "必填项：标题。作者和ISBN为可选，但可提高搜索准确性。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存"
           }
         }
       }
     },
-    "Return Book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buch zurückgeben"
+    "Scan": {},
+    "Scan Book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch scannen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuir Leabhar ar Ais"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanáil Leabhar"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "归还图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "扫描图书"
           }
         }
       }
     },
-    "Save" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speichern"
+    "Scan Book Barcode": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch-Barcode scannen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sábháil"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanáil Barcód Leabhair"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保存"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "扫描图书条形码"
           }
         }
       }
     },
-    "Scan Book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buch scannen"
+    "Scan Book to Checkout": {},
+    "Scan Book to Return": {},
+    "Search Google Books": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Google Books durchsuchen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scanáil Leabhar"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuardaigh Google Books"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "扫描图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索谷歌图书"
           }
         }
       }
     },
-    "Scan Book Barcode" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buch-Barcode scannen"
+    "Search Google Books to get complete information, or add manually with the details you have.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Durchsuchen Sie Google Books, um vollständige Informationen zu erhalten, oder fügen Sie manuell die Details hinzu, die Sie haben."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scanáil Barcód Leabhair"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuardaigh Google Books chun faisnéis iomlán a fháil, nó cuir leis go manual leis na sonraí atá agat."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "扫描图书条形码"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索Google图书以获取完整信息，或使用您拥有的详细信息手动添加。"
           }
         }
       }
     },
-    "Search books or authors" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bücher oder Autoren suchen"
+    "Search Results - Select Books": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suchergebnisse - Bücher auswählen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuardaigh leabhair nó údair"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Torthaí Cuardaigh - Roghnaigh Leabhair"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "搜索图书或作者"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索结果 - 选择图书"
           }
         }
       }
     },
-    "Search by name" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nach Name suchen"
+    "Search books or authors": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bücher oder Autoren suchen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuardaigh de réir ainm"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuardaigh leabhair nó údair"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "按名字搜索"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索图书或作者"
           }
         }
       }
     },
-    "Search Google Books" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Google Books durchsuchen"
+    "Search by name": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nach Name suchen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuardaigh Google Books"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuardaigh de réir ainm"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "搜索谷歌图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "按名字搜索"
           }
         }
       }
     },
-    "Search Google Books to get complete information, or add manually with the details you have." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Durchsuchen Sie Google Books, um vollständige Informationen zu erhalten, oder fügen Sie manuell die Details hinzu, die Sie haben."
+    "Searching...": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suchen..."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cuardaigh Google Books chun faisnéis iomlán a fháil, nó cuir leis go manual leis na sonraí atá agat."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ag Cuardach..."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "搜索Google图书以获取完整信息，或使用您拥有的详细信息手动添加。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在搜索..."
           }
         }
       }
     },
-    "Search Results - Select Books" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suchergebnisse - Bücher auswählen"
+    "Select Book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buch auswählen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Torthaí Cuardaigh - Roghnaigh Leabhair"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roghnaigh Leabhar"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "搜索结果 - 选择图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择图书"
           }
         }
       }
     },
-    "Searching..." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suchen..."
+    "Select Copy to Return": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exemplar zum Zurückgeben auswählen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ag Cuardach..."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roghnaigh Cóip le Cur ar Ais"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在搜索..."
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择要归还的副本"
           }
         }
       }
     },
-    "Select a book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wählen Sie ein Buch"
+    "Select Student": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schüler auswählen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Roghnaigh leabhar"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roghnaigh Dalta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择一本图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择学生"
           }
         }
       }
     },
-    "Select a student" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wählen Sie einen Schüler"
+    "Select a Student": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wählen Sie einen Schüler"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Roghnaigh dalta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roghnaigh Dalta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择一个学生"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择一个学生"
           }
         }
       }
     },
-    "Select a Student" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wählen Sie einen Schüler"
+    "Select a book": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wählen Sie ein Buch"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Roghnaigh Dalta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roghnaigh leabhar"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择一个学生"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择一本图书"
           }
         }
       }
     },
-    "Select Book" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buch auswählen"
+    "Select a student": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wählen Sie einen Schüler"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Roghnaigh Leabhar"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roghnaigh dalta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择图书"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择一个学生"
           }
         }
       }
     },
-    "Select Copy to Return" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Exemplar zum Zurückgeben auswählen"
+    "Settings": {},
+    "Status": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Status"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Roghnaigh Cóip le Cur ar Ais"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stádas"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择要归还的副本"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "状态"
           }
         }
       }
     },
-    "Select Student" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schüler auswählen"
+    "Student": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schüler"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Roghnaigh Dalta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dalta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择学生"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "学生"
           }
         }
       }
-    },
-    "Settings" : {
-
     },
-    "Status" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status"
+    "Student Information": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schülerinformationen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stádas"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eolas Dalta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "状态"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "学生信息"
           }
         }
       }
     },
-    "Student" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schüler"
+    "Student Name": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schülername"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dalta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainm an Dalta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "学生"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "学生姓名"
           }
         }
       }
     },
-    "Student Information" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schülerinformationen"
+    "Student Name (e.g., John Smith)": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schülername (z.B. John Smith)"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eolas Dalta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainm an Dalta (m.sh. John Smith)"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "学生信息"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "学生姓名（例如 John Smith）"
           }
         }
       }
     },
-    "Student Name" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schülername"
+    "Student: %@": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schüler: %1$@"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ainm an Dalta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dalta: %1$@"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "学生姓名"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "学生：%1$@"
           }
         }
       }
     },
-    "Student Name (e.g., John Smith)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schülername (z.B. John Smith)"
+    "Students will not be allowed to check out more than %lld book%@ at a time.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Students will not be allowed to check out more than %1$lld book%2$@ at a time."
           }
-        },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ainm an Dalta (m.sh. John Smith)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "学生姓名（例如 John Smith）"
-          }
         }
       }
     },
-    "Student: %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schüler: %1$@"
+    "There are no books currently checked out": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Derzeit sind keine Bücher ausgeliehen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dalta: %1$@"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Níl aon leabhair seiceáilte amach faoi láthair"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "学生：%1$@"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "目前没有图书被借出"
           }
         }
       }
     },
-    "Students will not be allowed to check out more than %lld book%@ at a time." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Students will not be allowed to check out more than %1$lld book%2$@ at a time."
+    "This will permanently delete all %lld student%@. This action cannot be undone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "This will permanently delete all %1$lld student%2$@. This action cannot be undone."
           }
         }
       }
     },
-    "There are no books currently checked out" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Derzeit sind keine Bücher ausgeliehen"
+    "This will permanently delete all books, students, checkouts, and activities. This action cannot be undone.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dies wird alle Bücher, Schüler, Ausleihen und Aktivitäten dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden."
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Níl aon leabhair seiceáilte amach faoi láthair"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scriosadh go buan go léir na leabhair, na scoláire, na seiceálacha amach, agus gníomhaíochta. Ní féidir an gníomh seo a bhaint ar ais."
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "目前没有图书被借出"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这将永久删除所有图书、学生、借阅和活动。此操作无法撤销。"
           }
         }
       }
     },
-    "This will permanently delete all %lld student%@. This action cannot be undone." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "This will permanently delete all %1$lld student%2$@. This action cannot be undone."
+    "Title": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel"
+          }
+        },
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teideal"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "标题"
           }
         }
       }
     },
-    "This will permanently delete all books, students, checkouts, and activities. This action cannot be undone." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dies wird alle Bücher, Schüler, Ausleihen und Aktivitäten dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden."
+    "Title (optional)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel (optional)"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scriosadh go buan go léir na leabhair, na scoláire, na seiceálacha amach, agus gníomhaíochta. Ní féidir an gníomh seo a bhaint ar ais."
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teideal (roghnach)"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "这将永久删除所有图书、学生、借阅和活动。此操作无法撤销。"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "标题（可选）"
           }
         }
       }
     },
-    "Title" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Titel"
+    "Total": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesamt"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teideal"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iomlán"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "标题"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "总计"
           }
         }
       }
     },
-    "Title (optional)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Titel (optional)"
+    "Total Copies": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesamtexemplare"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teideal (roghnach)"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cóipeanna Iomlána"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "标题（可选）"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "总册数"
           }
         }
       }
     },
-    "Total" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gesamt"
+    "Total Copies:": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesamtexemplare:"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iomlán"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cóipeanna Iomlána:"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "总计"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "总册数："
           }
         }
       }
     },
-    "Total Copies" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gesamtexemplare"
+    "Total Copies: %lld": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gesamtexemplare: %1$lld"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cóipeanna Iomlána"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cóipeanna Iomlána: %1$lld"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "总册数"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "总册数：%1$lld"
           }
         }
       }
     },
-    "Total Copies:" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gesamtexemplare:"
+    "Try searching with different keywords or add manually": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versuchen Sie mit verschiedenen Schlüsselwörtern zu suchen oder fügen Sie manuell hinzu"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cóipeanna Iomlána:"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bain triail as cuardach le focail chéile eile nó cuir leis go manual"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "总册数："
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尝试使用不同的关键词搜索或手动添加"
           }
         }
       }
     },
-    "Total Copies: %lld" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gesamtexemplare: %1$lld"
+    "Usually found on the back cover": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normalerweise auf der Rückseite zu finden"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cóipeanna Iomlána: %1$lld"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "De ghnáth ar an gclúdach cúil"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "总册数：%1$lld"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通常在封底找到"
           }
         }
       }
     },
-    "Try searching with different keywords or add manually" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Versuchen Sie mit verschiedenen Schlüsselwörtern zu suchen oder fügen Sie manuell hinzu"
+    "View on Google Books": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Google Books anzeigen"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bain triail as cuardach le focail chéile eile nó cuir leis go manual"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Féach ar Google Books"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "尝试使用不同的关键词搜索或手动添加"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在Google图书上查看"
           }
         }
       }
     },
-    "Usually found on the back cover" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Normalerweise auf der Rückseite zu finden"
+    "Wish List": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wunschliste"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "De ghnáth ar an gclúdach cúil"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liosta Mianta"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "通常在封底找到"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "愿望清单"
           }
         }
       }
     },
-    "View on Google Books" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In Google Books anzeigen"
+    "by %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "von %1$@"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Féach ar Google Books"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "de %1$@"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在Google图书上查看"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "由%1$@"
           }
         }
       }
     },
-    "Wish List" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wunschliste"
+    "of %lld total": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "von %1$lld insgesamt"
           }
         },
-        "ga" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Liosta Mianta"
+        "ga": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "as %1$lld ar fad"
           }
         },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "愿望清单"
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共%1$lld个中"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

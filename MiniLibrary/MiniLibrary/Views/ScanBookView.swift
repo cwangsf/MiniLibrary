@@ -22,22 +22,22 @@ struct ScanBookView: View {
         case .confirming:
             switch scanPurpose {
             case .addBook:
-                return "Confirm Book"
+                return String(localized: "Confirm Book")
             case .checkout:
-                return "Confirm Checkout"
+                return String(localized: "Confirm Checkout")
             case .returnBook:
-                return "Confirm Return"
+                return String(localized: "Confirm Return")
             }
         case .editing:
-            return "Edit Book Details"
+            return String(localized: "Edit Book Details")
         default:
             switch scanPurpose {
             case .addBook:
-                return "Scan Book"
+                return String(localized: "Scan Book")
             case .checkout:
-                return "Scan Book to Checkout"
+                return String(localized: "Scan Book to Checkout")
             case .returnBook:
-                return "Scan Book to Return"
+                return String(localized: "Scan Book to Return")
             }
         }
     }

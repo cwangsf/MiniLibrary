@@ -18,17 +18,17 @@ enum StatCardType {
     var title: String {
         switch self {
         case .quickCheckout:
-            return "Checkout Book"
+            return String(localized: "Check Out Book")
         case .quickReturn:
-            return "Return Book"
+            return String(localized: "Return Book")
         case .totalCopies:
-            return "Total Copies"
+            return String(localized: "Total Copies")
         case .checkedOut:
-            return "Checked Out"
+            return String(localized: "Checked Out")
         case .wishlist:
-            return "Wish List"
+            return String(localized: "Wish List")
         case .settings:
-            return "Settings"
+            return String(localized: "Settings")
         }
     }
 
@@ -40,7 +40,7 @@ enum StatCardType {
              .settings(let count):
             return "\(count)"
         case .quickCheckout, .quickReturn:
-            return "Scan"
+            return String(localized: "Scan")
         }
     }
 

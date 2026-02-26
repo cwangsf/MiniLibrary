@@ -16,11 +16,11 @@ enum AppTab: Hashable, CaseIterable {
     var label: String {
         switch self {
         case .home:
-            return "Home"
+            return String(localized: "Home")
         case .catalog:
-            return "Catalog"
+            return String(localized: "Catalog")
         case .add:
-            return "Add"
+            return String(localized: "Add")
         }
     }
 

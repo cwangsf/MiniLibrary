@@ -177,12 +177,12 @@ struct CheckoutBookView: View {
         NavigationStack {
             Form {
                 Section("Student Information") {
-                    TextField(String(localized: "First Name"), text: $newStudentFirstName)
-                    TextField(String(localized: "Last Name"), text: $newStudentLastName)
-                    TextField(String(localized: "Class Code (optional)"), text: $newStudentClass)
+                    TextField("First Name", text: $newStudentFirstName)
+                    TextField("Last Name", text: $newStudentLastName)
+                    TextField("Class Code (optional)", text: $newStudentClass)
                 }
             }
-            .navigationTitle(String(localized: "Add New Student"))
+            .navigationTitle("Add New Student")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
