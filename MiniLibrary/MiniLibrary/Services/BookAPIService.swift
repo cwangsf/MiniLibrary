@@ -19,6 +19,7 @@ struct BookAPIService {
 
     // MARK: - Constants
     private static let baseURL = "https://www.googleapis.com/books/v1/volumes"
+    private static let openLibraryBaseURL = "https://covers.openlibrary.org/b/isbn"
 
     private init() {
         let config = URLSessionConfiguration.default
@@ -56,6 +57,38 @@ struct BookAPIService {
         let query = queryComponents.joined(separator: "+")
         let urlString = "\(Self.baseURL)?q=\(query)&maxResults=5"
         return URL(string: urlString)
+    }
+    
+    // MARK: - Open Library Cover Methods
+    
+    /// Build Open Library cover URL for a given ISBN
+    /// Size options: S (small), M (medium), L (large)
+    private func buildOpenLibraryCoverURL(_ isbn: String, size: String = "L") -> URL? {
+        let urlString = "\(Self.openLibraryBaseURL)/\(isbn)-\(size).jpg"
+        return URL(string: urlString)
+    }
+    
+    /// Try to fetch cover from Open Library (faster, no rate limits)
+    /// Returns the URL string if successful, nil otherwise
+    private func tryFetchOpenLibraryCover(_ isbn: String) async -> String? {
+        guard let url = buildOpenLibraryCoverURL(isbn) else {
+            return nil
+        }
+        
+        do {
+            // Open Library returns a redirect or 404 for missing covers
+            let (_, response) = try await session.data(from: url)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                return nil
+            }
+            
+            // If we get a 200, the cover exists
+            return url.absoluteString
+        } catch {
+            return nil
+        }
     }
 
     /// Fetch book info from Google Books API by ISBN
@@ -187,19 +220,29 @@ struct BookAPIService {
         do {
             var coverURL: String?
             var updatedMetadata: GoogleBookItem?
+            var coverSource = "unknown"
 
-            // Try ISBN search first if available
+            // STRATEGY 1: Try Open Library first (fastest, no rate limits, no API needed)
             if let isbn = book.isbn {
+                if let openLibraryCover = await tryFetchOpenLibraryCover(isbn) {
+                    coverURL = openLibraryCover
+                    coverSource = "Open Library"
+                    logger.info("Found cover on Open Library for: \(book.title)")
+                }
+            }
+
+            // STRATEGY 2: Fall back to Google Books ISBN search
+            if coverURL == nil, let isbn = book.isbn {
                 let items = try await searchBooksByISBN(isbn)
                 if let firstItem = items.first {
                     coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
                     updatedMetadata = firstItem
+                    coverSource = "Google Books (ISBN)"
                 }
             }
 
-            // Fall back to title/author search if no ISBN or ISBN search failed
+            // STRATEGY 3: Fall back to Google Books title/author search
             if coverURL == nil {
-                // Don't include nil or empty author in search - use empty string instead
                 let searchAuthor = book.author ?? ""
 
                 let items = try await searchBooksByTitleAndAuthor(
@@ -209,6 +252,7 @@ struct BookAPIService {
                 if let firstItem = items.first {
                     coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
                     updatedMetadata = firstItem
+                    coverSource = "Google Books (Title/Author)"
                 }
             }
 
@@ -226,11 +270,12 @@ struct BookAPIService {
                     for: book.id.uuidString
                 ) {
                     book.cachedCoverImage = cachedFilename
-                    logger.info("Cached cover for: \(book.title)")
+                    logger.info("Cached cover for '\(book.title)' from \(coverSource)")
                 }
             }
 
             // Also update other metadata if book doesn't have it (useful for wishlist items)
+            // Only Google Books provides metadata, Open Library only provides covers
             if let metadata = updatedMetadata {
                 let volumeInfo = metadata.volumeInfo
 
