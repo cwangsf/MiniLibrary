@@ -24,6 +24,9 @@ struct BookDetailView: View {
     @State private var showingReturnConfirmation = false
     @State private var checkoutToReturn: CheckoutRecord?
     @State private var isFetchingBookInfo = false
+    @State private var isEditingInfo = false
+    @State private var titleText = ""
+    @State private var authorText = ""
 
     var body: some View {
         ScrollView {
@@ -33,7 +36,44 @@ struct BookDetailView: View {
                     .padding(.top, 20)
 
                 // Book Info
-                BookInfoHeaderView(book: book)
+                VStack(alignment: .center, spacing: 8) {
+                    HStack {
+                        Spacer()
+                        Button(isEditingInfo ? "Done" : "Edit") {
+                            if isEditingInfo {
+                                saveBookInfo()
+                            }
+                            isEditingInfo.toggle()
+                        }
+                        .font(.subheadline)
+                    }
+                    .padding(.horizontal)
+                    
+                    if isEditingInfo {
+                        VStack(spacing: 12) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Title")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                TextField("Book Title", text: $titleText)
+                                    .textFieldStyle(.roundedBorder)
+                                    .font(.title2)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Author")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                TextField("Author Name", text: $authorText)
+                                    .textFieldStyle(.roundedBorder)
+                                    .font(.title3)
+                            }
+                        }
+                        .padding(.horizontal)
+                    } else {
+                        BookInfoHeaderView(book: book)
+                    }
+                }
 
                 // Checkout Button
                 if book.availableCopies >= 1 {
@@ -271,6 +311,8 @@ struct BookDetailView: View {
             notesText = book.notes ?? ""
             totalCopiesText = "\(book.totalCopies)"
             availableCopiesText = "\(book.availableCopies)"
+            titleText = book.title
+            authorText = book.author ?? ""
 
             // Fetch book info in background if missing metadata
             fetchBookInfoIfNeeded()
@@ -283,6 +325,24 @@ struct BookDetailView: View {
 
     private func saveNotes() {
         book.notes = notesText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    private func saveBookInfo() {
+        let trimmedTitle = titleText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedAuthor = authorText.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Don't allow empty title
+        guard !trimmedTitle.isEmpty else {
+            titleText = book.title
+            authorText = book.author ?? ""
+            return
+        }
+        
+        book.title = trimmedTitle
+        book.author = trimmedAuthor.isEmpty ? nil : trimmedAuthor
+        
+        // Save changes to database
+        try? modelContext.save()
     }
 
     private func startEditingCopies() {

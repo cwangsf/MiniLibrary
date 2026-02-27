@@ -16,6 +16,8 @@ struct ScanBookView: View {
 
     @State private var viewModel = ScanBookViewModel()
     @State private var showingScanResult = false
+    @State private var showingCheckoutAfterAdd = false
+    @State private var bookToCheckout: Book?
 
     var navigationTitle: String {
         switch viewModel.state {
@@ -93,6 +95,14 @@ struct ScanBookView: View {
             .onChange(of: viewModel.state) { _, newState in
                 if case .existingBook = newState {
                     showingScanResult = true
+                }
+            }
+            .sheet(isPresented: $showingCheckoutAfterAdd) {
+                if let book = bookToCheckout {
+                    CheckoutBookView(book: book) {
+                        viewModel.reset()
+                        dismiss()
+                    }
                 }
             }
         }
@@ -264,41 +274,73 @@ struct ScanBookView: View {
                     }
 
                 case .checkout:
-                    NavigationLink(destination: CheckoutBookView(book: book) {
-                        viewModel.reset()
-                        dismiss()
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.right.circle.fill")
-                            Text("Proceed to Checkout")
+                    // Check if book exists in catalog
+                    let existingBook = viewModel.existingBook ?? allBooks.first(where: { $0.isbn == book.isbn })
+                    
+                    if let bookToCheckout = existingBook {
+                        // Book exists - allow checkout
+                        NavigationLink(destination: CheckoutBookView(book: bookToCheckout) {
+                            viewModel.reset()
+                            dismiss()
+                        }) {
+                            HStack {
+                                Image(systemName: "arrow.right.circle.fill")
+                                Text("Proceed to Checkout")
+                            }
+                            .prominentButton(color: .blue)
                         }
-                        .prominentButton(color: .blue)
-                    }
-
-                    Button {
-                        addBook()
-                    } label: {
-                        Text("Add Book to Catalog First")
-                            .secondaryButton()
+                    } else {
+                        // Book not in catalog - only allow adding
+                        VStack(spacing: 8) {
+                            Text("Book not in catalog")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            
+                            Button {
+                                addBookAndProceedToCheckout()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "plus.circle.fill")
+                                    Text("Add Book to Catalog")
+                                }
+                                .prominentButton(color: .green)
+                            }
+                        }
                     }
 
                 case .returnBook:
-                    NavigationLink(destination: ReturnBookView(book: book) {
-                        viewModel.reset()
-                        dismiss()
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.uturn.backward.circle.fill")
-                            Text("Proceed to Return")
+                    // Check if book exists in catalog
+                    let existingBook = viewModel.existingBook ?? allBooks.first(where: { $0.isbn == book.isbn })
+                    
+                    if let bookToReturn = existingBook {
+                        // Book exists - allow return
+                        NavigationLink(destination: ReturnBookView(book: bookToReturn) {
+                            viewModel.reset()
+                            dismiss()
+                        }) {
+                            HStack {
+                                Image(systemName: "arrow.uturn.backward.circle.fill")
+                                Text("Proceed to Return")
+                            }
+                            .prominentButton(color: .blue)
                         }
-                        .prominentButton(color: .blue)
-                    }
-
-                    Button {
-                        addBook()
-                    } label: {
-                        Text("Add Book to Catalog First")
-                            .secondaryButton()
+                    } else {
+                        // Book not in catalog - only allow adding
+                        VStack(spacing: 8) {
+                            Text("Book not in catalog")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            
+                            Button {
+                                addBookAndProceedToReturn()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "plus.circle.fill")
+                                    Text("Add Book to Catalog")
+                                }
+                                .prominentButton(color: .green)
+                            }
+                        }
                     }
                 }
 
@@ -427,6 +469,119 @@ struct ScanBookView: View {
 
         showingScanResult = false
         viewModel.reset()
+    }
+    
+    private func addBookAndProceedToCheckout() {
+        // Create a new book with proper values
+        let book: Book
+        
+        // Check if we're in confirmation mode (direct from scan) or edit mode
+        if case .confirming = viewModel.state, let scannedBook = viewModel.scannedBook {
+            // In confirmation mode: use the scanned book's data directly
+            book = Book(
+                isbn: scannedBook.isbn,
+                title: scannedBook.title,
+                author: scannedBook.author,
+                totalCopies: 1,
+                availableCopies: 1,
+                bookDescription: scannedBook.bookDescription,
+                pageCount: scannedBook.pageCount,
+                publishedDate: scannedBook.publishedDate,
+                publisher: scannedBook.publisher,
+                languageCode: scannedBook.languageCode,
+                coverImageURL: scannedBook.coverImageURL
+            )
+        } else if let scannedBook = viewModel.scannedBook {
+            // In edit mode: use the edited values from viewModel
+            book = Book(
+                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
+                title: viewModel.title,
+                author: viewModel.author,
+                totalCopies: viewModel.totalCopies,
+                availableCopies: viewModel.totalCopies,
+                bookDescription: scannedBook.bookDescription,
+                pageCount: scannedBook.pageCount,
+                publishedDate: scannedBook.publishedDate,
+                publisher: scannedBook.publisher,
+                languageCode: scannedBook.languageCode,
+                coverImageURL: scannedBook.coverImageURL
+            )
+        } else {
+            // Manual entry: create book from form fields only
+            book = Book(
+                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
+                title: viewModel.title,
+                author: viewModel.author,
+                totalCopies: viewModel.totalCopies,
+                availableCopies: viewModel.totalCopies
+            )
+        }
+        
+        modelContext.insert(book)
+        
+        // Log activity
+        ActivityLogger.logBookAdded(book, copies: book.totalCopies, modelContext: modelContext)
+        
+        // Proceed to checkout with the newly added book
+        bookToCheckout = book
+        showingCheckoutAfterAdd = true
+    }
+    
+    private func addBookAndProceedToReturn() {
+        // Create a new book with proper values
+        let book: Book
+        
+        // Check if we're in confirmation mode (direct from scan) or edit mode
+        if case .confirming = viewModel.state, let scannedBook = viewModel.scannedBook {
+            // In confirmation mode: use the scanned book's data directly
+            book = Book(
+                isbn: scannedBook.isbn,
+                title: scannedBook.title,
+                author: scannedBook.author,
+                totalCopies: 1,
+                availableCopies: 1,
+                bookDescription: scannedBook.bookDescription,
+                pageCount: scannedBook.pageCount,
+                publishedDate: scannedBook.publishedDate,
+                publisher: scannedBook.publisher,
+                languageCode: scannedBook.languageCode,
+                coverImageURL: scannedBook.coverImageURL
+            )
+        } else if let scannedBook = viewModel.scannedBook {
+            // In edit mode: use the edited values from viewModel
+            book = Book(
+                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
+                title: viewModel.title,
+                author: viewModel.author,
+                totalCopies: viewModel.totalCopies,
+                availableCopies: viewModel.totalCopies,
+                bookDescription: scannedBook.bookDescription,
+                pageCount: scannedBook.pageCount,
+                publishedDate: scannedBook.publishedDate,
+                publisher: scannedBook.publisher,
+                languageCode: scannedBook.languageCode,
+                coverImageURL: scannedBook.coverImageURL
+            )
+        } else {
+            // Manual entry: create book from form fields only
+            book = Book(
+                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
+                title: viewModel.title,
+                author: viewModel.author,
+                totalCopies: viewModel.totalCopies,
+                availableCopies: viewModel.totalCopies
+            )
+        }
+        
+        modelContext.insert(book)
+        
+        // Log activity
+        ActivityLogger.logBookAdded(book, copies: book.totalCopies, modelContext: modelContext)
+        
+        // Note: For return, we can't proceed automatically because the book
+        // was just added and has no checkout records yet. Just dismiss.
+        viewModel.reset()
+        dismiss()
     }
 }
 
