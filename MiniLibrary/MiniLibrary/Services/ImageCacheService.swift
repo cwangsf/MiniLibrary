@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Service for caching book cover images to disk
 actor ImageCacheService {
@@ -39,7 +40,25 @@ actor ImageCacheService {
         }
 
         // Download the image
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        // Check HTTP response status
+        if let httpResponse = response as? HTTPURLResponse {
+            guard httpResponse.statusCode == 200 else {
+                // Not found or error - don't cache
+                return nil
+            }
+        }
+        
+        // Validate that the data is actually a valid image
+        guard data.count > 100 else { // Image files should be larger than 100 bytes
+            return nil
+        }
+        
+        // Try to create UIImage to validate it's a real image
+        guard UIImage(data: data) != nil else {
+            return nil
+        }
 
         // Save to disk
         return try saveImageData(data, for: bookId)

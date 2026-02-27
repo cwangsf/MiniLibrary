@@ -304,6 +304,11 @@ struct AddView: View {
                 // Log activity
                 ActivityLogger.logCatalogCSVImport(count: importedCount, modelContext: modelContext)
 
+                // Start downloading cover images in the background
+                Task.detached(priority: .utility) {
+                    await self.downloadCoversForImportedBooks()
+                }
+
                 showingImportResult = true
             } catch {
                 importResult = ImportResult(
@@ -528,6 +533,30 @@ struct AddView: View {
             return build
         }
         return "Unknown"
+    }
+    
+    /// Download cover images for recently imported books in the background
+    private func downloadCoversForImportedBooks() async {
+        // Fetch books without cached covers from the current context
+        let descriptor = FetchDescriptor<Book>(
+            predicate: #Predicate<Book> { book in
+                book.cachedCoverImage == nil && !book.isWishlistItem
+            }
+        )
+        
+        let booksWithoutCovers = (try? modelContext.fetch(descriptor)) ?? []
+        
+        logger.info("Starting background cover download for \(booksWithoutCovers.count) books")
+        
+        // Download covers with controlled concurrency
+        for book in booksWithoutCovers {
+            await BookAPIService.shared.updateBookCover(book)
+            
+            // Save periodically to persist downloaded covers
+            try? modelContext.save()
+        }
+        
+        logger.info("Finished background cover downloads")
     }
     
     /// Try to read file with multiple text encodings

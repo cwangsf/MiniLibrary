@@ -87,7 +87,7 @@ struct BookAPIService {
     
     /// Build Open Library cover URL for a given ISBN
     /// Size options: S (small), M (medium), L (large)
-    private func buildOpenLibraryCoverURL(_ isbn: String, size: String = "L") -> URL? {
+    private func buildOpenLibraryCoverURL(_ isbn: String, size: String = "S") -> URL? {
         let urlString = "\(Self.openLibraryBaseURL)/\(isbn)-\(size).jpg"
         return URL(string: urlString)
     }
@@ -232,112 +232,30 @@ struct BookAPIService {
             }
         }
 
-        do {
-            var coverURL: String?
-            var updatedMetadata: GoogleBookItem?
-            var coverSource = "unknown"
-            var downloadSucceeded = false
-
-            // STRATEGY 1: Try Open Library first (fastest, no rate limits)
-            if let isbn = book.isbn, let openLibraryCover = getOpenLibraryCoverURL(isbn) {
-                coverURL = openLibraryCover
-                coverSource = "Open Library"
-                
-                // Try to download and cache immediately
-                let secureURL = openLibraryCover.replacingOccurrences(of: "http://", with: "https://")
-                if let cachedFilename = try? await ImageCacheService.shared.cacheImage(
+        // Only use Open Library for cover images (no rate limits, reliable)
+        if let isbn = book.isbn, let openLibraryCover = getOpenLibraryCoverURL(isbn) {
+            // Try to download and cache immediately
+            let secureURL = openLibraryCover.replacingOccurrences(of: "http://", with: "https://")
+            do {
+                if let cachedFilename = try await ImageCacheService.shared.cacheImage(
                     from: secureURL,
                     for: book.id.uuidString
                 ) {
                     book.coverImageURL = openLibraryCover
                     book.cachedCoverImage = cachedFilename
-                    downloadSucceeded = true
-                    logger.info("Cached cover for '\(book.title)' from Open Library")
+                    logger.info("✅ Successfully cached cover for '\(book.title)' (ISBN: \(isbn)) - File: \(cachedFilename)")
+                } else {
+                    // Validation failed - invalid or missing image
+                    logger.warning("⚠️ No valid cover image for '\(book.title)' (ISBN: \(isbn)) - Open Library returned invalid/missing image")
                 }
+            } catch {
+                let authorInfo = book.author.map { " by \($0)" } ?? ""
+                logger.error("❌ Failed to download cover for '\(book.title)'\(authorInfo) (ISBN: \(isbn)) - Error: \(error.localizedDescription)")
             }
-
-            // STRATEGY 2: Only try Google Books if Open Library failed
-            if !downloadSucceeded {
-                // Try ISBN search first if available
-                if let isbn = book.isbn {
-                    let items = try await searchBooksByISBN(isbn)
-                    if let firstItem = items.first {
-                        coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
-                        updatedMetadata = firstItem
-                        coverSource = "Google Books (ISBN)"
-                    }
-                }
-
-                // STRATEGY 3: Fall back to title/author search
-                if coverURL == nil {
-                    let searchAuthor = book.author ?? ""
-                    let items = try await searchBooksByTitleAndAuthor(
-                        title: book.title,
-                        author: searchAuthor
-                    )
-                    if let firstItem = items.first {
-                        coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
-                        updatedMetadata = firstItem
-                        coverSource = "Google Books (Title/Author)"
-                    }
-                }
-
-                // Download and cache the Google Books cover
-                if let coverURL = coverURL {
-                    book.coverImageURL = coverURL
-                    let secureURL = coverURL.replacingOccurrences(of: "http://", with: "https://")
-                    
-                    if let cachedFilename = try await ImageCacheService.shared.cacheImage(
-                        from: secureURL,
-                        for: book.id.uuidString
-                    ) {
-                        book.cachedCoverImage = cachedFilename
-                        downloadSucceeded = true
-                        logger.info("Cached cover for '\(book.title)' from \(coverSource)")
-                    }
-                }
-            }
-
-            // Also update other metadata if book doesn't have it (useful for wishlist items)
-            // Only Google Books provides metadata, Open Library only provides covers
-            if let metadata = updatedMetadata {
-                let volumeInfo = metadata.volumeInfo
-
-                if book.isbn == nil,
-                   let isbn = volumeInfo.industryIdentifiers?.first(where: { $0.type == "ISBN_13" || $0.type == "ISBN_10" })?.identifier {
-                    book.isbn = isbn
-                }
-
-                if book.bookDescription == nil {
-                    book.bookDescription = volumeInfo.description
-                }
-
-                if book.pageCount == nil {
-                    book.pageCount = volumeInfo.pageCount
-                }
-
-                if book.publishedDate == nil {
-                    book.publishedDate = volumeInfo.publishedDate
-                }
-
-                if book.publisher == nil {
-                    book.publisher = volumeInfo.publisher
-                }
-
-                if book.languageCode == nil {
-                    book.languageCode = volumeInfo.language
-                }
-
-                // Update author if it's nil or empty
-                if (book.author ?? "").isEmpty,
-                   let authors = volumeInfo.authors,
-                   !authors.isEmpty {
-                    book.author = authors.joined(separator: ", ")
-                }
-            }
-        } catch {
+        } else {
+            // No ISBN available
             let authorInfo = book.author.map { " by \($0)" } ?? ""
-            logger.error("Failed to fetch/cache cover for '\(book.title)'\(authorInfo): \(error)")
+            logger.info("⏭️ Skipping cover download for '\(book.title)'\(authorInfo) - No ISBN available")
         }
     }
 }
