@@ -62,9 +62,13 @@ struct MiniLibraryApp: App {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
             case .notDetermined:
-                NotificationService.requestAuthorization()
+                Task { @MainActor in
+                    NotificationService.requestAuthorization()
+                }
             case .authorized, .provisional:
-                NotificationService.scheduleWeeklyExportReminder()
+                Task { @MainActor in
+                    NotificationService.scheduleWeeklyExportReminder()
+                }
             default:
                 break
             }

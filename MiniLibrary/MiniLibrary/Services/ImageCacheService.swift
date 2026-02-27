@@ -11,7 +11,7 @@ import Foundation
 actor ImageCacheService {
     static let shared = ImageCacheService()
 
-    private let fileManager = FileManager.default
+    private nonisolated(unsafe) let fileManager = FileManager.default
     private lazy var cacheDirectory: URL? = {
         guard let cachesDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first else {
             return nil

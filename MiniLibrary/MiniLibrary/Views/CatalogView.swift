@@ -13,60 +13,17 @@ struct CatalogView: View {
     @Query(sort: \Book.title) private var books: [Book]
     @State private var searchText = ""
     @State private var selectedLanguage: LanguageFilter = .all
-
-    var filteredBooks: [Book] {
-        let catalogBooks = books.filter { !$0.isWishlistItem }
-
-        // Apply language filter
-        let languageFilteredBooks = selectedLanguage.filter(catalogBooks)
-
-        // Apply search filter
-        if searchText.isEmpty {
-            return languageFilteredBooks
-        } else {
-            return languageFilteredBooks.filter { book in
-                book.title.localizedCaseInsensitiveContains(searchText) ||
-                (book.author?.localizedCaseInsensitiveContains(searchText) ?? false)
-            }
-        }
-    }
-
-    // Group books by first letter of title
-    private var alphabeticalGrouping: AlphabeticalGrouping<Book> {
-        AlphabeticalGrouper.group(filteredBooks, by: \.title)
-    }
-
-    private var groupedBooks: [String: [Book]] {
-        alphabeticalGrouping.grouped
-    }
-
-    private var sortedSectionTitles: [String] {
-        alphabeticalGrouping.sortedSectionTitles
-    }
+    
+    // Cached filtered books to avoid recalculating on every render
+    @State private var filteredBooks: [Book] = []
 
     var body: some View {
         NavigationStack {
                 ZStack(alignment: .trailing) {
                     List {
-                        if searchText.isEmpty {
-                            // Grouped view with section index when not searching
-                            ForEach(sortedSectionTitles, id: \.self) { letter in
-                                Section {
-                                    ForEach(groupedBooks[letter] ?? []) { book in
-                                        BookRowWithActions(book: book, onDelete: deleteBook)
-                                            .listRowSeparator(.hidden)
-                                    }
-                                } header: {
-                                    Text(letter)
-                                }
-                                .id(letter)
-                            }
-                        } else {
-                            // Flat list when searching
-                            ForEach(filteredBooks) { book in
-                                BookRowWithActions(book: book, onDelete: deleteBook)
-                                    .listRowSeparator(.hidden)
-                            }
+                        ForEach(filteredBooks) { book in
+                            BookRowWithActions(book: book, onDelete: deleteBook)
+                                .listRowSeparator(.hidden)
                         }
                     }
                     .listStyle(.plain)
@@ -85,6 +42,35 @@ struct CatalogView: View {
                 }
             .navigationTitle("Catalog")
             .searchable(text: $searchText, prompt: "Search books or authors")
+            .onAppear {
+                updateFilteredBooks()
+            }
+            .onChange(of: books.count) { _, _ in
+                updateFilteredBooks()
+            }
+            .onChange(of: selectedLanguage) { _, _ in
+                updateFilteredBooks()
+            }
+            .onChange(of: searchText) { _, _ in
+                updateFilteredBooks()
+            }
+        }
+    }
+    
+    private func updateFilteredBooks() {
+        let catalogBooks = books.filter { !$0.isWishlistItem }
+        
+        // Apply language filter
+        let languageFilteredBooks = selectedLanguage.filter(catalogBooks)
+        
+        // Apply search filter
+        if searchText.isEmpty {
+            filteredBooks = languageFilteredBooks
+        } else {
+            filteredBooks = languageFilteredBooks.filter { book in
+                book.title.localizedCaseInsensitiveContains(searchText) ||
+                (book.author?.localizedCaseInsensitiveContains(searchText) ?? false)
+            }
         }
     }
 

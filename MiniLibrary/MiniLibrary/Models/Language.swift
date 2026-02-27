@@ -113,7 +113,7 @@ enum Language: String, Codable, CaseIterable {
     }
 
     /// Initialize from language code string (handles variants like "zh-CN")
-    init?(code: String) {
+    nonisolated init?(code: String) {
         // Handle language codes with region (e.g., "zh-CN", "en-US")
         let baseCode = code.split(separator: "-").first.map(String.init) ?? code
         self.init(rawValue: baseCode.lowercased())

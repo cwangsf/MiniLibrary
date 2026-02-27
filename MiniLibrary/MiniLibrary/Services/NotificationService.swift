@@ -14,9 +14,10 @@ enum NotificationService {
     private static let weeklyExportReminderID = "weekly-export-reminder"
 
     static func requestAuthorization() {
+        let localLogger = logger
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if let error {
-                logger.error("Notification authorization error: \(error.localizedDescription)")
+                localLogger.error("Notification authorization error: \(error.localizedDescription)")
                 return
             }
             if granted {
@@ -29,6 +30,7 @@ enum NotificationService {
 
     static func scheduleWeeklyExportReminder() {
         let center = UNUserNotificationCenter.current()
+        let localLogger = logger
 
         // Remove any existing pending notification with this ID
         center.removePendingNotificationRequests(withIdentifiers: [weeklyExportReminderID])
@@ -49,7 +51,7 @@ enum NotificationService {
 
         center.add(request) { error in
             if let error {
-                logger.error("Failed to schedule export reminder: \(error.localizedDescription)")
+                localLogger.error("Failed to schedule export reminder: \(error.localizedDescription)")
             }
         }
     }

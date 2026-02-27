@@ -10,6 +10,30 @@ import os
 
 private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "BookAPIService")
 
+// MARK: - Concurrent Load Limiter
+/// Actor to limit concurrent cover image loads to prevent overwhelming older devices
+actor CoverLoadLimiter {
+    static let shared = CoverLoadLimiter()
+    
+    private var activeLoads = 0
+    private let maxConcurrentLoads = 3 // Only 3 concurrent loads at a time
+    
+    private init() {}
+    
+    /// Wait for a slot to become available before loading
+    func waitForSlot() async {
+        while activeLoads >= maxConcurrentLoads {
+            try? await Task.sleep(for: .milliseconds(100))
+        }
+        activeLoads += 1
+    }
+    
+    /// Release a slot when done loading
+    func releaseSlot() {
+        activeLoads = max(0, activeLoads - 1)
+    }
+}
+
 // MARK: - API Service (Stateless)
 struct BookAPIService {
     static let shared = BookAPIService()
@@ -68,27 +92,10 @@ struct BookAPIService {
         return URL(string: urlString)
     }
     
-    /// Try to fetch cover from Open Library (faster, no rate limits)
-    /// Returns the URL string if successful, nil otherwise
-    private func tryFetchOpenLibraryCover(_ isbn: String) async -> String? {
-        guard let url = buildOpenLibraryCoverURL(isbn) else {
-            return nil
-        }
-        
-        do {
-            // Open Library returns a redirect or 404 for missing covers
-            let (_, response) = try await session.data(from: url)
-            
-            guard let httpResponse = response as? HTTPURLResponse,
-                  httpResponse.statusCode == 200 else {
-                return nil
-            }
-            
-            // If we get a 200, the cover exists
-            return url.absoluteString
-        } catch {
-            return nil
-        }
+    /// Get Open Library cover URL directly (no validation - let caching handle failures)
+    /// Returns the URL string immediately without checking if it exists
+    private func getOpenLibraryCoverURL(_ isbn: String) -> String? {
+        return buildOpenLibraryCoverURL(isbn)?.absoluteString
     }
 
     /// Fetch book info from Google Books API by ISBN
@@ -216,61 +223,78 @@ struct BookAPIService {
         guard book.cachedCoverImage == nil else {
             return
         }
+        
+        // Wait for an available slot to prevent overwhelming the device
+        await CoverLoadLimiter.shared.waitForSlot()
+        defer {
+            Task {
+                await CoverLoadLimiter.shared.releaseSlot()
+            }
+        }
 
         do {
             var coverURL: String?
             var updatedMetadata: GoogleBookItem?
             var coverSource = "unknown"
+            var downloadSucceeded = false
 
-            // STRATEGY 1: Try Open Library first (fastest, no rate limits, no API needed)
-            if let isbn = book.isbn {
-                if let openLibraryCover = await tryFetchOpenLibraryCover(isbn) {
-                    coverURL = openLibraryCover
-                    coverSource = "Open Library"
-                    logger.info("Found cover on Open Library for: \(book.title)")
-                }
-            }
-
-            // STRATEGY 2: Fall back to Google Books ISBN search
-            if coverURL == nil, let isbn = book.isbn {
-                let items = try await searchBooksByISBN(isbn)
-                if let firstItem = items.first {
-                    coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
-                    updatedMetadata = firstItem
-                    coverSource = "Google Books (ISBN)"
-                }
-            }
-
-            // STRATEGY 3: Fall back to Google Books title/author search
-            if coverURL == nil {
-                let searchAuthor = book.author ?? ""
-
-                let items = try await searchBooksByTitleAndAuthor(
-                    title: book.title,
-                    author: searchAuthor
-                )
-                if let firstItem = items.first {
-                    coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
-                    updatedMetadata = firstItem
-                    coverSource = "Google Books (Title/Author)"
-                }
-            }
-
-            // Download and cache the cover image
-            if let coverURL = coverURL {
-                // Store the remote URL for reference
-                book.coverImageURL = coverURL
-
-                // Convert HTTP to HTTPS for ATS compliance
-                let secureURL = coverURL.replacingOccurrences(of: "http://", with: "https://")
-
-                // Download and cache the image
-                if let cachedFilename = try await ImageCacheService.shared.cacheImage(
+            // STRATEGY 1: Try Open Library first (fastest, no rate limits)
+            if let isbn = book.isbn, let openLibraryCover = getOpenLibraryCoverURL(isbn) {
+                coverURL = openLibraryCover
+                coverSource = "Open Library"
+                
+                // Try to download and cache immediately
+                let secureURL = openLibraryCover.replacingOccurrences(of: "http://", with: "https://")
+                if let cachedFilename = try? await ImageCacheService.shared.cacheImage(
                     from: secureURL,
                     for: book.id.uuidString
                 ) {
+                    book.coverImageURL = openLibraryCover
                     book.cachedCoverImage = cachedFilename
-                    logger.info("Cached cover for '\(book.title)' from \(coverSource)")
+                    downloadSucceeded = true
+                    logger.info("Cached cover for '\(book.title)' from Open Library")
+                }
+            }
+
+            // STRATEGY 2: Only try Google Books if Open Library failed
+            if !downloadSucceeded {
+                // Try ISBN search first if available
+                if let isbn = book.isbn {
+                    let items = try await searchBooksByISBN(isbn)
+                    if let firstItem = items.first {
+                        coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
+                        updatedMetadata = firstItem
+                        coverSource = "Google Books (ISBN)"
+                    }
+                }
+
+                // STRATEGY 3: Fall back to title/author search
+                if coverURL == nil {
+                    let searchAuthor = book.author ?? ""
+                    let items = try await searchBooksByTitleAndAuthor(
+                        title: book.title,
+                        author: searchAuthor
+                    )
+                    if let firstItem = items.first {
+                        coverURL = firstItem.volumeInfo.imageLinks?.thumbnail
+                        updatedMetadata = firstItem
+                        coverSource = "Google Books (Title/Author)"
+                    }
+                }
+
+                // Download and cache the Google Books cover
+                if let coverURL = coverURL {
+                    book.coverImageURL = coverURL
+                    let secureURL = coverURL.replacingOccurrences(of: "http://", with: "https://")
+                    
+                    if let cachedFilename = try await ImageCacheService.shared.cacheImage(
+                        from: secureURL,
+                        for: book.id.uuidString
+                    ) {
+                        book.cachedCoverImage = cachedFilename
+                        downloadSucceeded = true
+                        logger.info("Cached cover for '\(book.title)' from \(coverSource)")
+                    }
                 }
             }
 
