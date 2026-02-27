@@ -78,7 +78,7 @@ struct AddBookView: View {
             }
             .disabled(!isButtonEnabled || isSearching)
             .padding()
-            .background(.ultraThinMaterial)
+            .background(Color(.systemBackground).opacity(0.95))
         }
         .sheet(isPresented: $showingConfirmation) {
 

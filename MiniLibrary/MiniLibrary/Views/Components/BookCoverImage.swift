@@ -31,7 +31,6 @@ struct BookCoverImage: View {
         }
         .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
         .onAppear {
             // Only try to load once
             guard !hasAttemptedLoad else { return }

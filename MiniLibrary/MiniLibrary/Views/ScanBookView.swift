@@ -357,7 +357,7 @@ struct ScanBookView: View {
                 .tint(.red)
             }
             .padding()
-            .background(.ultraThinMaterial)
+            .background(Color(.systemBackground).opacity(0.95))
         }
     }
 
@@ -397,7 +397,7 @@ struct ScanBookView: View {
             }
             .disabled(viewModel.title.isEmpty || viewModel.author.isEmpty)
             .padding()
-            .background(.ultraThinMaterial)
+            .background(Color(.systemBackground).opacity(0.95))
         }
     }
 

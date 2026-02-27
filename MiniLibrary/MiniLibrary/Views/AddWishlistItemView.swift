@@ -156,11 +156,11 @@ struct AddWishlistItemView: View {
                     .prominentButton(color: .blue)
                 }
                 .padding()
-                .background(.ultraThinMaterial)
+                .background(Color(.systemBackground).opacity(0.95))
             }
         }
     }
-    
+
     private func toggleSelection(_ index: Int) {
         if selectedItems.contains(index) {
             selectedItems.remove(index)

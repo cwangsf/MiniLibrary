@@ -99,7 +99,7 @@ struct WishlistView: View {
                 LanguageFilterPicker(selectedLanguage: $selectedLanguage)
                     .padding(.horizontal)
                     .padding(.vertical, 8)
-                    .background(.ultraThinMaterial)
+                    .background(Color(.systemBackground).opacity(0.95))
             }
         }
         .sheet(item: $selectedBook) { book in

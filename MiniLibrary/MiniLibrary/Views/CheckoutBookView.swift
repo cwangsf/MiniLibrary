@@ -125,12 +125,12 @@ struct CheckoutBookView: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background((selectedBook == nil || selectedStudent == nil) ? .gray : .blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .disabled(selectedBook == nil || selectedStudent == nil)
+                .background((selectedBook == nil || selectedStudent == nil) ? .gray : .blue)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding()
-                .background(.ultraThinMaterial)
+                .background(Color(.systemBackground).opacity(0.95))
             }
             .navigationTitle("Check Out Book")
             .navigationBarTitleDisplayMode(.inline)

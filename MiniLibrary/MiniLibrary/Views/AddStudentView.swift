@@ -76,7 +76,7 @@ struct AddStudentView: View {
             }
             .disabled(firstName.isEmpty || lastName.isEmpty)
             .padding()
-            .background(.ultraThinMaterial)
+            .background(Color(.systemBackground).opacity(0.95))
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
