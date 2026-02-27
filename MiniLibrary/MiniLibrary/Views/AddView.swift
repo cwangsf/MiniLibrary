@@ -544,16 +544,30 @@ struct AddView: View {
             }
         )
         
-        let booksWithoutCovers = (try? modelContext.fetch(descriptor)) ?? []
+        // Properly handle fetch errors
+        guard let booksWithoutCovers = try? modelContext.fetch(descriptor) else {
+            logger.error("Failed to fetch books for background cover download")
+            return
+        }
         
         logger.info("Starting background cover download for \(booksWithoutCovers.count) books")
         
         // Download covers with controlled concurrency
         for book in booksWithoutCovers {
+            // Verify book is still valid before processing
+            guard !book.isDeleted else {
+                logger.warning("Skipping deleted book during cover download")
+                continue
+            }
+            
             await BookAPIService.shared.updateBookCover(book)
             
-            // Save periodically to persist downloaded covers
-            try? modelContext.save()
+            // Save periodically to persist downloaded covers with proper error handling
+            do {
+                try modelContext.save()
+            } catch {
+                logger.error("Failed to save cover for book '\(book.title)': \(error.localizedDescription)")
+            }
         }
         
         logger.info("Finished background cover downloads")
