@@ -90,10 +90,16 @@ struct BookDetailView: View {
                 }
 
                 // Return Book Buttons
-                if let checkouts = book.checkouts?.filter({ $0.isActive }), !checkouts.isEmpty {
+                if let checkouts = book.checkouts?.filter({ $0.isActive && !$0.isDeleted }), !checkouts.isEmpty {
                     VStack(spacing: 12) {
                         ForEach(checkouts) { checkout in
                             Button {
+                                // Validate checkout and related objects before showing confirmation
+                                guard !checkout.isDeleted,
+                                      let student = checkout.student, !student.isDeleted else {
+                                    logger.warning("Attempted to return book with deleted checkout or student")
+                                    return
+                                }
                                 checkoutToReturn = checkout
                                 showingReturnConfirmation = true
                             } label: {
@@ -340,9 +346,14 @@ struct BookDetailView: View {
         
         book.title = trimmedTitle
         book.author = trimmedAuthor.isEmpty ? nil : trimmedAuthor
-        
+
         // Save changes to database
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+            logger.info("Successfully saved book info for '\(book.title)'")
+        } catch {
+            logger.error("Failed to save book info: \(error.localizedDescription)")
+        }
     }
 
     private func startEditingCopies() {
@@ -375,7 +386,12 @@ struct BookDetailView: View {
         }
 
         // Save changes to database
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+            logger.info("Successfully saved copy counts for '\(book.title)': total=\(totalCopies), available=\(book.availableCopies)")
+        } catch {
+            logger.error("Failed to save copy counts: \(error.localizedDescription)")
+        }
     }
 
     private func fetchBookInfoIfNeeded() {

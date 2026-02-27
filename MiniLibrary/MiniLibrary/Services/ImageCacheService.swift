@@ -7,6 +7,9 @@
 
 import Foundation
 import UIKit
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "ImageCacheService")
 
 /// Service for caching book cover images to disk
 actor ImageCacheService {
@@ -21,7 +24,13 @@ actor ImageCacheService {
 
         // Create directory if it doesn't exist
         if !fileManager.fileExists(atPath: bookCoversDirectory.path) {
-            try? fileManager.createDirectory(at: bookCoversDirectory, withIntermediateDirectories: true)
+            do {
+                try fileManager.createDirectory(at: bookCoversDirectory, withIntermediateDirectories: true)
+                logger.info("Successfully created cache directory at: \(bookCoversDirectory.path)")
+            } catch {
+                logger.error("Failed to create cache directory: \(error.localizedDescription)")
+                return nil
+            }
         }
 
         return bookCoversDirectory

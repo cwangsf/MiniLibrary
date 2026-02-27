@@ -7,6 +7,9 @@
 
 import SwiftUI
 import SwiftData
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "RecentActivitySection")
 
 struct RecentActivitySection: View {
     @Environment(\.modelContext) private var modelContext
@@ -31,8 +34,17 @@ struct RecentActivitySection: View {
                         ActivityRowView(activity: activity)
                             .swipeActions(edge: .trailing) {
                                 Button(role: .destructive) {
+                                    guard !activity.isDeleted else {
+                                        logger.warning("Attempted to delete already deleted activity")
+                                        return
+                                    }
                                     modelContext.delete(activity)
-                                    try? modelContext.save()
+                                    do {
+                                        try modelContext.save()
+                                        logger.info("Successfully deleted activity")
+                                    } catch {
+                                        logger.error("Failed to delete activity: \(error.localizedDescription)")
+                                    }
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                                 }

@@ -7,6 +7,9 @@
 
 import SwiftUI
 import SwiftData
+import os
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "CatalogView")
 
 struct CatalogView: View {
     @Environment(\.modelContext) private var modelContext
@@ -120,8 +123,19 @@ struct CatalogView: View {
     }
     
     private func deleteBook(_ book: Book) {
+        guard !book.isDeleted else {
+            logger.warning("Attempted to delete an already deleted book")
+            return
+        }
+        
         modelContext.delete(book)
-        try? modelContext.save()
+        
+        do {
+            try modelContext.save()
+            logger.info("Successfully deleted book: '\(book.title)'")
+        } catch {
+            logger.error("Failed to delete book '\(book.title)': \(error.localizedDescription)")
+        }
     }
 }
 

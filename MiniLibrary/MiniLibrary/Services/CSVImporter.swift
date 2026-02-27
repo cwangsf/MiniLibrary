@@ -412,11 +412,20 @@ struct CSVImporter {
         for (index, row) in rows.enumerated() {
             // Create CheckoutRecord from CSV row
             if let checkout = createCheckoutRecord(from: row, books: existingBooks, students: existingStudents) {
+                // Validate relationships before inserting
+                guard let book = checkout.book, !book.isDeleted,
+                      let student = checkout.student, !student.isDeleted else {
+                    logger.warning("Skipping line \(index + 2): book or student was deleted")
+                    continue
+                }
+
                 modelContext.insert(checkout)
 
-                // Update the book's available copies
-                if let book = checkout.book, book.availableCopies > 0 {
+                // Update the book's available copies safely
+                if book.availableCopies > 0 {
                     book.availableCopies -= 1
+                } else {
+                    logger.warning("Book '\(book.title)' has no available copies, but checkout was still created")
                 }
 
                 importedCount += 1

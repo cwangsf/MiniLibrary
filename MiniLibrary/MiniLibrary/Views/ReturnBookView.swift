@@ -43,6 +43,12 @@ struct ReturnBookView: View {
             } else {
                 ForEach(activeCheckouts) { checkout in
                     Button {
+                        // Validate checkout and related objects are not deleted
+                        guard !checkout.isDeleted,
+                              let book = checkout.book, !book.isDeleted,
+                              let student = checkout.student, !student.isDeleted else {
+                            return
+                        }
                         checkoutToReturn = checkout
                         showingReturnConfirmation = true
                     } label: {
