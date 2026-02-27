@@ -687,6 +687,12 @@
         }
       }
     },
+    "Are you sure you want to delete \"%@\" from your wishlist? This action cannot be undone." : {
+
+    },
+    "Are you sure you want to delete \"%@\"? This action cannot be undone." : {
+
+    },
     "Author" : {
       "localizations" : {
         "de" : {
@@ -1543,6 +1549,9 @@
           }
         }
       }
+    },
+    "Delete Book" : {
+
     },
     "Description" : {
       "localizations" : {

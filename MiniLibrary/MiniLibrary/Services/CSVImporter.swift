@@ -334,8 +334,8 @@ struct CSVImporter {
     }
 
     /// Import students from CSV format
-    /// Expected format: First Name, Last Name, Class (optional)
-    /// First Name and Last Name are required, Class is optional
+    /// Expected format: First Name, Surname, Year_Class (optional)
+    /// First Name and Surname are required, Year_Class is optional
     static func importStudents(from csvContent: String, modelContext: ModelContext) throws -> Int {
         let rows = CSVParser.parse(csvString: csvContent)
 
@@ -351,7 +351,7 @@ struct CSVImporter {
                 modelContext.insert(student)
                 importedCount += 1
             } else {
-                logger.info("Skipping line \(index + 2): invalid student data - First Name and Last Name are required")
+                logger.info("Skipping line \(index + 2): invalid student data - First Name and Surname are required")
             }
         }
 
@@ -359,22 +359,33 @@ struct CSVImporter {
     }
 
     /// Create a Student instance from CSV row
-    /// Format: First Name, Last Name, Class (optional)
+    /// Format: First Name, Surname, Year_Class (optional)
     private static func createStudent(from csvRow: [String: String]) -> Student? {
-        // First Name and Last Name are required
+        // First Name is required
         guard let firstName = csvRow["First Name"]?.trimmingCharacters(in: .whitespaces),
               !firstName.isEmpty else {
             return nil
         }
 
-        guard let lastName = csvRow["Last Name"]?.trimmingCharacters(in: .whitespaces),
-              !lastName.isEmpty else {
+        // Surname is required (try "Surname" first, then fall back to "Last Name" for backward compatibility)
+        let lastName: String
+        if let surname = csvRow["Surname"]?.trimmingCharacters(in: .whitespaces), !surname.isEmpty {
+            lastName = surname
+        } else if let lastNameValue = csvRow["Last Name"]?.trimmingCharacters(in: .whitespaces), !lastNameValue.isEmpty {
+            lastName = lastNameValue
+        } else {
             return nil
         }
 
-        // Class is optional
-        let classCode = csvRow["Class"]?.trimmingCharacters(in: .whitespaces).isEmpty == false ?
-            csvRow["Class"]?.trimmingCharacters(in: .whitespaces) : nil
+        // Year_Class is optional (try "Year_Class" first, then fall back to "Class" for backward compatibility)
+        let classCode: String?
+        if let yearClass = csvRow["Year_Class"]?.trimmingCharacters(in: .whitespaces), !yearClass.isEmpty {
+            classCode = yearClass
+        } else if let classValue = csvRow["Class"]?.trimmingCharacters(in: .whitespaces), !classValue.isEmpty {
+            classCode = classValue
+        } else {
+            classCode = nil
+        }
 
         return Student(firstName: firstName, lastName: lastName, classCode: classCode)
     }

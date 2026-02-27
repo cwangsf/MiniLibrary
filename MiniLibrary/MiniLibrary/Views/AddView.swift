@@ -292,7 +292,7 @@ struct AddView: View {
             }
 
             do {
-                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                let csvContent = try readFileWithEncodingFallback(from: fileURL)
                 let importedCount = try CSVImporter.importBooks(from: csvContent, modelContext: modelContext)
 
                 importResult = ImportResult(
@@ -351,7 +351,7 @@ struct AddView: View {
             }
 
             do {
-                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                let csvContent = try readFileWithEncodingFallback(from: fileURL)
                 let importedCount = try CSVImporter.importWishlist(from: csvContent, modelContext: modelContext)
 
                 importResult = ImportResult(
@@ -410,7 +410,7 @@ struct AddView: View {
             }
 
             do {
-                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                let csvContent = try readFileWithEncodingFallback(from: fileURL)
                 let importedCount = try CSVImporter.importStudents(from: csvContent, modelContext: modelContext)
 
                 importResult = ImportResult(
@@ -469,7 +469,7 @@ struct AddView: View {
             }
 
             do {
-                let csvContent = try String(contentsOf: fileURL, encoding: .utf8)
+                let csvContent = try readFileWithEncodingFallback(from: fileURL)
                 let importedCount = try CSVImporter.importCheckoutRecords(from: csvContent, modelContext: modelContext)
 
                 importResult = ImportResult(
@@ -528,6 +528,42 @@ struct AddView: View {
             return build
         }
         return "Unknown"
+    }
+    
+    /// Try to read file with multiple text encodings
+    /// Attempts UTF-8, then falls back to common encodings
+    private func readFileWithEncodingFallback(from url: URL) throws -> String {
+        // Try UTF-8 first (most common)
+        if let content = try? String(contentsOf: url, encoding: .utf8) {
+            return content
+        }
+        
+        // Try Windows-1252 (common for Excel exports)
+        if let content = try? String(contentsOf: url, encoding: .windowsCP1252) {
+            logger.info("Successfully read file using Windows-1252 encoding")
+            return content
+        }
+        
+        // Try ISO Latin 1
+        if let content = try? String(contentsOf: url, encoding: .isoLatin1) {
+            logger.info("Successfully read file using ISO Latin 1 encoding")
+            return content
+        }
+        
+        // Try ASCII
+        if let content = try? String(contentsOf: url, encoding: .ascii) {
+            logger.info("Successfully read file using ASCII encoding")
+            return content
+        }
+        
+        // Try Mac Roman (older Mac files)
+        if let content = try? String(contentsOf: url, encoding: .macOSRoman) {
+            logger.info("Successfully read file using Mac Roman encoding")
+            return content
+        }
+        
+        // If all fail, throw an error
+        throw CSVImportError.fileReadError
     }
 }
 
