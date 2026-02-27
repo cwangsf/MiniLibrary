@@ -18,6 +18,10 @@ struct WishlistView: View {
     @State private var showingAddWishlistSheet = false
     @State private var shareItem: ShareItem?
     @State private var selectedLanguage: LanguageFilter = .all
+    
+    // Confirmation dialog state
+    @State private var bookToDelete: Book?
+    @State private var showingDeleteConfirmation = false
 
     // Apply language filter
     // Include books without language info (metadata not yet fetched)
@@ -55,7 +59,7 @@ struct WishlistView: View {
                                         .padding(.vertical, 4)
                                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                             Button(role: .destructive) {
-                                                deleteBook(book)
+                                                requestDeleteBook(book)
                                             } label: {
                                                 Label("Delete", systemImage: "trash")
                                             }
@@ -107,8 +111,24 @@ struct WishlistView: View {
         .sheet(item: $shareItem) { item in
             ShareSheet(items: [item.shareText, item.url])
         }
+        .alert("Delete Book", isPresented: $showingDeleteConfirmation, presenting: bookToDelete) { book in
+            Button("Cancel", role: .cancel) {
+                bookToDelete = nil
+            }
+            Button("Delete", role: .destructive) {
+                deleteBook(book)
+                bookToDelete = nil
+            }
+        } message: { book in
+            Text("Are you sure you want to delete \"\(book.title)\" from your wishlist? This action cannot be undone.")
+        }
     }
 
+    private func requestDeleteBook(_ book: Book) {
+        bookToDelete = book
+        showingDeleteConfirmation = true
+    }
+    
     private func deleteBook(_ book: Book) {
         modelContext.delete(book)
     }

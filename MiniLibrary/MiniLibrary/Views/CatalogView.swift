@@ -16,13 +16,17 @@ struct CatalogView: View {
     
     // Cached filtered books to avoid recalculating on every render
     @State private var filteredBooks: [Book] = []
+    
+    // Confirmation dialog state
+    @State private var bookToDelete: Book?
+    @State private var showingDeleteConfirmation = false
 
     var body: some View {
         NavigationStack {
                 ZStack(alignment: .trailing) {
                     List {
                         ForEach(filteredBooks) { book in
-                            BookRowWithActions(book: book, onDelete: deleteBook)
+                            BookRowWithActions(book: book, onDelete: requestDeleteBook)
                                 .listRowSeparator(.hidden)
                         }
                     }
@@ -54,6 +58,17 @@ struct CatalogView: View {
             .onChange(of: searchText) { _, _ in
                 updateFilteredBooks()
             }
+            .alert("Delete Book", isPresented: $showingDeleteConfirmation, presenting: bookToDelete) { book in
+                Button("Cancel", role: .cancel) {
+                    bookToDelete = nil
+                }
+                Button("Delete", role: .destructive) {
+                    deleteBook(book)
+                    bookToDelete = nil
+                }
+            } message: { book in
+                Text("Are you sure you want to delete \"\(book.title)\"? This action cannot be undone.")
+            }
         }
     }
     
@@ -74,6 +89,11 @@ struct CatalogView: View {
         }
     }
 
+    private func requestDeleteBook(_ book: Book) {
+        bookToDelete = book
+        showingDeleteConfirmation = true
+    }
+    
     private func deleteBook(_ book: Book) {
         modelContext.delete(book)
         try? modelContext.save()
