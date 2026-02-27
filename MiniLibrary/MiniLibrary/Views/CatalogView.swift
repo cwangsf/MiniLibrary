@@ -23,27 +23,33 @@ struct CatalogView: View {
 
     var body: some View {
         NavigationStack {
-                ZStack(alignment: .trailing) {
-                    List {
-                        ForEach(filteredBooks) { book in
-                            BookRowWithActions(book: book, onDelete: requestDeleteBook)
-                                .listRowSeparator(.hidden)
+            Group {
+                if filteredBooks.isEmpty {
+                    emptyStateView
+                } else {
+                    ZStack(alignment: .trailing) {
+                        List {
+                            ForEach(filteredBooks) { book in
+                                BookRowWithActions(book: book, onDelete: requestDeleteBook)
+                                    .listRowSeparator(.hidden)
+                            }
                         }
-                    }
-                    .listStyle(.plain)
-                    .scrollDismissesKeyboard(.immediately)
+                        .listStyle(.plain)
+                        .scrollDismissesKeyboard(.immediately)
 
-                    // Floating language filter at bottom
-                    VStack {
-                        Spacer()
+                        // Floating language filter at bottom
+                        VStack {
+                            Spacer()
 
-                        LanguageFilterPicker(selectedLanguage: $selectedLanguage)
-                            .background(Color(.systemBackground).opacity(0.95))
-                            .cornerRadius(8)
-                            .padding(.horizontal)
+                            LanguageFilterPicker(selectedLanguage: $selectedLanguage)
+                                .background(Color(.systemBackground).opacity(0.95))
+                                .cornerRadius(8)
+                                .padding(.horizontal)
+                        }
+                        .allowsHitTesting(true)
                     }
-                    .allowsHitTesting(true)
                 }
+            }
             .navigationTitle("Catalog")
             .searchable(text: $searchText, prompt: "Search books or authors")
             .onAppear {
@@ -70,6 +76,25 @@ struct CatalogView: View {
                 Text("Are you sure you want to delete \"\(book.title)\"? This action cannot be undone.")
             }
         }
+    }
+    
+    private var emptyStateView: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "books.vertical")
+                .font(.system(size: 60))
+                .foregroundStyle(.secondary)
+            
+            Text("No Books in Catalog")
+                .font(.title2)
+                .fontWeight(.semibold)
+            
+            Text("Add books by scanning ISBN or importing from CSV")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private func updateFilteredBooks() {

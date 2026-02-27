@@ -378,6 +378,9 @@
         }
       }
     },
+    "Add books by scanning ISBN or importing from CSV" : {
+
+    },
     "Add Copies" : {
       "localizations" : {
         "de" : {
@@ -2378,6 +2381,9 @@
           }
         }
       }
+    },
+    "No Books in Catalog" : {
+
     },
     "No Checked Out Books" : {
       "localizations" : {
