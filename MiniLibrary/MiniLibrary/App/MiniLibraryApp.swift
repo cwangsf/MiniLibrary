@@ -14,10 +14,6 @@ private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibr
 
 @main
 struct MiniLibraryApp: App {
-    @AppStorage("hasSeededBooks") private var hasSeededBooks = false
-    @AppStorage("hasSeededWishlist") private var hasSeededWishlist = false
-    @AppStorage("hasCleared") private var hasCleared = false
-
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Book.self,
@@ -29,17 +25,7 @@ struct MiniLibraryApp: App {
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {
-            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-            let context = ModelContext(container)
-
-            // Seed students from CSV
-            do {
-                try DataSeeder.seedStudentsFromCSV(fileName: "sample_students", modelContext: context)
-            } catch {
-                logger.error("Error seeding students: \(error)")
-            }
-
-            return container
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
@@ -49,9 +35,6 @@ struct MiniLibraryApp: App {
         WindowGroup {
             MainTabView()
                 .onAppear {
-                    clearDataIfNeeded()
-                    seedBooksIfNeeded()
-                    seedWishlistIfNeeded()
                     setupNotifications()
                 }
         }
@@ -72,41 +55,6 @@ struct MiniLibraryApp: App {
             default:
                 break
             }
-        }
-    }
-
-    private func clearDataIfNeeded() {
-        guard !hasCleared else { return }
-
-        let context = ModelContext(sharedModelContainer)
-        DataSeeder.clearLocalData(modelContext: context)
-        hasCleared = true
-        logger.info("Local data cleared on first install")
-    }
-
-    private func seedBooksIfNeeded() {
-        guard !hasSeededBooks else { return }
-
-        let context = ModelContext(sharedModelContainer)
-        do {
-            try DataSeeder.seedBooksFromCSV(fileName: "sample_books", modelContext: context)
-            hasSeededBooks = true
-            logger.info("Books seeded successfully on first install")
-        } catch {
-            logger.error("Error seeding books: \(error)")
-        }
-    }
-
-    private func seedWishlistIfNeeded() {
-        guard !hasSeededWishlist else { return }
-
-        let context = ModelContext(sharedModelContainer)
-        do {
-            try DataSeeder.seedWishlistFromCSV(fileName: "sample_wish_list", modelContext: context)
-            hasSeededWishlist = true
-            logger.info("Wishlist seeded successfully on first install")
-        } catch {
-            logger.error("Error seeding wishlist: \(error)")
         }
     }
 }
