@@ -14,9 +14,7 @@ private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibr
 
 struct AddView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var books: [Book]
-    @Query private var students: [Student]
-    @Query private var checkouts: [CheckoutRecord]
+    // Removed @Query properties - data now fetched on-demand for exports only
     @State private var exportFileURL: URL?
     @State private var isExporting = false
     @State private var exportWishlistFileURL: URL?
@@ -183,8 +181,16 @@ struct AddView: View {
     private func exportCatalog() async {
         isExporting = true
 
-        // Capture books array to avoid cross-context issues
-        let catalogBooks = books.filter { !$0.isWishlistItem }
+        // Fetch catalog books on-demand (lazy loading)
+        let descriptor = FetchDescriptor<Book>(
+            predicate: #Predicate { !$0.isWishlistItem }
+        )
+        
+        guard let catalogBooks = try? modelContext.fetch(descriptor) else {
+            logger.error("Failed to fetch catalog books for export")
+            isExporting = false
+            return
+        }
 
         // Export CSV
         let csvContent = CSVExporter.exportBooks(catalogBooks)
@@ -198,8 +204,16 @@ struct AddView: View {
     private func exportWishlist() async {
         isExportingWishlist = true
 
-        // Capture wishlist books to avoid cross-context issues
-        let wishlistBooks = books.filter { $0.isWishlistItem }
+        // Fetch wishlist books on-demand (lazy loading)
+        let descriptor = FetchDescriptor<Book>(
+            predicate: #Predicate { $0.isWishlistItem }
+        )
+        
+        guard let wishlistBooks = try? modelContext.fetch(descriptor) else {
+            logger.error("Failed to fetch wishlist books for export")
+            isExportingWishlist = false
+            return
+        }
 
         // Export CSV
         let csvContent = CSVExporter.exportBooks(wishlistBooks)
@@ -212,8 +226,14 @@ struct AddView: View {
     private func exportStudents() async {
         isExportingStudents = true
 
-        // Capture students to avoid cross-context issues
-        let studentList = students
+        // Fetch students on-demand (lazy loading)
+        let descriptor = FetchDescriptor<Student>()
+        
+        guard let studentList = try? modelContext.fetch(descriptor) else {
+            logger.error("Failed to fetch students for export")
+            isExportingStudents = false
+            return
+        }
 
         // Export CSV
         let csvContent = CSVExporter.exportStudents(studentList)
@@ -226,8 +246,14 @@ struct AddView: View {
     private func exportCheckouts() async {
         isExportingCheckouts = true
 
-        // Capture checkouts to avoid cross-context issues
-        let checkoutList = checkouts
+        // Fetch checkouts on-demand (lazy loading)
+        let descriptor = FetchDescriptor<CheckoutRecord>()
+        
+        guard let checkoutList = try? modelContext.fetch(descriptor) else {
+            logger.error("Failed to fetch checkouts for export")
+            isExportingCheckouts = false
+            return
+        }
 
         // Export CSV
         let csvContent = CSVExporter.exportCheckoutRecords(checkoutList)
@@ -238,19 +264,28 @@ struct AddView: View {
     }
 
     private func deleteAllData() {
-        // Delete all checkout records
-        for checkout in checkouts {
-            modelContext.delete(checkout)
+        // Fetch and delete all checkout records
+        let checkoutDescriptor = FetchDescriptor<CheckoutRecord>()
+        if let checkouts = try? modelContext.fetch(checkoutDescriptor) {
+            for checkout in checkouts {
+                modelContext.delete(checkout)
+            }
         }
 
-        // Delete all books (catalog and wishlist)
-        for book in books {
-            modelContext.delete(book)
+        // Fetch and delete all books (catalog and wishlist)
+        let bookDescriptor = FetchDescriptor<Book>()
+        if let books = try? modelContext.fetch(bookDescriptor) {
+            for book in books {
+                modelContext.delete(book)
+            }
         }
 
-        // Delete all students
-        for student in students {
-            modelContext.delete(student)
+        // Fetch and delete all students
+        let studentDescriptor = FetchDescriptor<Student>()
+        if let students = try? modelContext.fetch(studentDescriptor) {
+            for student in students {
+                modelContext.delete(student)
+            }
         }
 
         // Reset export URLs

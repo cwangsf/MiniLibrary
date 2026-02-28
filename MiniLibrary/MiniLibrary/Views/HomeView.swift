@@ -11,17 +11,25 @@ import SwiftData
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Query private var books: [Book]
-    @Query private var activeCheckouts: [CheckoutRecord]
+    
+    // Optimized: Use predicate-filtered queries instead of loading all books
+    @Query(filter: #Predicate<Book> { !$0.isWishlistItem })
+    private var catalogBooks: [Book]
+    
+    @Query(filter: #Predicate<Book> { $0.isWishlistItem })
+    private var wishlistBooks: [Book]
+    
+    @Query(filter: #Predicate<CheckoutRecord> { $0.returnDate == nil })
+    private var activeCheckouts: [CheckoutRecord]
 
     @AppStorage("maxBooksPerStudent") private var maxBooksAllowed: Int = 3
 
     var wishlistCount: Int {
-        books.filter { $0.isWishlistItem }.count
+        wishlistBooks.count
     }
 
     var totalCopies: Int {
-        books.filter { !$0.isWishlistItem }.count
+        catalogBooks.count
     }
 
     var statCards: [StatCardType] {
@@ -29,7 +37,7 @@ struct HomeView: View {
             .quickCheckout,
             .quickReturn,
             .totalCopies(totalCopies),
-            .checkedOut(activeCheckouts.filter { $0.isActive }.count),
+            .checkedOut(activeCheckouts.count),  // Already filtered by predicate
             .wishlist(wishlistCount),
             .settings(maxBooksAllowed),
         ]
