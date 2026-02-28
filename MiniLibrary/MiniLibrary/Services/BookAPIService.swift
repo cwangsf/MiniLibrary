@@ -219,6 +219,12 @@ struct BookAPIService {
     /// Downloads and caches the cover image locally
     /// Works with ISBN or title/author search
     func updateBookCover(_ book: Book) async {
+        // Skip cover fetching for wishlist items (performance optimization)
+        guard !book.isWishlistItem else {
+            logger.info("⏭️ Skipping cover fetch for wishlist item: '\(book.title)'")
+            return
+        }
+        
         // Skip if already has cached cover
         guard book.cachedCoverImage == nil else {
             return

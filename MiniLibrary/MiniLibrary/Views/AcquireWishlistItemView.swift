@@ -104,7 +104,10 @@ struct AcquireWishlistItemView: View {
     }
 
     private func acquireBook() {
+        // Convert from wishlist to catalog book
         book.isWishlistItem = false
+        
+        // Set actual copy counts (wishlist items have 0 copies)
         book.totalCopies = copiesToAdd
         book.availableCopies = copiesToAdd
 

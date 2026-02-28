@@ -240,10 +240,9 @@ struct AddWishlistItemView: View {
             isbn: bookISBN,
             title: bookTitle,
             author: bookAuthor,
-            totalCopies: 0,
-            availableCopies: 0,
             publisher: bookPublisher,
             isWishlistItem: true
+            // Note: totalCopies and availableCopies automatically set to 0 for wishlist items
         )
         
         modelContext.insert(book)

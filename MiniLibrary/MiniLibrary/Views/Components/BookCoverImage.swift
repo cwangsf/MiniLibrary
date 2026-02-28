@@ -33,6 +33,9 @@ struct BookCoverImage: View {
         .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .onAppear {
+            // Skip loading for wishlist items (no need to fetch covers for books we don't own)
+            guard !book.isWishlistItem else { return }
+            
             // Only load images if device supports it
             guard DeviceCapability.shared.shouldDisplayCoverImages else { return }
             

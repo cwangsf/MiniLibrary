@@ -58,8 +58,17 @@ final class Book: Codable {
         self.isbn = isbn
         self.title = title
         self.author = author
-        self.totalCopies = totalCopies
-        self.availableCopies = availableCopies ?? totalCopies
+        self.isWishlistItem = isWishlistItem
+        
+        // Wishlist items use 0 copies to save memory and avoid checkout relationship overhead
+        if isWishlistItem {
+            self.totalCopies = 0
+            self.availableCopies = 0
+        } else {
+            self.totalCopies = totalCopies
+            self.availableCopies = availableCopies ?? totalCopies
+        }
+        
         self.createdAt = createdAt
         self.bookDescription = bookDescription
         self.pageCount = pageCount
@@ -69,7 +78,6 @@ final class Book: Codable {
         self.coverImageURL = coverImageURL
         self.cachedCoverImage = cachedCoverImage
         self.notes = notes
-        self.isWishlistItem = isWishlistItem
         self.isFavorite = isFavorite
     }
 
