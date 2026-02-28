@@ -22,8 +22,9 @@ struct BookCoverImage: View {
             // Always show placeholder as background
             placeholderView
             
-            // Overlay the actual image if loaded
-            if let cachedImage = cachedImage {
+            // Overlay the actual image if loaded and device supports it
+            if DeviceCapability.shared.shouldDisplayCoverImages,
+               let cachedImage = cachedImage {
                 Image(uiImage: cachedImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
@@ -32,6 +33,9 @@ struct BookCoverImage: View {
         .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .onAppear {
+            // Only load images if device supports it
+            guard DeviceCapability.shared.shouldDisplayCoverImages else { return }
+            
             // Only try to load once
             guard !hasAttemptedLoad else { return }
             hasAttemptedLoad = true

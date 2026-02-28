@@ -537,6 +537,12 @@ struct AddView: View {
     
     /// Download cover images for recently imported books in the background
     private func downloadCoversForImportedBooks() async {
+        // Check if device supports background downloads
+        guard DeviceCapability.shared.supportsBackgroundDownloads else {
+            logger.info("⏭️ Skipping background cover downloads - device does not support rich media")
+            return
+        }
+        
         // Fetch books without cached covers from the current context
         let descriptor = FetchDescriptor<Book>(
             predicate: #Predicate<Book> { book in
