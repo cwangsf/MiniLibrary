@@ -14,7 +14,6 @@ struct BookCoverImage: View {
 
     @State private var isLoadingCover = false
     @State private var cachedImage: UIImage?
-    @State private var loadTask: Task<Void, Never>?
     @State private var hasAttemptedLoad = false
 
     var body: some View {
@@ -32,7 +31,7 @@ struct BookCoverImage: View {
         }
         .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .onAppear {
+        .task(priority: .utility) {
             // Skip loading for wishlist items (no need to fetch covers for books we don't own)
             guard !book.isWishlistItem else { return }
             
@@ -44,18 +43,11 @@ struct BookCoverImage: View {
             hasAttemptedLoad = true
             
             // Use background task with low priority to not block scrolling
-            loadTask = Task(priority: .utility) {
-                if book.cachedCoverImage != nil {
-                    await loadCachedImage()
-                } else {
-                    await loadCover()
-                }
+            if book.cachedCoverImage != nil {
+                await loadCachedImage()
+            } else {
+                await loadCover()
             }
-        }
-        .onDisappear {
-            // Cancel loading when scrolled off screen
-            loadTask?.cancel()
-            loadTask = nil
         }
     }
 
