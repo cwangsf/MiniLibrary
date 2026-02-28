@@ -8,10 +8,10 @@
 import SwiftUI
 
 enum StatCardType {
-    case totalCopies(Int)
-    case checkedOut(Int)
-    case wishlist(Int)
-    case settings(Int)
+    case totalCopies
+    case checkedOut
+    case wishlist
+    case settings
     case quickCheckout
     case quickReturn
 
@@ -29,18 +29,6 @@ enum StatCardType {
             return String(localized: "Wish List")
         case .settings:
             return String(localized: "Settings")
-        }
-    }
-
-    var value: String {
-        switch self {
-        case .totalCopies(let count),
-             .checkedOut(let count),
-             .wishlist(let count),
-             .settings(let count):
-            return "\(count)"
-        case .quickCheckout, .quickReturn:
-            return String(localized: "Scan")
         }
     }
 
@@ -98,24 +86,23 @@ enum StatCardType {
 
 struct StatCard: View {
     let title: String
-    let value: String
     let icon: String
     let color: Color
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 40, weight: .bold))
+                .font(.system(size: 50, weight: .bold))
                 .foregroundStyle(color)
-                .padding()
-            
-            Text(value)
-                .font(.title2)
-                .fontWeight(.bold)
+                .padding(.top)
             
             Text(title)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.primary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity)
         .padding()

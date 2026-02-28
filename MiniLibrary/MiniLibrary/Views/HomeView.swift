@@ -11,35 +11,15 @@ import SwiftData
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    
-    // Optimized: Use predicate-filtered queries instead of loading all books
-    @Query(filter: #Predicate<Book> { !$0.isWishlistItem })
-    private var catalogBooks: [Book]
-    
-    @Query(filter: #Predicate<Book> { $0.isWishlistItem })
-    private var wishlistBooks: [Book]
-    
-    @Query(filter: #Predicate<CheckoutRecord> { $0.returnDate == nil })
-    private var activeCheckouts: [CheckoutRecord]
-
-    @AppStorage("maxBooksPerStudent") private var maxBooksAllowed: Int = 3
-
-    var wishlistCount: Int {
-        wishlistBooks.count
-    }
-
-    var totalCopies: Int {
-        catalogBooks.count
-    }
 
     var statCards: [StatCardType] {
         [
             .quickCheckout,
             .quickReturn,
-            .totalCopies(totalCopies),
-            .checkedOut(activeCheckouts.count),  // Already filtered by predicate
-            .wishlist(wishlistCount),
-            .settings(maxBooksAllowed),
+            .totalCopies,
+            .checkedOut,
+            .wishlist,
+            .settings,
         ]
     }
 
@@ -85,32 +65,32 @@ extension HomeView {
         switch cardType {
         case .totalCopies:
             NavigationLink(destination: CatalogView()) {
-                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+                StatCard(title: cardType.title, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
         case .checkedOut:
             NavigationLink(destination: CheckedOutBooksListView()) {
-                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+                StatCard(title: cardType.title, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
         case .wishlist:
             NavigationLink(destination: WishlistView()) {
-                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+                StatCard(title: cardType.title, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
         case .settings:
             NavigationLink(destination: SettingsView()) {
-                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+                StatCard(title: cardType.title, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
         case .quickCheckout:
             NavigationLink(destination: ScanBookView(scanPurpose: .checkout)) {
-                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+                StatCard(title: cardType.title, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
         case .quickReturn:
             NavigationLink(destination: ScanBookView(scanPurpose: .returnBook)) {
-                StatCard(title: cardType.title, value: cardType.value, icon: cardType.icon, color: cardType.color)
+                StatCard(title: cardType.title, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
         }
