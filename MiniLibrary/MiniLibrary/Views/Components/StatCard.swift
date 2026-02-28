@@ -22,9 +22,9 @@ enum StatCardType {
         case .quickReturn:
             return String(localized: "Return Book")
         case .totalCopies:
-            return String(localized: "Total Copies")
+            return String(localized: "All Books")
         case .checkedOut:
-            return String(localized: "Checked Out")
+            return String(localized: "Checked Out Records")
         case .wishlist:
             return String(localized: "Wish List")
         case .settings:

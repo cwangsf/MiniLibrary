@@ -21,47 +21,55 @@ struct WishlistView: View {
     // Confirmation dialog state
     @State private var bookToDelete: Book?
     @State private var showingDeleteConfirmation = false
+    
+    // Total count loaded lazily
+    @State private var totalWishlistCount: Int?
 
     var body: some View {
-        List {
-            if wishlistBooks.isEmpty {
-                ContentUnavailableView(
-                    "No Wishlist Items",
-                    systemImage: "list.star",
-                    description: Text("Books you want to add to your library will appear here")
-                )
-            } else {
-                ForEach(wishlistBooks) { book in
-                    WishlistItemView(book: book, shareItem: $shareItem)
-                        .padding(.vertical, 4)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                            Button(role: .destructive) {
-                                requestDeleteBook(book)
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
+        NavigationStack {
+            Group {
+                if wishlistBooks.isEmpty {
+                    emptyStateView
+                } else {
+                    List {
+                        ForEach(wishlistBooks) { book in
+                            WishlistItemView(book: book, shareItem: $shareItem)
+                                .padding(.vertical, 4)
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button(role: .destructive) {
+                                        requestDeleteBook(book)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
 
-                            Button {
-                                selectedBook = book
-                                showingAcquireSheet = true
-                            } label: {
-                                Label("Acquire", systemImage: "plus.circle")
-                            }
-                            .tint(.green)
+                                    Button {
+                                        selectedBook = book
+                                        showingAcquireSheet = true
+                                    } label: {
+                                        Label("Acquire", systemImage: "plus.circle")
+                                    }
+                                    .tint(.green)
+                                }
                         }
+                    }
+                    .listStyle(.plain)
                 }
             }
-        }
-        .listStyle(.plain)
-        .navigationTitle("Wish List")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    showingAddWishlistSheet = true
-                } label: {
-                    Image(systemName: "plus")
+            .navigationTitle(totalWishlistCount != nil ? "Wish List (\(totalWishlistCount!))" : "Wish List")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        showingAddWishlistSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
                 }
+            }
+            .onAppear {
+                loadTotalCount()
+            }
+            .onChange(of: wishlistBooks.count) { _, _ in
+                loadTotalCount()
             }
         }
         .sheet(item: $selectedBook) { book in
@@ -83,6 +91,35 @@ struct WishlistView: View {
             }
         } message: { book in
             Text("Are you sure you want to delete \"\(book.title)\" from your wishlist? This action cannot be undone.")
+        }
+    }
+    
+    private var emptyStateView: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "list.star")
+                .font(.system(size: 60))
+                .foregroundStyle(.secondary)
+            
+            Text("No Wishlist Items")
+                .font(.title2)
+                .fontWeight(.semibold)
+            
+            Text("Books you want to add to your library will appear here")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private func loadTotalCount() {
+        // Load count asynchronously to avoid blocking UI
+        Task {
+            let count = wishlistBooks.count
+            await MainActor.run {
+                totalWishlistCount = count
+            }
         }
     }
 

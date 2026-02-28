@@ -22,6 +22,9 @@ struct CatalogView: View {
     // Confirmation dialog state
     @State private var bookToDelete: Book?
     @State private var showingDeleteConfirmation = false
+    
+    // Total count loaded lazily
+    @State private var totalBooksCount: Int?
 
     var body: some View {
         NavigationStack {
@@ -39,13 +42,15 @@ struct CatalogView: View {
                     .scrollDismissesKeyboard(.immediately)
                 }
             }
-            .navigationTitle("Catalog")
+            .navigationTitle(totalBooksCount != nil ? "Catalog (\(totalBooksCount!))" : "Catalog")
             .searchable(text: $searchText, prompt: "Search books or authors")
             .onAppear {
                 updateFilteredBooks()
+                loadTotalCount()
             }
             .onChange(of: books.count) { _, _ in
                 updateFilteredBooks()
+                loadTotalCount()
             }
             .onChange(of: searchText) { _, _ in
                 updateFilteredBooks()
@@ -93,6 +98,16 @@ struct CatalogView: View {
             filteredBooks = catalogBooks.filter { book in
                 book.title.localizedCaseInsensitiveContains(searchText) ||
                 (book.author?.localizedCaseInsensitiveContains(searchText) ?? false)
+            }
+        }
+    }
+    
+    private func loadTotalCount() {
+        // Load count asynchronously to avoid blocking UI
+        Task {
+            let count = books.filter { !$0.isWishlistItem }.count
+            await MainActor.run {
+                totalBooksCount = count
             }
         }
     }

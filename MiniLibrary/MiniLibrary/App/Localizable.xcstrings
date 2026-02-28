@@ -647,6 +647,9 @@
         }
       }
     },
+    "All Books" : {
+
+    },
     "All books are currently available" : {
       "localizations" : {
         "de" : {
@@ -1044,6 +1047,9 @@
         }
       }
     },
+    "Catalog (%lld)" : {
+
+    },
     "Check Out Book" : {
       "localizations" : {
         "de" : {
@@ -1131,6 +1137,9 @@
           }
         }
       }
+    },
+    "Checked Out Records" : {
+
     },
     "Class Code (optional)" : {
       "localizations" : {
@@ -3763,6 +3772,9 @@
           }
         }
       }
+    },
+    "Wish List (%lld)" : {
+
     }
   },
   "version" : "1.0"
