@@ -177,6 +177,18 @@ struct BookAPIService {
     }
 
     // MARK: - Private Helpers
+    
+    /// Convert HTTP URLs to HTTPS for App Transport Security
+    private func makeSecureURL(_ urlString: String?) -> String? {
+        guard let urlString = urlString, !urlString.isEmpty else { return nil }
+        
+        if urlString.hasPrefix("http://") {
+            return urlString.replacingOccurrences(of: "http://", with: "https://")
+        }
+        
+        return urlString
+    }
+    
     private func parseGoogleBookData(_ item: GoogleBookItem, isbn: String?) -> Book {
         let volumeInfo = item.volumeInfo
 
@@ -191,7 +203,7 @@ struct BookAPIService {
             publishedDate: volumeInfo.publishedDate,
             publisher: volumeInfo.publisher,
             languageCode: volumeInfo.language,
-            coverImageURL: volumeInfo.imageLinks?.thumbnail
+            coverImageURL: makeSecureURL(volumeInfo.imageLinks?.thumbnail)
         )
     }
 
@@ -211,7 +223,7 @@ struct BookAPIService {
             publishedDate: volumeInfo.publishedDate,
             publisher: volumeInfo.publisher,
             languageCode: volumeInfo.language,
-            coverImageURL: volumeInfo.imageLinks?.thumbnail,
+            coverImageURL: makeSecureURL(volumeInfo.imageLinks?.thumbnail),
             isWishlistItem: isWishlistItem
         )
     }

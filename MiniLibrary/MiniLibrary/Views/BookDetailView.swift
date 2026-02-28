@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import UIKit
 import os
 
 private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "BookDetailView")
@@ -27,14 +28,14 @@ struct BookDetailView: View {
     @State private var isEditingInfo = false
     @State private var titleText = ""
     @State private var authorText = ""
-
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // Book Cover - Centered at top
-                BookCoverImage(book: book, width: 180, height: 270)
+                // Book Cover - Use Google Books fallback if no cached cover
+                bookCoverView
                     .padding(.top, 20)
-
+                
                 // Book Info
                 VStack(alignment: .center, spacing: 8) {
                     HStack {
@@ -74,7 +75,7 @@ struct BookDetailView: View {
                         BookInfoHeaderView(book: book)
                     }
                 }
-
+                
                 // Checkout Button
                 if book.availableCopies >= 1 {
                     Button {
@@ -88,7 +89,7 @@ struct BookDetailView: View {
                     }
                     .padding(.horizontal)
                 }
-
+                
                 // Return Book Buttons
                 if let checkouts = book.checkouts?.filter({ $0.isActive && !$0.isDeleted }), !checkouts.isEmpty {
                     VStack(spacing: 12) {
@@ -119,7 +120,7 @@ struct BookDetailView: View {
                     }
                     .padding(.horizontal)
                 }
-
+                
                 // Availability
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
@@ -136,7 +137,7 @@ struct BookDetailView: View {
                         }
                         .font(.subheadline)
                     }
-
+                    
                     if isEditingCopies {
                         VStack(spacing: 12) {
                             HStack {
@@ -146,7 +147,7 @@ struct BookDetailView: View {
                                     .keyboardType(.numberPad)
                                     .textFieldStyle(.roundedBorder)
                             }
-
+                            
                             HStack {
                                 Text("Available:")
                                     .frame(width: 120, alignment: .leading)
@@ -154,7 +155,7 @@ struct BookDetailView: View {
                                     .keyboardType(.numberPad)
                                     .textFieldStyle(.roundedBorder)
                             }
-
+                            
                             Text("Note: Available copies cannot exceed total copies")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
@@ -163,9 +164,9 @@ struct BookDetailView: View {
                         HStack {
                             Label("\(book.availableCopies) available", systemImage: "checkmark.circle.fill")
                                 .foregroundStyle(book.availableCopies > 0 ? .green : .red)
-
+                            
                             Spacer()
-
+                            
                             Text("of \(book.totalCopies) total")
                                 .foregroundStyle(.secondary)
                         }
@@ -176,20 +177,20 @@ struct BookDetailView: View {
                 .background(.background)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
-
+                
                 // Active Checkouts
                 if let checkouts = book.checkouts?.filter({ $0.isActive }), !checkouts.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Currently Checked Out By")
                             .font(.headline)
-
+                        
                         ForEach(checkouts) { checkout in
                             HStack {
                                 Text(checkout.student?.fullName ?? "Unknown")
                                     .font(.subheadline)
-
+                                
                                 Spacer()
-
+                                
                                 Text("Due: \(checkout.dueDate, format: .dateTime.month().day())")
                                     .font(.caption)
                                     .foregroundStyle(checkout.isOverdue ? .red : .secondary)
@@ -203,13 +204,13 @@ struct BookDetailView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .padding(.horizontal)
                 }
-
+                
                 // Book Description
                 if let description = book.bookDescription, !description.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Description")
                             .font(.headline)
-
+                        
                         Text(description)
                             .font(.body)
                             .foregroundStyle(.primary)
@@ -261,7 +262,7 @@ struct BookDetailView: View {
                         }
                         .font(.subheadline)
                     }
-
+                    
                     if isEditingNotes {
                         TextEditor(text: $notesText)
                             .frame(minHeight: 100)
@@ -290,7 +291,7 @@ struct BookDetailView: View {
                 .background(.background)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
-
+                
                 Spacer()
             }
         }
@@ -319,16 +320,106 @@ struct BookDetailView: View {
             availableCopiesText = "\(book.availableCopies)"
             titleText = book.title
             authorText = book.author ?? ""
-
+            
             // Fetch book info in background if missing metadata
             fetchBookInfoIfNeeded()
         }
     }
-
+    
+    // MARK: - Book Cover View
+    
+    @ViewBuilder
+    private var bookCoverView: some View {
+        if book.cachedCoverImage == nil,
+           let coverURL = book.coverImageURL,
+           let url = URL(string: coverURL) {
+            // Fallback to Google Books cover using AsyncImage
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .empty:
+                    // Loading placeholder
+                    ZStack {
+                        Rectangle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [.blue.opacity(0.3), .purple.opacity(0.3)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                        
+                        VStack(spacing: 8) {
+                            Image(systemName: "book.fill")
+                                .font(.system(size: 54))
+                                .foregroundStyle(.white.opacity(0.8))
+                            
+                            ProgressView()
+                                .tint(.white)
+                        }
+                    }
+                    .frame(width: 180, height: 270)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .onAppear {
+                        logger.info("Loading Google Books cover for '\(book.title)' from URL: \(url.absoluteString)")
+                    }
+                    
+                case .success(let image):
+                    // Successfully loaded Google Books cover
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 180, height: 270)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .task {
+                            logger.info("Successfully loaded Google Books cover for '\(book.title)'")
+                            // Cache the image so it appears in list view
+                            await cacheGoogleBooksCover(from: url)
+                        }
+                    
+                case .failure(let error):
+                    // Failed to load - show placeholder
+                    BookCoverImage(book: book, width: 180, height: 270)
+                        .onAppear {
+                            logger.warning("Failed to load Google Books cover for '\(book.title)': \(error.localizedDescription)")
+                        }
+                    
+                @unknown default:
+                    BookCoverImage(book: book, width: 180, height: 270)
+                }
+            }
+        } else {
+            // No cover available - show placeholder
+            BookCoverImage(book: book, width: 180, height: 270)
+        }
+    }
+    
     private func returnBook(_ checkout: CheckoutRecord) {
         BookManagementService.returnBook(checkout, modelContext: modelContext)
     }
-
+    
+    private func cacheGoogleBooksCover(from url: URL) async {
+        do {
+            // Download the image data
+            let (data, _) = try await URLSession.shared.data(from: url)
+            
+            // Validate it's a valid image
+            guard UIImage(data: data) != nil else {
+                logger.warning("Downloaded data from Google Books is not a valid image for '\(book.title)'")
+                return
+            }
+            
+            // Save to cache
+            if let filename = try await ImageCacheService.shared.saveImageData(data, for: book.id.uuidString) {
+                await MainActor.run {
+                    book.cachedCoverImage = filename
+                    logger.info("Successfully cached Google Books cover for '\(book.title)' as '\(filename)'")
+                }
+            }
+        } catch {
+            logger.error("Failed to cache Google Books cover for '\(book.title)': \(error.localizedDescription)")
+        }
+    }
+    
     private func saveNotes() {
         book.notes = notesText.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -346,7 +437,7 @@ struct BookDetailView: View {
         
         book.title = trimmedTitle
         book.author = trimmedAuthor.isEmpty ? nil : trimmedAuthor
-
+        
         // Save changes to database
         do {
             try modelContext.save()
@@ -355,12 +446,12 @@ struct BookDetailView: View {
             logger.error("Failed to save book info: \(error.localizedDescription)")
         }
     }
-
+    
     private func startEditingCopies() {
         totalCopiesText = "\(book.totalCopies)"
         availableCopiesText = "\(book.availableCopies)"
     }
-
+    
     private func saveCopies() {
         guard let totalCopies = Int(totalCopiesText),
               let availableCopies = Int(availableCopiesText),
@@ -372,19 +463,19 @@ struct BookDetailView: View {
             availableCopiesText = "\(book.availableCopies)"
             return
         }
-
+        
         // Calculate how many copies were added
         let copiesDifference = totalCopies - book.totalCopies
-
+        
         book.totalCopies = totalCopies
-
+        
         // If total copies increased, add those new copies to available
         if copiesDifference > 0 {
             book.availableCopies = availableCopies + copiesDifference
         } else {
             book.availableCopies = availableCopies
         }
-
+        
         // Save changes to database
         do {
             try modelContext.save()
@@ -393,27 +484,27 @@ struct BookDetailView: View {
             logger.error("Failed to save copy counts: \(error.localizedDescription)")
         }
     }
-
+    
     private func fetchBookInfoIfNeeded() {
         // Only fetch if we're missing key metadata and not already fetching
         guard !isFetchingBookInfo else { return }
-
+        
         // Check if we need to fetch (missing description or other metadata)
         let needsFetch = book.bookDescription == nil ||
-                        book.bookDescription?.isEmpty == true ||
-                        book.coverImageURL == nil
-
+        book.bookDescription?.isEmpty == true ||
+        book.coverImageURL == nil
+        
         guard needsFetch else { return }
-
+        
         // We need an ISBN or at least title to search
         guard book.isbn != nil || !book.title.isEmpty else { return }
-
+        
         isFetchingBookInfo = true
-
+        
         Task {
             do {
                 let fetchedBook: Book
-
+                
                 if let isbn = book.isbn {
                     // Fetch by ISBN for most accurate results
                     fetchedBook = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
@@ -423,15 +514,15 @@ struct BookDetailView: View {
                         title: book.title,
                         author: book.author ?? ""
                     )
-
+                    
                     guard let firstItem = items.first else {
                         isFetchingBookInfo = false
                         return
                     }
-
+                    
                     fetchedBook = BookAPIService.shared.createBookFromSearchResult(firstItem)
                 }
-
+                
                 // Update the existing book with fetched metadata
                 await MainActor.run {
                     updateBookMetadata(from: fetchedBook)
@@ -446,33 +537,33 @@ struct BookDetailView: View {
             }
         }
     }
-
+    
     private func updateBookMetadata(from fetchedBook: Book) {
         // Update metadata fields, but preserve user data and inventory
         if book.bookDescription == nil || book.bookDescription?.isEmpty == true {
             book.bookDescription = fetchedBook.bookDescription
         }
-
+        
         if book.coverImageURL == nil {
             book.coverImageURL = fetchedBook.coverImageURL
         }
-
+        
         if book.pageCount == nil {
             book.pageCount = fetchedBook.pageCount
         }
-
+        
         if book.publishedDate == nil {
             book.publishedDate = fetchedBook.publishedDate
         }
-
+        
         if book.publisher == nil {
             book.publisher = fetchedBook.publisher
         }
-
+        
         if book.languageCode == nil {
             book.languageCode = fetchedBook.languageCode
         }
-
+        
         // Don't update: title, author, ISBN, totalCopies, availableCopies, notes, checkouts
         // These are user-managed or critical data
     }
