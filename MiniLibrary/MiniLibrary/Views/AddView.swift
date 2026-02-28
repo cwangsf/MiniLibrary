@@ -168,13 +168,6 @@ struct AddView: View {
                     Text(result.message)
                 }
             }
-            .task {
-                // Pre-generate the export files in background
-                await exportCatalog()
-                await exportWishlist()
-                await exportStudents()
-                await exportCheckouts()
-            }
         }
     }
 
