@@ -87,7 +87,10 @@ struct BookAPIService {
     
     /// Build Open Library cover URL for a given ISBN
     /// Size options: S (small), M (medium), L (large)
-    private func buildOpenLibraryCoverURL(_ isbn: String, size: String = "S") -> URL? {
+    /// Automatically selects size based on device capability
+    private func buildOpenLibraryCoverURL(_ isbn: String) -> URL? {
+        // Use large images for capable devices, small for low-memory devices
+        let size = DeviceCapability.shared.supportsRichMedia ? "L" : "S"
         let urlString = "\(Self.openLibraryBaseURL)/\(isbn)-\(size).jpg"
         return URL(string: urlString)
     }
