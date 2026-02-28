@@ -61,42 +61,29 @@ struct StudentSelectionView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollViewReader { proxy in
-                ZStack(alignment: .trailing) {
-                    List {
-                        ForEach(sortedSectionTitles, id: \.self) { letter in
-                            Section {
-                                ForEach(groupedStudents[letter] ?? []) { student in
-                                    Button(action: {
-                                        onSelect(student)
-                                        dismiss()
-                                    }) {
-                                        HStack {
-                                            Text(student.fullName)
-                                                .foregroundStyle(.primary)
-                                            if let classCode = student.classCode {
-                                                Spacer()
-                                                Text(classCode)
-                                                    .font(.caption)
-                                                    .foregroundStyle(.secondary)
-                                            }
-                                        }
+            List {
+                ForEach(sortedSectionTitles, id: \.self) { letter in
+                    Section {
+                        ForEach(groupedStudents[letter] ?? []) { student in
+                            Button(action: {
+                                onSelect(student)
+                                dismiss()
+                            }) {
+                                HStack {
+                                    Text(student.fullName)
+                                        .foregroundStyle(.primary)
+                                    if let classCode = student.classCode {
+                                        Spacer()
+                                        Text(classCode)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
                                     }
                                 }
-                            } header: {
-                                Text(letter.isEmpty ? "No Class" : letter)
                             }
-                            .id(letter)
                         }
+                    } header: {
+                        Text(letter.isEmpty ? "No Class" : letter)
                     }
-
-                    // Section Index Titles (A-Z) on the right side
-                    if !sortedSectionTitles.isEmpty && searchText.isEmpty {
-                        SectionIndexTitles(titles: sortedSectionTitles, itemWidth: 80) { letter in
-                              withAnimation {
-                                  proxy.scrollTo(letter, anchor: .top)
-                              }
-                          }                    }
                 }
             }
             .navigationTitle("Select Student")

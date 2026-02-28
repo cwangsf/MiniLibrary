@@ -17,72 +17,42 @@ struct WishlistView: View {
     @State private var showingAcquireSheet = false
     @State private var showingAddWishlistSheet = false
     @State private var shareItem: ShareItem?
-    @State private var selectedLanguage: LanguageFilter = .all
     
     // Confirmation dialog state
     @State private var bookToDelete: Book?
     @State private var showingDeleteConfirmation = false
 
-    // Apply language filter
-    // Include books without language info (metadata not yet fetched)
-    var filteredWishlistBooks: [Book] {
-        selectedLanguage.filter(wishlistBooks, includeUnknown: true)
-    }
-
-    // Group books by first letter of title
-    private var alphabeticalGrouping: AlphabeticalGrouping<Book> {
-        AlphabeticalGrouper.group(filteredWishlistBooks, by: \.title)
-    }
-
-    private var groupedBooks: [String: [Book]] {
-        alphabeticalGrouping.grouped
-    }
-
-    private var sortedSectionTitles: [String] {
-        alphabeticalGrouping.sortedSectionTitles
-    }
-
     var body: some View {
-            ZStack(alignment: .trailing) {
-                List {
-                    if wishlistBooks.isEmpty {
-                        ContentUnavailableView(
-                            "No Wishlist Items",
-                            systemImage: "list.star",
-                            description: Text("Books you want to add to your library will appear here")
-                        )
-                    } else {
-                        ForEach(sortedSectionTitles, id: \.self) { letter in
-                            Section {
-                                ForEach(groupedBooks[letter] ?? []) { book in
-                                    WishlistItemView(book: book, shareItem: $shareItem)
-                                        .padding(.vertical, 4)
-                                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                            Button(role: .destructive) {
-                                                requestDeleteBook(book)
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
-                                            }
-
-                                            Button {
-                                                selectedBook = book
-                                                showingAcquireSheet = true
-                                            } label: {
-                                                Label("Acquire", systemImage: "plus.circle")
-                                            }
-                                            .tint(.green)
-                                        }
-                                }
-                            } header: {
-                                Text(letter)
+        List {
+            if wishlistBooks.isEmpty {
+                ContentUnavailableView(
+                    "No Wishlist Items",
+                    systemImage: "list.star",
+                    description: Text("Books you want to add to your library will appear here")
+                )
+            } else {
+                ForEach(wishlistBooks) { book in
+                    WishlistItemView(book: book, shareItem: $shareItem)
+                        .padding(.vertical, 4)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                requestDeleteBook(book)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
                             }
-                            .id(letter)
-                        }
-                    }
-                }
-                .listStyle(.plain)
 
+                            Button {
+                                selectedBook = book
+                                showingAcquireSheet = true
+                            } label: {
+                                Label("Acquire", systemImage: "plus.circle")
+                            }
+                            .tint(.green)
+                        }
+                }
             }
+        }
+        .listStyle(.plain)
         .navigationTitle("Wish List")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -92,14 +62,6 @@ struct WishlistView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
-            }
-        }
-        .safeAreaInset(edge: .top, spacing: 0) {
-            if !wishlistBooks.isEmpty {
-                LanguageFilterPicker(selectedLanguage: $selectedLanguage)
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
-                    .background(Color(.systemBackground).opacity(0.95))
             }
         }
         .sheet(item: $selectedBook) { book in

@@ -22,7 +22,7 @@ enum CSVExporter {
                 escapeCSV(book.author ?? ""),
                 String(book.totalCopies),
                 String(book.availableCopies),
-                escapeCSV(book.language?.displayName ?? ""),
+                escapeCSV(book.languageCode ?? ""),
                 escapeCSV(book.publisher ?? ""),
                 escapeCSV(book.publishedDate ?? ""),
                 book.pageCount != nil ? String(book.pageCount!) : "",

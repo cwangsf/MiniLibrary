@@ -15,7 +15,6 @@ struct CatalogView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Book.title) private var books: [Book]
     @State private var searchText = ""
-    @State private var selectedLanguage: LanguageFilter = .all
     
     // Cached filtered books to avoid recalculating on every render
     @State private var filteredBooks: [Book] = []
@@ -30,27 +29,14 @@ struct CatalogView: View {
                 if filteredBooks.isEmpty {
                     emptyStateView
                 } else {
-                    ZStack(alignment: .trailing) {
-                        List {
-                            ForEach(filteredBooks) { book in
-                                BookRowWithActions(book: book, onDelete: requestDeleteBook)
-                                    .listRowSeparator(.hidden)
-                            }
+                    List {
+                        ForEach(filteredBooks) { book in
+                            BookRowWithActions(book: book, onDelete: requestDeleteBook)
+                                .listRowSeparator(.hidden)
                         }
-                        .listStyle(.plain)
-                        .scrollDismissesKeyboard(.immediately)
-
-                        // Floating language filter at bottom
-                        VStack {
-                            Spacer()
-
-                            LanguageFilterPicker(selectedLanguage: $selectedLanguage)
-                                .background(Color(.systemBackground).opacity(0.95))
-                                .cornerRadius(8)
-                                .padding(.horizontal)
-                        }
-                        .allowsHitTesting(true)
                     }
+                    .listStyle(.plain)
+                    .scrollDismissesKeyboard(.immediately)
                 }
             }
             .navigationTitle("Catalog")
@@ -59,9 +45,6 @@ struct CatalogView: View {
                 updateFilteredBooks()
             }
             .onChange(of: books.count) { _, _ in
-                updateFilteredBooks()
-            }
-            .onChange(of: selectedLanguage) { _, _ in
                 updateFilteredBooks()
             }
             .onChange(of: searchText) { _, _ in
@@ -103,14 +86,11 @@ struct CatalogView: View {
     private func updateFilteredBooks() {
         let catalogBooks = books.filter { !$0.isWishlistItem }
         
-        // Apply language filter
-        let languageFilteredBooks = selectedLanguage.filter(catalogBooks)
-        
         // Apply search filter
         if searchText.isEmpty {
-            filteredBooks = languageFilteredBooks
+            filteredBooks = catalogBooks
         } else {
-            filteredBooks = languageFilteredBooks.filter { book in
+            filteredBooks = catalogBooks.filter { book in
                 book.title.localizedCaseInsensitiveContains(searchText) ||
                 (book.author?.localizedCaseInsensitiveContains(searchText) ?? false)
             }

@@ -32,12 +32,6 @@ final class Book: Codable {
     var isWishlistItem: Bool
     var isFavorite: Bool
 
-    // Computed property for Language enum
-    var language: Language? {
-        guard let code = languageCode else { return nil }
-        return Language(code: code)
-    }
-
     @Relationship(deleteRule: .nullify, inverse: \CheckoutRecord.book)
     var checkouts: [CheckoutRecord]?
 
