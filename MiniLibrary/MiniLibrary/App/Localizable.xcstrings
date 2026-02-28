@@ -1466,6 +1466,9 @@
         }
       }
     },
+    "Danger Zone" : {
+
+    },
     "Delete" : {
       "localizations" : {
         "de" : {
@@ -1825,6 +1828,9 @@
         }
       }
     },
+    "Export Data" : {
+
+    },
     "Export Reminder" : {
       "localizations" : {
         "de" : {
@@ -2113,6 +2119,9 @@
           }
         }
       }
+    },
+    "Import Data" : {
+
     },
     "Import Students from CSV" : {
       "localizations" : {

@@ -89,39 +89,121 @@ struct AddView: View {
                     }
                 }
 
-                BulkDataManagementSection(
-                    isExporting: $isExporting,
-                    exportFileURL: $exportFileURL,
-                    isExportingWishlist: $isExportingWishlist,
-                    exportWishlistFileURL: $exportWishlistFileURL,
-                    isExportingStudents: $isExportingStudents,
-                    exportStudentsFileURL: $exportStudentsFileURL,
-                    isExportingCheckouts: $isExportingCheckouts,
-                    exportCheckoutsFileURL: $exportCheckoutsFileURL,
-                    showingDeleteConfirmation: $showingDeleteConfirmation,
-                    showingImportPicker: $showingImportPicker,
-                    importType: $importType,
-                    onExportCatalog: {
-                        Task {
-                            await exportCatalog()
-                        }
-                    },
-                    onExportWishlist: {
-                        Task {
-                            await exportWishlist()
-                        }
-                    },
-                    onExportStudents: {
-                        Task {
-                            await exportStudents()
-                        }
-                    },
-                    onExportCheckouts: {
-                        Task {
-                            await exportCheckouts()
+                // Export Section
+                Section("Export Data") {
+                    // Export Catalog
+                    HStack {
+                        ExportCatalogRow(
+                            isExporting: isExporting,
+                            exportFileURL: exportFileURL,
+                            onExport: {
+                                Task {
+                                    await exportCatalog()
+                                }
+                            }
+                        )
+                        if isExporting {
+                            Spacer()
+                            ProgressView()
+                                .scaleEffect(0.8)
                         }
                     }
-                )
+                    
+                    // Export Wishlist
+                    HStack {
+                        ExportWishlistRow(
+                            isExporting: isExportingWishlist,
+                            exportFileURL: exportWishlistFileURL,
+                            onExport: {
+                                Task {
+                                    await exportWishlist()
+                                }
+                            }
+                        )
+                        if isExportingWishlist {
+                            Spacer()
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        }
+                    }
+                    
+                    // Export Students
+                    HStack {
+                        ExportStudentsRow(
+                            isExporting: isExportingStudents,
+                            exportFileURL: exportStudentsFileURL,
+                            onExport: {
+                                Task {
+                                    await exportStudents()
+                                }
+                            }
+                        )
+                        if isExportingStudents {
+                            Spacer()
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        }
+                    }
+                    
+                    // Export Checkouts
+                    HStack {
+                        ExportCheckoutsRow(
+                            isExporting: isExportingCheckouts,
+                            exportFileURL: exportCheckoutsFileURL,
+                            onExport: {
+                                Task {
+                                    await exportCheckouts()
+                                }
+                            }
+                        )
+                        if isExportingCheckouts {
+                            Spacer()
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        }
+                    }
+                }
+                
+                // Import Section
+                Section("Import Data") {
+                    // Import Catalog
+                    ImportCatalogRow {
+                        importType = .catalog
+                        showingImportPicker = true
+                    }
+                    
+                    // Import Wishlist
+                    ImportWishlistRow {
+                        importType = .wishlist
+                        showingImportPicker = true
+                    }
+                    
+                    // Import Students
+                    ImportStudentsRow {
+                        importType = .students
+                        showingImportPicker = true
+                    }
+                    
+                    // Import Checkout Records
+                    ImportCheckoutRecordsRow {
+                        importType = .checkouts
+                        showingImportPicker = true
+                    }
+                }
+                
+                // Delete Section
+                Section("Danger Zone") {
+                    Button {
+                        showingDeleteConfirmation = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash.fill")
+                                .foregroundStyle(.red)
+                            Text("Delete All Data")
+                                .foregroundStyle(.tint)
+                        }
+                    }
+                }
 
                 // App Info Section
                 Section("About") {
