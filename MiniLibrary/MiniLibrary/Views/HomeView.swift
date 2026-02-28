@@ -13,7 +13,6 @@ struct HomeView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Query private var books: [Book]
     @Query private var activeCheckouts: [CheckoutRecord]
-    @Query(sort: \Activity.timestamp, order: .reverse) private var activities: [Activity]
 
     @AppStorage("maxBooksPerStudent") private var maxBooksAllowed: Int = 3
 
@@ -62,9 +61,6 @@ struct HomeView: View {
                             statCardView(for: statCards[5])
                         }
                         .padding(.horizontal)
-
-                        // Recent Activity Section
-                        RecentActivitySection(activities: activities)
                     }
                     .padding(.top)
                 }
@@ -115,5 +111,5 @@ extension HomeView {
 
 #Preview {
     HomeView()
-        .modelContainer(for: [Book.self, CheckoutRecord.self, Student.self, Activity.self])
+        .modelContainer(for: [Book.self, CheckoutRecord.self, Student.self])
 }

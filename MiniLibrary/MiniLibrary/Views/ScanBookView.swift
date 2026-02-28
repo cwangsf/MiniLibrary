@@ -450,9 +450,6 @@ struct ScanBookView: View {
 
         modelContext.insert(book)
 
-        // Log activity
-        ActivityLogger.logBookAdded(book, copies: book.totalCopies, modelContext: modelContext)
-
         // Reset the view model to clear scanned book data
         viewModel.reset()
 
@@ -463,9 +460,6 @@ struct ScanBookView: View {
     private func addCopyToExistingBook(_ book: Book, copies: Int) {
         book.totalCopies += copies
         book.availableCopies += copies
-
-        // Log activity
-        ActivityLogger.logCopiesAdded(book, copies: copies, modelContext: modelContext)
 
         showingScanResult = false
         viewModel.reset()
@@ -519,9 +513,6 @@ struct ScanBookView: View {
         
         modelContext.insert(book)
         
-        // Log activity
-        ActivityLogger.logBookAdded(book, copies: book.totalCopies, modelContext: modelContext)
-        
         // Proceed to checkout with the newly added book
         bookToCheckout = book
         showingCheckoutAfterAdd = true
@@ -574,9 +565,6 @@ struct ScanBookView: View {
         }
         
         modelContext.insert(book)
-        
-        // Log activity
-        ActivityLogger.logBookAdded(book, copies: book.totalCopies, modelContext: modelContext)
         
         // Note: For return, we can't proceed automatically because the book
         // was just added and has no checkout records yet. Just dismiss.

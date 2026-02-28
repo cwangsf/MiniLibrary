@@ -180,9 +180,6 @@ struct AddWishlistItemView: View {
             addedCount += 1
         }
         
-        // Log activity
-        ActivityLogger.logWishlistBulkAdd(count: addedCount, modelContext: modelContext)
-        
         dismiss()
     }
     
@@ -246,9 +243,6 @@ struct AddWishlistItemView: View {
         )
         
         modelContext.insert(book)
-
-        // Log activity
-        ActivityLogger.logWishlistAddedManually(book, modelContext: modelContext)
         
         dismiss()
     }

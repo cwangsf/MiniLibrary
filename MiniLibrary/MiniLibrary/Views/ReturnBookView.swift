@@ -109,6 +109,6 @@ struct ReturnBookView: View {
 #Preview {
     NavigationStack {
         ReturnBookView()
-            .modelContainer(for: [CheckoutRecord.self, Book.self, Student.self, Activity.self])
+            .modelContainer(for: [CheckoutRecord.self, Book.self, Student.self])
     }
 }

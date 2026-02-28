@@ -231,6 +231,7 @@
       }
     },
     "Activity will appear here as you use the library" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2475,6 +2476,7 @@
       }
     },
     "No Recent Activity" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2834,6 +2836,7 @@
 
     },
     "Recent Activity" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {

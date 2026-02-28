@@ -230,9 +230,6 @@ struct CheckoutBookView: View {
         book.availableCopies -= 1
         modelContext.insert(checkout)
 
-        // Log activity
-        ActivityLogger.logCheckout(book, student: student, dueDate: dueDate, modelContext: modelContext)
-
         dismiss()
         onCheckoutComplete?()
     }

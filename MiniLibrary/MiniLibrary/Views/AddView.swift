@@ -17,7 +17,6 @@ struct AddView: View {
     @Query private var books: [Book]
     @Query private var students: [Student]
     @Query private var checkouts: [CheckoutRecord]
-    @Query private var activities: [Activity]
     @State private var exportFileURL: URL?
     @State private var isExporting = false
     @State private var exportWishlistFileURL: URL?
@@ -239,11 +238,6 @@ struct AddView: View {
     }
 
     private func deleteAllData() {
-        // Delete all activities
-        for activity in activities {
-            modelContext.delete(activity)
-        }
-
         // Delete all checkout records
         for checkout in checkouts {
             modelContext.delete(checkout)
@@ -300,9 +294,6 @@ struct AddView: View {
                     message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") from the CSV file. Cover images will load in the background.",
                     isSuccess: true
                 )
-
-                // Log activity
-                ActivityLogger.logCatalogCSVImport(count: importedCount, modelContext: modelContext)
 
                 // Start downloading cover images in the background
                 Task.detached(priority: .utility) {
@@ -365,9 +356,6 @@ struct AddView: View {
                     isSuccess: true
                 )
 
-                // Log activity
-                ActivityLogger.logWishlistCSVImport(count: importedCount, modelContext: modelContext)
-
                 showingImportResult = true
             } catch {
                 importResult = ImportResult(
@@ -424,9 +412,6 @@ struct AddView: View {
                     isSuccess: true
                 )
 
-                // Log activity
-                ActivityLogger.logStudentCSVImport(count: importedCount, modelContext: modelContext)
-
                 showingImportResult = true
             } catch {
                 importResult = ImportResult(
@@ -482,9 +467,6 @@ struct AddView: View {
                     message: "Successfully imported \(importedCount) checkout record\(importedCount == 1 ? "" : "s") from the CSV file.",
                     isSuccess: true
                 )
-
-                // Log activity
-                ActivityLogger.logCheckoutCSVImport(count: importedCount, modelContext: modelContext)
 
                 showingImportResult = true
             } catch {

@@ -111,9 +111,6 @@ struct AcquireWishlistItemView: View {
         book.totalCopies = copiesToAdd
         book.availableCopies = copiesToAdd
 
-        // Log activity
-        ActivityLogger.logWishlistFulfilled(book, copies: copiesToAdd, modelContext: modelContext)
-
         dismiss()
     }
 }

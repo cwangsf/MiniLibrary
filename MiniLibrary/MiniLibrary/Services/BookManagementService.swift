@@ -23,9 +23,6 @@ struct BookManagementService {
         // Update book availability
         if let book = checkout.book {
             book.availableCopies += 1
-
-            // Log the return activity
-            ActivityLogger.logReturn(book, studentLibraryId: checkout.student?.fullName, modelContext: modelContext)
         }
     }
 }

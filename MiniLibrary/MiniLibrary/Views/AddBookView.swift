@@ -148,9 +148,6 @@ struct AddBookView: View {
 
         modelContext.insert(book)
 
-        // Log activity
-        ActivityLogger.logBookAdded(book, copies: totalCopies, modelContext: modelContext)
-
         dismiss()
     }
 }
