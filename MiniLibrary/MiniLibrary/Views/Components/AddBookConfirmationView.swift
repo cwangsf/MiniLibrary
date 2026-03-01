@@ -102,6 +102,6 @@ struct AddBookConfirmationView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.large])
     }
 }

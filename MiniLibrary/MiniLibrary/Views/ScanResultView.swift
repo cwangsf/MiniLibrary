@@ -58,18 +58,6 @@ struct ScanResultView: View {
                 .prominentButton(color: .blue)
             }
 
-//            Button {
-//                book.isWishlistItem = true
-//                onConfirm(copiesToAdd)
-//                dismiss()
-//            } label: {
-//                HStack {
-//                    Image(systemName: "list.star.fill")
-//                    Text("Add to Wishlist")
-//                }
-//                .prominentButton(color: .purple)
-//            }
-
         case .checkout:
             if book.availableCopies > 0 {
                 Button {
@@ -132,8 +120,6 @@ struct ScanResultView: View {
                         VStack(spacing: 12) {
                             // Book Info
                             VStack(spacing: 4) {
-                                Text("Book")
-                                    .labelStyle()
                                 Text(book.title)
                                     .bookTitle()
                                 if let author = book.author {
@@ -188,8 +174,6 @@ struct ScanResultView: View {
 
                                 // Add Copies
                                 VStack(spacing: 8) {
-                                    Text("Add Copies")
-                                        .labelStyle()
                                     Stepper("Add \(copiesToAdd) \(copiesToAdd == 1 ? "copy" : "copies")", value: $copiesToAdd, in: 1...99)
                                         .valueText()
                                 }
@@ -393,7 +377,7 @@ struct ScanResultView: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.large])
         .sheet(isPresented: $showingCheckoutView) {
             CheckoutBookView(book: book) {
                 // After checkout completes, dismiss the confirmation view

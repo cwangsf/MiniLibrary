@@ -100,7 +100,7 @@ struct AcquireWishlistItemView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.large])
     }
 
     private func acquireBook() {

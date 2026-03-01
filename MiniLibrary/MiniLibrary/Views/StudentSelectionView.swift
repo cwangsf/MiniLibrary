@@ -97,6 +97,8 @@ struct StudentSelectionView: View {
                 }
             }
         }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
     }
 }
 

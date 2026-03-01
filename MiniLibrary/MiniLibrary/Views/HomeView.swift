@@ -9,8 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
+    private let cardSpacing: CGFloat = 16
 
     var statCards: [StatCardType] {
         [
@@ -24,33 +24,31 @@ struct HomeView: View {
     }
 
     var body: some View {
-
-            // iPhone Layout
             NavigationStack {
                 ScrollView {
-                    VStack(spacing: 20) {
+                    VStack(spacing: cardSpacing) {
                         // Statistics Cards - First Row
-                        HStack(spacing: 15) {
+                        HStack(spacing: cardSpacing) {
                             statCardView(for: statCards[0])
                             statCardView(for: statCards[1])
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, cardSpacing)
 
                         // Statistics Cards - Second Row
-                        HStack(spacing: 15) {
+                        HStack(spacing: cardSpacing) {
                             statCardView(for: statCards[2])
                             statCardView(for: statCards[3])
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, cardSpacing)
 
                         // Action Cards - Third Row
-                        HStack(spacing: 15) {
+                        HStack(spacing: cardSpacing) {
                             statCardView(for: statCards[4])
                             statCardView(for: statCards[5])
                         }
-                        .padding(.horizontal)
+                        .padding(.horizontal, cardSpacing)
                     }
-                    .padding(.top)
+                    .padding(.top, cardSpacing)
                 }
                 .navigationTitle("Home")
             }

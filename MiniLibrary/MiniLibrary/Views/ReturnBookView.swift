@@ -94,7 +94,7 @@ struct ReturnBookView: View {
                     .navigationTitle("Return Book")
                     .navigationBarTitleDisplayMode(.inline)
                 }
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.large])
             }
         }
     }

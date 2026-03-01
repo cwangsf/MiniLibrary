@@ -170,6 +170,8 @@ struct CheckoutBookView: View {
                 Text("\(studentName) already has \(maxBooksAllowed) book\(maxBooksAllowed == 1 ? "" : "s") checked out, which is the maximum allowed. Please ask them to return a book before borrowing another.")
             }
         }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
     }
 
     @ViewBuilder

@@ -383,6 +383,7 @@
 
     },
     "Add Copies" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -513,6 +514,9 @@
           }
         }
       }
+    },
+    "Add this book to your catalog first" : {
+
     },
     "Add to Catalog" : {
       "localizations" : {
@@ -900,6 +904,9 @@
           }
         }
       }
+    },
+    "Book Not Found" : {
+
     },
     "Book not in catalog" : {
 

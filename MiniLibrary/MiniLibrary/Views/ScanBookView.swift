@@ -17,6 +17,7 @@ struct ScanBookView: View {
     @State private var viewModel = ScanBookViewModel()
     @State private var showingScanResult = false
     @State private var showingCheckoutAfterAdd = false
+    @State private var showingConfirmation = false
     @State private var bookToCheckout: Book?
 
     var navigationTitle: String {
@@ -53,7 +54,13 @@ struct ScanBookView: View {
                 case .loading(let isbn):
                     loadingView(isbn: isbn)
                 case .confirming(let book):
-                    bookConfirmationView(book: book)
+                    // Only show inline confirmation for addBook mode
+                    // Checkout and return modes use sheet presentation
+                    if scanPurpose == .addBook {
+                        bookConfirmationView(book: book)
+                    } else {
+                        Color.clear
+                    }
                 case .editing, .error:
                     bookFormView
                 case .existingBook:
@@ -95,6 +102,11 @@ struct ScanBookView: View {
             .onChange(of: viewModel.state) { _, newState in
                 if case .existingBook = newState {
                     showingScanResult = true
+                } else if case .confirming = newState {
+                    // For checkout and return modes, show confirmation as a sheet
+                    if scanPurpose == .checkout || scanPurpose == .returnBook {
+                        showingConfirmation = true
+                    }
                 }
             }
             .sheet(isPresented: $showingCheckoutAfterAdd) {
@@ -103,6 +115,11 @@ struct ScanBookView: View {
                         viewModel.reset()
                         dismiss()
                     }
+                }
+            }
+            .sheet(isPresented: $showingConfirmation) {
+                if case .confirming(let book) = viewModel.state {
+                    bookConfirmationSheetView(book: book)
                 }
             }
         }
@@ -188,6 +205,101 @@ struct ScanBookView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
+    }
+
+    // MARK: - Book Confirmation Sheet View (for checkout/return modes)
+    @ViewBuilder
+    private func bookConfirmationSheetView(book: Book) -> some View {
+        NavigationStack {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Book Cover
+                    BookCoverImage(book: book, width: 180, height: 270)
+                        .padding(.top, 20)
+
+                    // Book Info
+                    VStack(alignment: .center, spacing: 8) {
+                        Text(book.title)
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+
+                        if let author = book.author {
+                            Text(author)
+                                .font(.title3)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+
+                        if let isbn = book.isbn {
+                            Text("ISBN: \(isbn)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(.horizontal)
+
+                    // Message
+                    VStack(spacing: 8) {
+                        Text("Book not in catalog")
+                            .font(.headline)
+                            .foregroundStyle(.secondary)
+                        
+                        Text("Add this book to your catalog first")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color(.systemGray6))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal)
+
+                    Spacer()
+                }
+            }
+            .navigationTitle("Book Not Found")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        showingConfirmation = false
+                        viewModel.reset()
+                    }
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 12) {
+                    Button {
+                        if scanPurpose == .checkout {
+                            addBookAndProceedToCheckout()
+                            showingConfirmation = false
+                        } else if scanPurpose == .returnBook {
+                            addBookAndProceedToReturn()
+                            showingConfirmation = false
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Add Book to Catalog")
+                        }
+                        .prominentButton(color: .green)
+                    }
+
+                    Button {
+                        showingConfirmation = false
+                        viewModel.reset()
+                    } label: {
+                        Text("Cancel")
+                            .secondaryButton()
+                    }
+                }
+                .padding()
+                .background(Color(.systemBackground).opacity(0.95))
+            }
+        }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
     }
 
     // MARK: - Book Confirmation View

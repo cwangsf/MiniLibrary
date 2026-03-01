@@ -324,6 +324,8 @@ struct BookDetailView: View {
             // Fetch book info in background if missing metadata
             fetchBookInfoIfNeeded()
         }
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
     }
     
     // MARK: - Book Cover View
