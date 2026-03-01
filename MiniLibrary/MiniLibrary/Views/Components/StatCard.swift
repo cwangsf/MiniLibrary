@@ -90,11 +90,10 @@ struct StatCard: View {
     let color: Color
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.system(size: 50, weight: .bold))
                 .foregroundStyle(color)
-                .padding(.top)
             
             Text(title)
                 .font(.headline)
@@ -103,9 +102,8 @@ struct StatCard: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.8)
-                .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity, minHeight: 140)
+        .frame(maxWidth: .infinity, minHeight: 140, maxHeight: 140)
         .padding()
         .background(
             LinearGradient(
