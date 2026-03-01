@@ -9,16 +9,19 @@ import Foundation
 import UIKit
 import os
 
-private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "ImageCacheService")
-
 /// Service for caching book cover images to disk
 actor ImageCacheService {
     static let shared = ImageCacheService()
 
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "ImageCacheService")
     private nonisolated(unsafe) let fileManager = FileManager.default
-    private lazy var cacheDirectory: URL? = {
+    private let cacheDirectory: URL?
+
+    private init() {
+        // Initialize cache directory
         guard let cachesDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first else {
-            return nil
+            self.cacheDirectory = nil
+            return
         }
         let bookCoversDirectory = cachesDirectory.appendingPathComponent("BookCovers", isDirectory: true)
 
@@ -27,16 +30,15 @@ actor ImageCacheService {
             do {
                 try fileManager.createDirectory(at: bookCoversDirectory, withIntermediateDirectories: true)
                 logger.info("Successfully created cache directory at: \(bookCoversDirectory.path)")
+                self.cacheDirectory = bookCoversDirectory
             } catch {
                 logger.error("Failed to create cache directory: \(error.localizedDescription)")
-                return nil
+                self.cacheDirectory = nil
             }
+        } else {
+            self.cacheDirectory = bookCoversDirectory
         }
-
-        return bookCoversDirectory
-    }()
-
-    private init() {}
+    }
 
     // MARK: - Public Methods
 
