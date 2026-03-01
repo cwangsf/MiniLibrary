@@ -47,6 +47,7 @@ class ScanBookViewModel {
         }
     }
 
+    var scanPurpose: ScanPurpose = .addBook
     var state: ScanState = .scanning
     var scannedBook: Book?
     var existingBook: Book?

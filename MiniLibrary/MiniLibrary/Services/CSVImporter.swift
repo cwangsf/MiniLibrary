@@ -545,12 +545,15 @@ struct CSVImporter {
 
 enum CSVImportError: LocalizedError {
     case emptyFile
+    case invalidFormat
     case fileReadError
 
     var errorDescription: String? {
         switch self {
         case .emptyFile:
             return "The CSV file is empty"
+        case .invalidFormat:
+            return "The CSV file format is invalid"
         case .fileReadError:
             return "Unable to read the CSV file"
         }
