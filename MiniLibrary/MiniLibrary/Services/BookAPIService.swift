@@ -191,10 +191,16 @@ struct BookAPIService {
     
     private func parseGoogleBookData(_ item: GoogleBookItem, isbn: String?) -> Book {
         let volumeInfo = item.volumeInfo
+        
+        logger.debug("📖 Google Books API Response:")
+        logger.debug("  Title: '\(volumeInfo.title)'")
+        logger.debug("  Subtitle: '\(volumeInfo.subtitle ?? "nil")'")
+        logger.debug("  Full Title: '\(volumeInfo.fullTitle)'")
+        logger.debug("  Authors: \(volumeInfo.authors?.joined(separator: ", ") ?? "nil")")
 
         return Book(
             isbn: isbn,
-            title: volumeInfo.title,
+            title: volumeInfo.fullTitle,
             author: volumeInfo.authors?.joined(separator: ", "),
             totalCopies: 1,
             availableCopies: 1,
@@ -214,7 +220,7 @@ struct BookAPIService {
 
         return Book(
             isbn: isbn,
-            title: volumeInfo.title,
+            title: volumeInfo.fullTitle,
             author: volumeInfo.authors?.joined(separator: ", "),
             totalCopies: isWishlistItem ? 0 : 1,
             availableCopies: isWishlistItem ? 0 : 1,
@@ -292,6 +298,7 @@ struct GoogleBookItem: Codable, Sendable {
 
 struct VolumeInfo: Codable, Sendable {
     let title: String
+    let subtitle: String?
     let authors: [String]?
     let description: String?
     let pageCount: Int?
@@ -300,6 +307,14 @@ struct VolumeInfo: Codable, Sendable {
     let language: String?
     let imageLinks: ImageLinks?
     let industryIdentifiers: [IndustryIdentifier]?
+    
+    /// Combined title with subtitle if available
+    var fullTitle: String {
+        if let subtitle = subtitle, !subtitle.isEmpty {
+            return "\(title): \(subtitle)"
+        }
+        return title
+    }
 }
 
 struct IndustryIdentifier: Codable, Sendable {
