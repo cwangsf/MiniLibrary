@@ -14,7 +14,6 @@ struct WishlistView: View {
     private var wishlistBooks: [Book]
 
     @State private var selectedBook: Book?
-    @State private var showingAcquireSheet = false
     @State private var showingAddWishlistSheet = false
     @State private var shareItem: ShareItem?
     

@@ -65,23 +65,6 @@ enum StatCardType {
             return .teal
         }
     }
-
-    var destination: String {
-        switch self {
-        case .totalCopies:
-            return "catalog"
-        case .checkedOut:
-            return "checkedOut"
-        case .wishlist:
-            return "wishlist"
-        case .settings:
-            return "settings"
-        case .quickCheckout:
-            return "quickCheckout"
-        case .quickReturn:
-            return "quickReturn"
-        }
-    }
 }
 
 struct StatCard: View {
