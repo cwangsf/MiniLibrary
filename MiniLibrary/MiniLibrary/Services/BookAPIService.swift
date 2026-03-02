@@ -44,6 +44,7 @@ struct BookAPIService {
     // MARK: - Constants
     private static let baseURL = "https://www.googleapis.com/books/v1/volumes"
     private static let openLibraryBaseURL = "https://covers.openlibrary.org/b/isbn"
+    private static let openLibraryAPIBaseURL = "https://openlibrary.org/api/books"
 
     private init() {
         let config = URLSessionConfiguration.default
@@ -102,7 +103,24 @@ struct BookAPIService {
     }
 
     /// Fetch book info from Google Books API by ISBN
+    /// Falls back to Open Library if Google fails (e.g., rate limiting with 429 error)
     func fetchBookInfoFromGoogle(isbn: String) async throws -> Book {
+        do {
+            // Try Google Books API first
+            return try await fetchFromGoogleAPI(isbn: isbn)
+        } catch let error as BookAPIError {
+            // If Google fails with rate limiting or other errors, try Open Library as fallback
+            logger.warning("Google Books API failed (\(error.errorDescription ?? "unknown error")), trying Open Library as fallback")
+            return try await fetchFromOpenLibrary(isbn: isbn)
+        } catch {
+            // For non-BookAPIError errors, also try fallback
+            logger.warning("Google Books API failed (\(error.localizedDescription)), trying Open Library as fallback")
+            return try await fetchFromOpenLibrary(isbn: isbn)
+        }
+    }
+    
+    /// Fetch book info from Google Books API only (no fallback)
+    private func fetchFromGoogleAPI(isbn: String) async throws -> Book {
         guard let url = buildISBNSearchURL(isbn) else {
             throw BookAPIError.invalidURL
         }
@@ -124,6 +142,37 @@ struct BookAPIService {
         }
 
         return parseGoogleBookData(firstItem, isbn: isbn)
+    }
+    
+    /// Fetch book info from Open Library API by ISBN
+    /// Returns basic book information from Open Library
+    private func fetchFromOpenLibrary(isbn: String) async throws -> Book {
+        // Build Open Library API URL: https://openlibrary.org/api/books?bibkeys=ISBN:9780980200447&format=json&jscmd=data
+        let cleanedISBN = isbn.replacingOccurrences(of: "-", with: "")
+        let urlString = "\(Self.openLibraryAPIBaseURL)?bibkeys=ISBN:\(cleanedISBN)&format=json&jscmd=data"
+        
+        guard let url = URL(string: urlString) else {
+            throw BookAPIError.invalidURL
+        }
+        
+        let (data, response) = try await session.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw BookAPIError.invalidResponse
+        }
+        
+        guard httpResponse.statusCode == 200 else {
+            throw BookAPIError.httpError(statusCode: httpResponse.statusCode)
+        }
+        
+        // Parse Open Library response
+        let openLibraryResponse = try JSONDecoder().decode([String: OpenLibraryBookData].self, from: data)
+        
+        guard let bookData = openLibraryResponse["ISBN:\(cleanedISBN)"] else {
+            throw BookAPIError.bookNotFound
+        }
+        
+        return parseOpenLibraryBookData(bookData, isbn: cleanedISBN)
     }
 
     /// Search for books by ISBN
@@ -324,6 +373,91 @@ struct IndustryIdentifier: Codable, Sendable {
 
 struct ImageLinks: Codable, Sendable {
     let thumbnail: String?
+}
+
+// MARK: - Open Library Response Models
+struct OpenLibraryBookData: Codable, Sendable {
+    let title: String?
+    let subtitle: String?
+    let authors: [OpenLibraryAuthor]?
+    let publishers: [OpenLibraryPublisher]?
+    let publishDate: String?
+    let numberOfPages: Int?
+    let cover: OpenLibraryCover?
+    
+    private enum CodingKeys: String, CodingKey {
+        case title
+        case subtitle
+        case authors
+        case publishers
+        case publishDate = "publish_date"
+        case numberOfPages = "number_of_pages"
+        case cover
+    }
+}
+
+struct OpenLibraryAuthor: Codable, Sendable {
+    let name: String?
+}
+
+struct OpenLibraryPublisher: Codable, Sendable {
+    let name: String?
+}
+
+struct OpenLibraryCover: Codable, Sendable {
+    let large: String?
+    let medium: String?
+    let small: String?
+}
+
+// MARK: - Open Library Parser
+extension BookAPIService {
+    private func parseOpenLibraryBookData(_ data: OpenLibraryBookData, isbn: String) -> Book {
+        let title = data.title ?? "Unknown Title"
+        let subtitle = data.subtitle
+        
+        let fullTitle: String
+        if let subtitle = subtitle, !subtitle.isEmpty {
+            fullTitle = "\(title): \(subtitle)"
+        } else {
+            fullTitle = title
+        }
+        
+        let authors = data.authors?.compactMap { $0.name }.joined(separator: ", ")
+        let publisher = data.publishers?.first?.name
+        
+        // Get cover image URL (prefer large, fall back to medium or small)
+        let coverURL: String?
+        if let large = data.cover?.large {
+            coverURL = makeSecureURL(large)
+        } else if let medium = data.cover?.medium {
+            coverURL = makeSecureURL(medium)
+        } else if let small = data.cover?.small {
+            coverURL = makeSecureURL(small)
+        } else {
+            // Use Open Library cover URL as fallback
+            coverURL = getOpenLibraryCoverURL(isbn)
+        }
+        
+        logger.debug("📚 Open Library API Response:")
+        logger.debug("  Title: '\(fullTitle)'")
+        logger.debug("  Authors: \(authors ?? "nil")")
+        logger.debug("  Publisher: \(publisher ?? "nil")")
+        
+        return Book(
+            isbn: isbn,
+            title: fullTitle,
+            author: authors,
+            totalCopies: 1,
+            availableCopies: 1,
+            bookDescription: nil, // Open Library doesn't provide description in this endpoint
+            pageCount: data.numberOfPages,
+            publishedDate: data.publishDate,
+            publisher: publisher,
+            languageCode: nil, // Open Library doesn't provide language in this endpoint
+            coverImageURL: coverURL
+        )
+    }
 }
 
 // MARK: - Errors

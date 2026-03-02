@@ -236,8 +236,6 @@ struct ScanResultView: View {
                         }
                     }
                     .padding(.horizontal)
-                    .padding(.top, 20)
-                    .padding(.bottom, 40)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
