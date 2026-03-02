@@ -401,14 +401,9 @@ struct AddView: View {
 
                 importResult = ImportResult(
                     title: "Import Successful",
-                    message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") from the CSV file. Cover images will load in the background.",
+                    message: "Successfully imported \(importedCount) book\(importedCount == 1 ? "" : "s") from the CSV file. Cover images will load automatically when viewing books.",
                     isSuccess: true
                 )
-
-                // Start downloading cover images in the background
-                Task.detached(priority: .utility) {
-                    await self.downloadCoversForImportedBooks()
-                }
 
                 showingImportResult = true
             } catch {
@@ -625,50 +620,6 @@ struct AddView: View {
             return build
         }
         return "Unknown"
-    }
-    
-    /// Download cover images for recently imported books in the background
-    private func downloadCoversForImportedBooks() async {
-        // Check if device supports background downloads
-        guard DeviceCapability.shared.supportsBackgroundDownloads else {
-            logger.info("⏭️ Skipping background cover downloads - device does not support rich media")
-            return
-        }
-        
-        // Fetch books without cached covers from the current context
-        let descriptor = FetchDescriptor<Book>(
-            predicate: #Predicate<Book> { book in
-                book.cachedCoverImage == nil && !book.isWishlistItem
-            }
-        )
-        
-        // Properly handle fetch errors
-        guard let booksWithoutCovers = try? modelContext.fetch(descriptor) else {
-            logger.error("Failed to fetch books for background cover download")
-            return
-        }
-        
-        logger.info("Starting background cover download for \(booksWithoutCovers.count) books")
-        
-        // Download covers with controlled concurrency
-        for book in booksWithoutCovers {
-            // Verify book is still valid before processing
-            guard !book.isDeleted else {
-                logger.warning("Skipping deleted book during cover download")
-                continue
-            }
-            
-            await BookAPIService.shared.updateBookCover(book)
-            
-            // Save periodically to persist downloaded covers with proper error handling
-            do {
-                try modelContext.save()
-            } catch {
-                logger.error("Failed to save cover for book '\(book.title)': \(error.localizedDescription)")
-            }
-        }
-        
-        logger.info("Finished background cover downloads")
     }
     
     /// Try to read file with multiple text encodings
