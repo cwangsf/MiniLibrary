@@ -263,6 +263,13 @@ struct BookAPIService {
         logger.debug("  Subtitle: '\(volumeInfo.subtitle ?? "nil")'")
         logger.debug("  Full Title: '\(volumeInfo.fullTitle)'")
         logger.debug("  Authors: \(volumeInfo.authors?.joined(separator: ", ") ?? "nil")")
+        
+        let coverURL = makeSecureURL(volumeInfo.imageLinks?.thumbnail)
+        if let coverURL = coverURL {
+            logger.info("🖼️ Google Books provided cover URL: \(coverURL)")
+        } else {
+            logger.warning("⚠️ Google Books did NOT provide a cover URL for '\(volumeInfo.fullTitle)'")
+        }
 
         return Book(
             isbn: isbn,
@@ -275,7 +282,7 @@ struct BookAPIService {
             publishedDate: volumeInfo.publishedDate,
             publisher: volumeInfo.publisher,
             languageCode: volumeInfo.language,
-            coverImageURL: makeSecureURL(volumeInfo.imageLinks?.thumbnail)
+            coverImageURL: coverURL
         )
     }
 
@@ -325,30 +332,45 @@ struct BookAPIService {
             }
         }
 
-        // Only use Open Library for cover images (no rate limits, reliable)
-        if let isbn = book.isbn, let openLibraryCover = getOpenLibraryCoverURL(isbn) {
-            // Try to download and cache immediately
-            let secureURL = openLibraryCover.replacingOccurrences(of: "http://", with: "https://")
-            do {
-                if let cachedFilename = try await ImageCacheService.shared.cacheImage(
-                    from: secureURL,
-                    for: book.id.uuidString
-                ) {
-                    book.coverImageURL = openLibraryCover
-                    book.cachedCoverImage = cachedFilename
-                    logger.info("✅ Successfully cached cover for '\(book.title)' (ISBN: \(isbn)) - File: \(cachedFilename)")
-                } else {
-                    // Validation failed - invalid or missing image
-                    logger.warning("⚠️ No valid cover image for '\(book.title)' (ISBN: \(isbn)) - Open Library returned invalid/missing image")
-                }
-            } catch {
-                let authorInfo = book.author.map { " by \($0)" } ?? ""
-                logger.error("❌ Failed to download cover for '\(book.title)'\(authorInfo) (ISBN: \(isbn)) - Error: \(error.localizedDescription)")
-            }
-        } else {
-            // No ISBN available
+        // Try to get cover URL - prefer existing coverImageURL from Google Books, fallback to Open Library
+        var coverURL: String?
+        var source: String = "Unknown"
+        
+        if let existingURL = book.coverImageURL {
+            // Book already has a cover URL from Google Books API
+            coverURL = existingURL
+            source = "Google Books"
+            logger.info("📸 Using existing Google Books cover URL for '\(book.title)'")
+        } else if let isbn = book.isbn, let openLibraryCover = getOpenLibraryCoverURL(isbn) {
+            // Fallback to Open Library if no existing URL
+            coverURL = openLibraryCover
+            source = "Open Library"
+            logger.info("📚 Using Open Library cover URL for '\(book.title)' (ISBN: \(isbn))")
+        }
+        
+        guard let coverURL = coverURL else {
             let authorInfo = book.author.map { " by \($0)" } ?? ""
-            logger.info("⏭️ Skipping cover download for '\(book.title)'\(authorInfo) - No ISBN available")
+            logger.info("⏭️ Skipping cover download for '\(book.title)'\(authorInfo) - No cover URL available")
+            return
+        }
+        
+        // Try to download and cache the cover
+        let secureURL = coverURL.replacingOccurrences(of: "http://", with: "https://")
+        do {
+            if let cachedFilename = try await ImageCacheService.shared.cacheImage(
+                from: secureURL,
+                for: book.id.uuidString
+            ) {
+                book.coverImageURL = coverURL
+                book.cachedCoverImage = cachedFilename
+                logger.info("✅ Successfully cached \(source) cover for '\(book.title)' - File: \(cachedFilename)")
+            } else {
+                // Validation failed - invalid or missing image
+                logger.warning("⚠️ No valid cover image for '\(book.title)' - \(source) returned invalid/missing image")
+            }
+        } catch {
+            let authorInfo = book.author.map { " by \($0)" } ?? ""
+            logger.error("❌ Failed to download \(source) cover for '\(book.title)'\(authorInfo) - Error: \(error.localizedDescription)")
         }
     }
 }
