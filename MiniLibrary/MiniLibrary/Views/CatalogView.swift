@@ -43,7 +43,7 @@ struct CatalogView: View {
                 }
             }
             .navigationTitle(totalBooksCount != nil ? "Catalog (\(totalBooksCount!))" : "Catalog")
-            .searchable(text: $searchText, prompt: "Search books or authors")
+            .searchable(text: $searchText, prompt: "Search books, authors, or ISBN")
             .onAppear {
                 updateFilteredBooks()
                 loadTotalCount()
@@ -97,7 +97,8 @@ struct CatalogView: View {
         } else {
             filteredBooks = catalogBooks.filter { book in
                 book.title.localizedCaseInsensitiveContains(searchText) ||
-                (book.author?.localizedCaseInsensitiveContains(searchText) ?? false)
+                (book.author?.localizedCaseInsensitiveContains(searchText) ?? false) ||
+                (book.isbn?.localizedCaseInsensitiveContains(searchText) ?? false)
             }
         }
     }

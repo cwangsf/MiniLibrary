@@ -3095,6 +3095,7 @@
 
     },
     "Search books or authors" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3115,6 +3116,9 @@
           }
         }
       }
+    },
+    "Search books, authors, or ISBN" : {
+
     },
     "Search by name" : {
       "localizations" : {
