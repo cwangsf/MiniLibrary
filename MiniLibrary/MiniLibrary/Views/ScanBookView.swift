@@ -520,44 +520,47 @@ struct ScanBookView: View {
     }
 
     // MARK: - Actions
-    private func addBook() {
-        // Create a new book with proper values
-        let book: Book
-
-        // Check if we're in confirmation mode (direct from scan) or edit mode
-        if case .confirming = viewModel.state, let scannedBook = viewModel.scannedBook {
-            // In confirmation mode: use the scanned book's data directly
-            book = Book(
-                isbn: scannedBook.isbn,
-                title: scannedBook.title,
-                author: scannedBook.author,
-                totalCopies: 1,
-                availableCopies: 1,
-                bookDescription: scannedBook.bookDescription,
-                pageCount: scannedBook.pageCount,
-                publishedDate: scannedBook.publishedDate,
-                publisher: scannedBook.publisher,
-                languageCode: scannedBook.languageCode,
-                coverImageURL: scannedBook.coverImageURL
-            )
-        } else if let scannedBook = viewModel.scannedBook {
-            // In edit mode: use the edited values from viewModel
-            book = Book(
-                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
-                title: viewModel.title,
-                author: viewModel.author,
-                totalCopies: viewModel.totalCopies,
-                availableCopies: viewModel.totalCopies,
-                bookDescription: scannedBook.bookDescription,
-                pageCount: scannedBook.pageCount,
-                publishedDate: scannedBook.publishedDate,
-                publisher: scannedBook.publisher,
-                languageCode: scannedBook.languageCode,
-                coverImageURL: scannedBook.coverImageURL
-            )
+    
+    /// Creates a new Book from the current ViewModel state
+    /// Handles three scenarios: confirming scanned data, editing scanned data, or manual entry
+    private func createBookFromViewModel() -> Book {
+        // If we have scanned book data, use it as the base
+        if let scannedBook = viewModel.scannedBook {
+            // Check if user is confirming unedited data or has entered edit mode
+            if case .confirming = viewModel.state {
+                // Confirming mode: use scanned data directly with default 1 copy
+                return Book(
+                    isbn: scannedBook.isbn,
+                    title: scannedBook.title,
+                    author: scannedBook.author,
+                    totalCopies: 1,
+                    availableCopies: 1,
+                    bookDescription: scannedBook.bookDescription,
+                    pageCount: scannedBook.pageCount,
+                    publishedDate: scannedBook.publishedDate,
+                    publisher: scannedBook.publisher,
+                    languageCode: scannedBook.languageCode,
+                    coverImageURL: scannedBook.coverImageURL
+                )
+            } else {
+                // Editing mode: use edited values from viewModel, preserve scanned metadata
+                return Book(
+                    isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
+                    title: viewModel.title,
+                    author: viewModel.author,
+                    totalCopies: viewModel.totalCopies,
+                    availableCopies: viewModel.totalCopies,
+                    bookDescription: scannedBook.bookDescription,
+                    pageCount: scannedBook.pageCount,
+                    publishedDate: scannedBook.publishedDate,
+                    publisher: scannedBook.publisher,
+                    languageCode: scannedBook.languageCode,
+                    coverImageURL: scannedBook.coverImageURL
+                )
+            }
         } else {
-            // Manual entry: create book from form fields only
-            book = Book(
+            // Manual entry: create book from form fields only (no scanned data)
+            return Book(
                 isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
                 title: viewModel.title,
                 author: viewModel.author,
@@ -565,13 +568,12 @@ struct ScanBookView: View {
                 availableCopies: viewModel.totalCopies
             )
         }
-
+    }
+    
+    private func addBook() {
+        let book = createBookFromViewModel()
         modelContext.insert(book)
-
-        // Reset the view model to clear scanned book data
         viewModel.reset()
-
-        // Dismiss the view to go back to Add tab
         dismiss()
     }
 
@@ -584,51 +586,7 @@ struct ScanBookView: View {
     }
     
     private func addBookAndProceedToCheckout() {
-        // Create a new book with proper values
-        let book: Book
-        
-        // Check if we're in confirmation mode (direct from scan) or edit mode
-        if case .confirming = viewModel.state, let scannedBook = viewModel.scannedBook {
-            // In confirmation mode: use the scanned book's data directly
-            book = Book(
-                isbn: scannedBook.isbn,
-                title: scannedBook.title,
-                author: scannedBook.author,
-                totalCopies: 1,
-                availableCopies: 1,
-                bookDescription: scannedBook.bookDescription,
-                pageCount: scannedBook.pageCount,
-                publishedDate: scannedBook.publishedDate,
-                publisher: scannedBook.publisher,
-                languageCode: scannedBook.languageCode,
-                coverImageURL: scannedBook.coverImageURL
-            )
-        } else if let scannedBook = viewModel.scannedBook {
-            // In edit mode: use the edited values from viewModel
-            book = Book(
-                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
-                title: viewModel.title,
-                author: viewModel.author,
-                totalCopies: viewModel.totalCopies,
-                availableCopies: viewModel.totalCopies,
-                bookDescription: scannedBook.bookDescription,
-                pageCount: scannedBook.pageCount,
-                publishedDate: scannedBook.publishedDate,
-                publisher: scannedBook.publisher,
-                languageCode: scannedBook.languageCode,
-                coverImageURL: scannedBook.coverImageURL
-            )
-        } else {
-            // Manual entry: create book from form fields only
-            book = Book(
-                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
-                title: viewModel.title,
-                author: viewModel.author,
-                totalCopies: viewModel.totalCopies,
-                availableCopies: viewModel.totalCopies
-            )
-        }
-        
+        let book = createBookFromViewModel()
         modelContext.insert(book)
         
         // Proceed to checkout with the newly added book
@@ -637,51 +595,7 @@ struct ScanBookView: View {
     }
     
     private func addBookAndProceedToReturn() {
-        // Create a new book with proper values
-        let book: Book
-        
-        // Check if we're in confirmation mode (direct from scan) or edit mode
-        if case .confirming = viewModel.state, let scannedBook = viewModel.scannedBook {
-            // In confirmation mode: use the scanned book's data directly
-            book = Book(
-                isbn: scannedBook.isbn,
-                title: scannedBook.title,
-                author: scannedBook.author,
-                totalCopies: 1,
-                availableCopies: 1,
-                bookDescription: scannedBook.bookDescription,
-                pageCount: scannedBook.pageCount,
-                publishedDate: scannedBook.publishedDate,
-                publisher: scannedBook.publisher,
-                languageCode: scannedBook.languageCode,
-                coverImageURL: scannedBook.coverImageURL
-            )
-        } else if let scannedBook = viewModel.scannedBook {
-            // In edit mode: use the edited values from viewModel
-            book = Book(
-                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
-                title: viewModel.title,
-                author: viewModel.author,
-                totalCopies: viewModel.totalCopies,
-                availableCopies: viewModel.totalCopies,
-                bookDescription: scannedBook.bookDescription,
-                pageCount: scannedBook.pageCount,
-                publishedDate: scannedBook.publishedDate,
-                publisher: scannedBook.publisher,
-                languageCode: scannedBook.languageCode,
-                coverImageURL: scannedBook.coverImageURL
-            )
-        } else {
-            // Manual entry: create book from form fields only
-            book = Book(
-                isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
-                title: viewModel.title,
-                author: viewModel.author,
-                totalCopies: viewModel.totalCopies,
-                availableCopies: viewModel.totalCopies
-            )
-        }
-        
+        let book = createBookFromViewModel()
         modelContext.insert(book)
         
         // Note: For return, we can't proceed automatically because the book
