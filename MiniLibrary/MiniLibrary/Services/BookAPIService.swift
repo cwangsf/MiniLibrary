@@ -151,27 +151,44 @@ struct BookAPIService {
         let cleanedISBN = isbn.replacingOccurrences(of: "-", with: "")
         let urlString = "\(Self.openLibraryAPIBaseURL)?bibkeys=ISBN:\(cleanedISBN)&format=json&jscmd=data"
         
+        logger.info("🔍 Attempting Open Library API: \(urlString)")
+        
         guard let url = URL(string: urlString) else {
+            logger.error("❌ Open Library: Invalid URL")
             throw BookAPIError.invalidURL
         }
         
         let (data, response) = try await session.data(from: url)
         
         guard let httpResponse = response as? HTTPURLResponse else {
+            logger.error("❌ Open Library: Invalid response")
             throw BookAPIError.invalidResponse
         }
         
+        logger.info("📡 Open Library HTTP Status: \(httpResponse.statusCode)")
+        
         guard httpResponse.statusCode == 200 else {
+            logger.error("❌ Open Library: HTTP error \(httpResponse.statusCode)")
             throw BookAPIError.httpError(statusCode: httpResponse.statusCode)
+        }
+        
+        // Log raw response for debugging
+        if let rawString = String(data: data, encoding: .utf8) {
+            logger.debug("📥 Open Library raw response: \(rawString)")
         }
         
         // Parse Open Library response
         let openLibraryResponse = try JSONDecoder().decode([String: OpenLibraryBookData].self, from: data)
         
+        logger.info("📦 Open Library response keys: \(openLibraryResponse.keys.joined(separator: ", "))")
+        
         guard let bookData = openLibraryResponse["ISBN:\(cleanedISBN)"] else {
+            logger.error("❌ Open Library: Book not found for ISBN:\(cleanedISBN)")
+            logger.debug("Available keys in response: \(openLibraryResponse.keys.joined(separator: ", "))")
             throw BookAPIError.bookNotFound
         }
         
+        logger.info("✅ Open Library: Found book data for ISBN:\(cleanedISBN)")
         return parseOpenLibraryBookData(bookData, isbn: cleanedISBN)
     }
 

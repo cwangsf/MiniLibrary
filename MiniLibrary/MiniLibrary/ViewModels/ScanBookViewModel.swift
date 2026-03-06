@@ -76,20 +76,21 @@ class ScanBookViewModel {
     @MainActor
     func fetchBookInfo(isbn: String) async {
         do {
-            // Try Google Books API first (more reliable)
+            // Try Google Books API first, with Open Library fallback
+            logger.info("🔎 Starting book info fetch for ISBN: \(isbn)")
             let book = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
             scannedBook = book
             title = book.title
             author = book.author ?? ""
             self.isbn = book.isbn ?? isbn
 
-            logger.debug("Fetched book - Title: \(book.title), Author: \(String(describing: book.author)), ISBN: \(book.isbn ?? "nil")")
+            logger.info("✅ Successfully fetched book - Title: \(book.title), Author: \(String(describing: book.author)), ISBN: \(book.isbn ?? "nil")")
             logger.debug("ViewModel state - Title: \(self.title), Author: \(self.author), ISBN: \(self.isbn)")
 
             state = .confirming(book: book)
         } catch {
             let errorMsg = "Could not fetch book info: \(error.localizedDescription)"
-            logger.error("API Error - \(error)")
+            logger.error("❌ Failed to fetch book info - \(error)")
             state = .error(message: errorMsg)
         }
     }
