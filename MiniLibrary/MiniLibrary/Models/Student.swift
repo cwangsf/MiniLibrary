@@ -53,3 +53,32 @@ final class Student: Codable {
         try container.encode(createdAt, forKey: .createdAt)
     }
 }
+
+// MARK: - Factory Methods
+extension Student {
+    /// Creates a Student from form input fields, automatically handling empty classCode
+    static func fromFormInput(firstName: String, lastName: String, classCode: String) -> Student {
+        Student(
+            firstName: firstName,
+            lastName: lastName,
+            classCode: classCode.trimmedOrNil
+        )
+    }
+    
+    /// Creates a Student from CSV row data, automatically handling empty/whitespace values
+    static func fromCSV(firstName: String, lastName: String, classCode: String?) -> Student? {
+        let trimmedFirst = firstName.trimmed
+        let trimmedLast = lastName.trimmed
+        
+        // Require both first and last name
+        guard !trimmedFirst.isEmpty, !trimmedLast.isEmpty else {
+            return nil
+        }
+        
+        return Student(
+            firstName: trimmedFirst,
+            lastName: trimmedLast,
+            classCode: classCode?.trimmedOrNil
+        )
+    }
+}

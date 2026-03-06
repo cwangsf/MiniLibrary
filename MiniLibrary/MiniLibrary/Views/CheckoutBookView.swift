@@ -210,10 +210,10 @@ struct CheckoutBookView: View {
     }
 
     private func addStudent() {
-        let student = Student(
+        let student = Student.fromFormInput(
             firstName: newStudentFirstName,
             lastName: newStudentLastName,
-            classCode: newStudentClass.isEmpty ? nil : newStudentClass
+            classCode: newStudentClass
         )
 
         modelContext.insert(student)

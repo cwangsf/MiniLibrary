@@ -132,10 +132,10 @@ struct AddStudentView: View {
     }
 
     private func addStudent() {
-        let student = Student(
+        let student = Student.fromFormInput(
             firstName: firstName,
             lastName: lastName,
-            classCode: classCode.isEmpty ? nil : classCode
+            classCode: classCode
         )
 
         modelContext.insert(student)
@@ -147,7 +147,7 @@ struct AddStudentView: View {
 
         student.firstName = editingFirstName
         student.lastName = editingLastName
-        student.classCode = editingCode.isEmpty ? nil : editingCode
+        student.classCode = editingCode.trimmedOrNil
     }
 
     private func deleteAllStudents() {

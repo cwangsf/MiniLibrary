@@ -120,66 +120,50 @@ struct CSVImporter {
     /// Create a Book instance from CSV row (supports multiple column name formats)
     /// Returns a tuple of (book, reason) where book is nil if creation failed
     private static func createBook(from csvRow: [String: String]) -> (book: Book?, reason: String) {
-        // Try "Title" column
-        guard let title = csvRow["Title"]?.trimmingCharacters(in: .whitespaces),
-              !title.isEmpty else {
+        // Title is required
+        guard let title = csvRow["Title"]?.trimmed, !title.isEmpty else {
             return (nil, "Missing or empty Title")
         }
 
         // Try both "Primary Author" and "Author" columns (author is optional)
-        var author: String? = nil
-        if let primaryAuthor = csvRow["Primary Author"]?.trimmingCharacters(in: .whitespaces),
-           !primaryAuthor.isEmpty {
-            author = primaryAuthor
-        } else if let standardAuthor = csvRow["Author"]?.trimmingCharacters(in: .whitespaces),
-                  !standardAuthor.isEmpty {
-            author = standardAuthor
-        }
+        let author = csvRow["Primary Author"]?.trimmedOrNil ?? csvRow["Author"]?.trimmedOrNil
 
         // Extract first ISBN from "ISBNs" or "ISBN" column
         var isbn: String? = nil
-        if let isbns = csvRow["ISBNs"]?.trimmingCharacters(in: .whitespaces),
-           !isbns.isEmpty {
+        if let isbns = csvRow["ISBNs"]?.trimmed, !isbns.isEmpty {
             // ISBNs are in format "1406312207, 9781406312201" or "[1406312207]"
             let cleaned = isbns.replacingOccurrences(of: "[", with: "")
                                .replacingOccurrences(of: "]", with: "")
                                .replacingOccurrences(of: "-", with: "")
-            isbn = cleaned.components(separatedBy: ",").first?.trimmingCharacters(in: .whitespaces)
-        } else if let singleISBN = csvRow["ISBN"]?.trimmingCharacters(in: .whitespaces),
-                  !singleISBN.isEmpty {
+            isbn = cleaned.components(separatedBy: ",").first?.trimmed
+        } else if let singleISBN = csvRow["ISBN"]?.trimmed, !singleISBN.isEmpty {
             isbn = singleISBN.replacingOccurrences(of: "-", with: "")
         }
 
         // Get copies (try both "Copies" and "Total Copies")
         var totalCopies = 1
-        if let copiesStr = csvRow["Copies"]?.trimmingCharacters(in: .whitespaces),
+        if let copiesStr = csvRow["Copies"]?.trimmed,
            let copies = Int(copiesStr), copies > 0 {
             totalCopies = copies
-        } else if let totalStr = csvRow["Total Copies"]?.trimmingCharacters(in: .whitespaces),
+        } else if let totalStr = csvRow["Total Copies"]?.trimmed,
                   let copies = Int(totalStr), copies > 0 {
             totalCopies = copies
         }
 
         // Get available copies (defaults to total if not specified)
         var availableCopies = totalCopies
-        if let availStr = csvRow["Available Copies"]?.trimmingCharacters(in: .whitespaces),
+        if let availStr = csvRow["Available Copies"]?.trimmed,
            let avail = Int(availStr), avail >= 0 {
             availableCopies = avail
         }
 
         // Optional fields from CSV
         // Try both "Languages" (plural) and "Language" (singular)
-        let language: String?
-        if let languages = csvRow["Languages"]?.trimmingCharacters(in: .whitespaces), !languages.isEmpty {
-            language = languages
-        } else {
-            language = csvRow["Language"]?.trimmingCharacters(in: .whitespaces)
-        }
-
-        let publisher = csvRow["Publisher"]?.trimmingCharacters(in: .whitespaces)
-        let publishedDate = csvRow["Published Date"]?.trimmingCharacters(in: .whitespaces)
-        let pageCount = csvRow["Page Count"].flatMap { Int($0.trimmingCharacters(in: .whitespaces)) }
-        let notes = csvRow["Notes"]?.trimmingCharacters(in: .whitespaces)
+        let language = csvRow["Languages"]?.trimmedOrNil ?? csvRow["Language"]?.trimmedOrNil
+        let publisher = csvRow["Publisher"]?.trimmedOrNil
+        let publishedDate = csvRow["Published Date"]?.trimmedOrNil
+        let pageCount = csvRow["Page Count"].flatMap { Int($0.trimmed) }
+        let notes = csvRow["Notes"]?.trimmedOrNil
 
         let book = Book(
             isbn: isbn,
@@ -362,32 +346,25 @@ struct CSVImporter {
     /// Format: First Name, Surname, Year_Class (optional)
     private static func createStudent(from csvRow: [String: String]) -> Student? {
         // First Name is required
-        guard let firstName = csvRow["First Name"]?.trimmingCharacters(in: .whitespaces),
+        guard let firstName = csvRow["First Name"]?.trimmed,
               !firstName.isEmpty else {
             return nil
         }
 
         // Surname is required (try "Surname" first, then fall back to "Last Name" for backward compatibility)
         let lastName: String
-        if let surname = csvRow["Surname"]?.trimmingCharacters(in: .whitespaces), !surname.isEmpty {
+        if let surname = csvRow["Surname"]?.trimmed, !surname.isEmpty {
             lastName = surname
-        } else if let lastNameValue = csvRow["Last Name"]?.trimmingCharacters(in: .whitespaces), !lastNameValue.isEmpty {
+        } else if let lastNameValue = csvRow["Last Name"]?.trimmed, !lastNameValue.isEmpty {
             lastName = lastNameValue
         } else {
             return nil
         }
 
         // Year_Class is optional (try "Year_Class" first, then fall back to "Class" for backward compatibility)
-        let classCode: String?
-        if let yearClass = csvRow["Year_Class"]?.trimmingCharacters(in: .whitespaces), !yearClass.isEmpty {
-            classCode = yearClass
-        } else if let classValue = csvRow["Class"]?.trimmingCharacters(in: .whitespaces), !classValue.isEmpty {
-            classCode = classValue
-        } else {
-            classCode = nil
-        }
+        let classCode = csvRow["Year_Class"]?.trimmedOrNil ?? csvRow["Class"]?.trimmedOrNil
 
-        return Student(firstName: firstName, lastName: lastName, classCode: classCode)
+        return Student.fromCSV(firstName: firstName, lastName: lastName, classCode: classCode)
     }
 
     /// Import checkout records from CSV format
