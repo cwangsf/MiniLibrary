@@ -30,7 +30,6 @@ final class Book: Codable {
     // User-editable field
     var notes: String?
     var isWishlistItem: Bool
-    var isFavorite: Bool
 
     @Relationship(deleteRule: .nullify, inverse: \CheckoutRecord.book)
     var checkouts: [CheckoutRecord]?
@@ -51,8 +50,7 @@ final class Book: Codable {
         coverImageURL: String? = nil,
         cachedCoverImage: String? = nil,
         notes: String? = nil,
-        isWishlistItem: Bool = false,
-        isFavorite: Bool = false
+        isWishlistItem: Bool = false
     ) {
         self.id = id
         self.isbn = isbn
@@ -78,7 +76,6 @@ final class Book: Codable {
         self.coverImageURL = coverImageURL
         self.cachedCoverImage = cachedCoverImage
         self.notes = notes
-        self.isFavorite = isFavorite
     }
 
     // MARK: - Codable
@@ -99,7 +96,6 @@ final class Book: Codable {
         case cachedCoverImage = "cached_cover_image"
         case notes
         case isWishlistItem = "is_wishlist_item"
-        case isFavorite = "is_favorite"
     }
 
     required init(from decoder: Decoder) throws {
@@ -120,7 +116,6 @@ final class Book: Codable {
         self.cachedCoverImage = try container.decodeIfPresent(String.self, forKey: .cachedCoverImage)
         self.notes = try container.decodeIfPresent(String.self, forKey: .notes)
         self.isWishlistItem = try container.decodeIfPresent(Bool.self, forKey: .isWishlistItem) ?? false
-        self.isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
     }
 
     func encode(to encoder: Encoder) throws {
@@ -141,7 +136,6 @@ final class Book: Codable {
         try container.encodeIfPresent(cachedCoverImage, forKey: .cachedCoverImage)
         try container.encodeIfPresent(notes, forKey: .notes)
         try container.encode(isWishlistItem, forKey: .isWishlistItem)
-        try container.encode(isFavorite, forKey: .isFavorite)
     }
 }
 
