@@ -151,6 +151,9 @@ struct CheckoutBookView: View {
                         dueDate: dueDate,
                         onConfirm: {
                             checkoutBook()
+                        },
+                        onCancel: {
+                            showingConfirmation = false
                         }
                     )
                 }

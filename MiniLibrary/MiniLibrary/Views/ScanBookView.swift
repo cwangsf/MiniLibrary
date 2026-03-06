@@ -110,6 +110,9 @@ struct ScanBookView: View {
                 }
             }
             .sheet(isPresented: $showingCheckoutAfterAdd) {
+                viewModel.reset()
+                bookToCheckout = nil
+            } content: {
                 if let book = bookToCheckout {
                     CheckoutBookView(book: book) {
                         viewModel.reset()
@@ -118,6 +121,9 @@ struct ScanBookView: View {
                 }
             }
             .sheet(isPresented: $showingConfirmation) {
+                showingConfirmation = false
+                viewModel.reset()
+            } content: {
                 if case .confirming(let book) = viewModel.state {
                     bookConfirmationSheetView(book: book)
                 }

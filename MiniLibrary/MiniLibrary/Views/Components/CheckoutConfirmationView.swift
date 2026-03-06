@@ -12,6 +12,7 @@ struct CheckoutConfirmationView: View {
     let student: Student
     let dueDate: Date
     let onConfirm: () -> Void
+    var onCancel: (() -> Void)? = nil
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -91,6 +92,7 @@ struct CheckoutConfirmationView: View {
                         }
 
                         Button {
+                            onCancel?()
                             dismiss()
                         } label: {
                             Text("Cancel")
