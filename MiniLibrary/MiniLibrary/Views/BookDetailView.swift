@@ -28,6 +28,7 @@ struct BookDetailView: View {
     @State private var isEditingInfo = false
     @State private var titleText = ""
     @State private var authorText = ""
+    @State private var isbnText = ""
     
     var body: some View {
         ScrollView {
@@ -68,6 +69,15 @@ struct BookDetailView: View {
                                 TextField("Author Name", text: $authorText)
                                     .textFieldStyle(.roundedBorder)
                                     .font(.title3)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("ISBN")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                TextField("ISBN", text: $isbnText)
+                                    .textFieldStyle(.roundedBorder)
+                                    .font(.body)
                             }
                         }
                         .padding(.horizontal)
@@ -320,6 +330,7 @@ struct BookDetailView: View {
             availableCopiesText = "\(book.availableCopies)"
             titleText = book.title
             authorText = book.author ?? ""
+            isbnText = book.isbn ?? ""
             
             // Fetch book info in background if missing metadata
             fetchBookInfoIfNeeded()
@@ -429,16 +440,19 @@ struct BookDetailView: View {
     private func saveBookInfo() {
         let trimmedTitle = titleText.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedAuthor = authorText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedISBN = isbnText.trimmingCharacters(in: .whitespacesAndNewlines)
         
         // Don't allow empty title
         guard !trimmedTitle.isEmpty else {
             titleText = book.title
             authorText = book.author ?? ""
+            isbnText = book.isbn ?? ""
             return
         }
         
         book.title = trimmedTitle
         book.author = trimmedAuthor.isEmpty ? nil : trimmedAuthor
+        book.isbn = trimmedISBN.isEmpty ? nil : trimmedISBN
         
         // Save changes to database
         do {
