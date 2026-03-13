@@ -76,7 +76,8 @@ struct CSVImporter {
                 if seenBooks.contains(bookKey) {
                     let reason = "Duplicate in CSV (same as earlier line): \(book.title) by \(book.author ?? "Unknown")"
                     skippedLines.append((lineNumber: lineNumber, reason: reason, row: row))
-                    logger.info("Skipping line \(lineNumber): \(reason)")
+                    let isbnInfo = book.isbn.map { " (ISBN: \($0))" } ?? " (no ISBN)"
+                    logger.info("Skipping line \(lineNumber): \(reason)\(isbnInfo)")
                     continue
                 }
 
@@ -95,7 +96,7 @@ struct CSVImporter {
                    }) {
                     let reason = "Duplicate in database: \(book.title) by \(book.author ?? "Unknown")"
                     skippedLines.append((lineNumber: lineNumber, reason: reason, row: row))
-                    logger.info("Skipping line \(lineNumber): \(reason)")
+                    logger.info("Skipping line \(lineNumber): \(reason) (no ISBN)")
                     continue
                 }
 
@@ -105,7 +106,9 @@ struct CSVImporter {
                 importedCount += 1
             } else {
                 skippedLines.append((lineNumber: lineNumber, reason: result.reason, row: row))
-                logger.info("Skipping line \(lineNumber): \(result.reason) Book info: \(row)")
+                let isbn = row["ISBN"] ?? row["ISBNs"]
+                let isbnInfo = isbn.map { " (ISBN: \($0))" } ?? " (no ISBN)"
+                logger.info("Skipping line \(lineNumber): \(result.reason)\(isbnInfo) Book info: \(row)")
             }
         }
 
@@ -202,7 +205,9 @@ struct CSVImporter {
                 modelContext.insert(book)
                 importedCount += 1
             } else {
-                logger.info("Skipping line \(index + 2): invalid wishlist data - Title is required")
+                let isbn = row["ISBN"] ?? row["ISBNs"]
+                let isbnInfo = isbn.map { " (ISBN: \($0))" } ?? " (no ISBN)"
+                logger.info("Skipping line \(index + 2): invalid wishlist data - Title is required\(isbnInfo)")
             }
         }
 
