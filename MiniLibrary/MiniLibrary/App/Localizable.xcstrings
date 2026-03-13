@@ -2433,6 +2433,9 @@
         }
       }
     },
+    "No checkouts match '%@'" : {
+
+    },
     "No copies available" : {
       "localizations" : {
         "de" : {
@@ -3118,6 +3121,9 @@
       }
     },
     "Search books, authors, or ISBN" : {
+
+    },
+    "Search by book or student name" : {
 
     },
     "Search by name" : {

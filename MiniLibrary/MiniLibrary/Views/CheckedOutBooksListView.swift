@@ -13,12 +13,29 @@ struct CheckedOutBooksListView: View {
     @Query(filter: #Predicate<CheckoutRecord> { $0.returnDate == nil },
            sort: \CheckoutRecord.dueDate)
     private var activeCheckouts: [CheckoutRecord]
+    
+    @State private var searchText = ""
+    
+    // Filter checkouts based on search text
+    private var filteredCheckouts: [CheckoutRecord] {
+        if searchText.isEmpty {
+            return activeCheckouts
+        }
+        
+        return activeCheckouts.filter { checkout in
+            let bookTitle = checkout.book?.title ?? ""
+            let studentName = checkout.student?.fullName ?? ""
+            
+            return bookTitle.localizedCaseInsensitiveContains(searchText) ||
+                   studentName.localizedCaseInsensitiveContains(searchText)
+        }
+    }
 
     // Group checkouts by student class
     private var groupedCheckouts: [String: [CheckoutRecord]] {
         var grouped: [String: [CheckoutRecord]] = [:]
 
-        for checkout in activeCheckouts {
+        for checkout in filteredCheckouts {
             if let classCode = checkout.student?.classCode, !classCode.isEmpty {
                 if grouped[classCode] == nil {
                     grouped[classCode] = []
@@ -53,6 +70,12 @@ struct CheckedOutBooksListView: View {
                     systemImage: "book.closed",
                     description: Text("All books are currently available")
                 )
+            } else if filteredCheckouts.isEmpty {
+                ContentUnavailableView(
+                    "No Results",
+                    systemImage: "magnifyingglass",
+                    description: Text("No checkouts match '\(searchText)'")
+                )
             } else {
                 ForEach(sortedSectionTitles, id: \.self) { classCode in
                     Section {
@@ -70,6 +93,7 @@ struct CheckedOutBooksListView: View {
         }
         .navigationTitle("Checked Out Books")
         .navigationBarTitleDisplayMode(.inline)
+        .searchable(text: $searchText, prompt: "Search by book or student name")
     }
 }
 
