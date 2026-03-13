@@ -11,6 +11,7 @@ import SwiftUI
 /// Provides a standardized confirmation UI across the app
 struct BaseConfirmationView<Content: View>: View {
     let title: String
+    let book: Book
     let confirmButtonText: String
     let confirmButtonIcon: String
     let confirmButtonColor: Color
@@ -22,6 +23,7 @@ struct BaseConfirmationView<Content: View>: View {
     
     init(
         title: String,
+        book: Book,
         confirmButtonText: String,
         confirmButtonIcon: String = "checkmark.circle.fill",
         confirmButtonColor: Color = .blue,
@@ -30,6 +32,7 @@ struct BaseConfirmationView<Content: View>: View {
         @ViewBuilder content: () -> Content
     ) {
         self.title = title
+        self.book = book
         self.confirmButtonText = confirmButtonText
         self.confirmButtonIcon = confirmButtonIcon
         self.confirmButtonColor = confirmButtonColor
@@ -42,9 +45,16 @@ struct BaseConfirmationView<Content: View>: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
-                    Text(title)
-                        .sectionTitle()
-                        .padding(.top, 20)
+                    VStack(spacing: 8) {
+                        Text(title)
+                            .sectionTitle()
+                        if let isbn = book.isbn {
+                            Text("ISBN: \(isbn)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(.top, 20)
                     
                     content
                         .padding(.horizontal)

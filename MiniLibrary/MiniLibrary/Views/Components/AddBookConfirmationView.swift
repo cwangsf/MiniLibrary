@@ -16,8 +16,16 @@ struct AddBookConfirmationView: View {
     let onConfirm: () -> Void
 
     var body: some View {
+        let tempBook = Book(
+            isbn: isbn.isEmpty ? nil : isbn,
+            title: title,
+            author: author.isEmpty ? nil : author,
+            totalCopies: 1
+        )
+        
         BaseConfirmationView(
             title: "Confirm New Book",
+            book: tempBook,
             confirmButtonText: "Add Book",
             confirmButtonIcon: "checkmark.circle.fill",
             confirmButtonColor: .blue,

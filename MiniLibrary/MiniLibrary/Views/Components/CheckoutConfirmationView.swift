@@ -17,6 +17,7 @@ struct CheckoutConfirmationView: View {
     var body: some View {
         BaseConfirmationView(
             title: "Confirm Checkout",
+            book: book,
             confirmButtonText: "Confirm Checkout",
             confirmButtonIcon: "checkmark.circle.fill",
             confirmButtonColor: .blue,
