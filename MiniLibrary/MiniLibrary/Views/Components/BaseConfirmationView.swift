@@ -7,14 +7,55 @@
 
 import SwiftUI
 
+/// Confirmation screen types with their associated display properties
+enum ConfirmationType {
+    case checkout
+    case returnBook
+    case addBook
+    
+    var title: String {
+        switch self {
+        case .checkout:
+            return "Confirm Checkout"
+        case .returnBook:
+            return "Confirm Return"
+        case .addBook:
+            return "Confirm New Book"
+        }
+    }
+    
+    var buttonText: String {
+        switch self {
+        case .checkout:
+            return "Confirm Checkout"
+        case .returnBook:
+            return "Confirm Return"
+        case .addBook:
+            return "Add Book"
+        }
+    }
+    
+    var buttonIcon: String {
+        return "checkmark.circle.fill"
+    }
+    
+    var buttonColor: Color {
+        switch self {
+        case .checkout:
+            return .blue
+        case .returnBook:
+            return .green
+        case .addBook:
+            return .blue
+        }
+    }
+}
+
 /// Generic base confirmation view with consistent layout and button structure
 /// Provides a standardized confirmation UI across the app
 struct BaseConfirmationView<Content: View>: View {
-    let title: String
+    let type: ConfirmationType
     let book: Book
-    let confirmButtonText: String
-    let confirmButtonIcon: String
-    let confirmButtonColor: Color
     let onConfirm: () -> Void
     let onCancel: (() -> Void)?
     @ViewBuilder let content: Content
@@ -22,20 +63,14 @@ struct BaseConfirmationView<Content: View>: View {
     @Environment(\.dismiss) private var dismiss
     
     init(
-        title: String,
+        type: ConfirmationType,
         book: Book,
-        confirmButtonText: String,
-        confirmButtonIcon: String = "checkmark.circle.fill",
-        confirmButtonColor: Color = .blue,
         onConfirm: @escaping () -> Void,
         onCancel: (() -> Void)? = nil,
         @ViewBuilder content: () -> Content
     ) {
-        self.title = title
+        self.type = type
         self.book = book
-        self.confirmButtonText = confirmButtonText
-        self.confirmButtonIcon = confirmButtonIcon
-        self.confirmButtonColor = confirmButtonColor
         self.onConfirm = onConfirm
         self.onCancel = onCancel
         self.content = content()
@@ -46,7 +81,7 @@ struct BaseConfirmationView<Content: View>: View {
             ScrollView {
                 VStack(spacing: 24) {
                     VStack(spacing: 8) {
-                        Text(title)
+                        Text(type.title)
                             .sectionTitle()
                         if let isbn = book.isbn {
                             Text("ISBN: \(isbn)")
@@ -66,10 +101,10 @@ struct BaseConfirmationView<Content: View>: View {
                             dismiss()
                         } label: {
                             HStack {
-                                Image(systemName: confirmButtonIcon)
-                                Text(confirmButtonText)
+                                Image(systemName: type.buttonIcon)
+                                Text(type.buttonText)
                             }
-                            .prominentButton(color: confirmButtonColor)
+                            .prominentButton(color: type.buttonColor)
                         }
                         
                         Button {

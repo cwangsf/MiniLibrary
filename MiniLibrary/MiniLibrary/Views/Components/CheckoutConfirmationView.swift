@@ -16,11 +16,8 @@ struct CheckoutConfirmationView: View {
 
     var body: some View {
         BaseConfirmationView(
-            title: "Confirm Checkout",
+            type: .checkout,
             book: book,
-            confirmButtonText: "Confirm Checkout",
-            confirmButtonIcon: "checkmark.circle.fill",
-            confirmButtonColor: .blue,
             onConfirm: onConfirm,
             onCancel: onCancel
         ) {

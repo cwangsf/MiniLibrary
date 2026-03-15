@@ -24,11 +24,8 @@ struct AddBookConfirmationView: View {
         )
         
         BaseConfirmationView(
-            title: "Confirm New Book",
+            type: .addBook,
             book: tempBook,
-            confirmButtonText: "Add Book",
-            confirmButtonIcon: "checkmark.circle.fill",
-            confirmButtonColor: .blue,
             onConfirm: onConfirm
         ) {
             VStack(spacing: 16) {
