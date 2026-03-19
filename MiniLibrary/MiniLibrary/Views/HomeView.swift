@@ -11,6 +11,8 @@ import SwiftData
 struct HomeView: View {
     
     private let cardSpacing: CGFloat = 16
+    @State private var showingCheckoutScan = false
+    @State private var showingReturnScan = false
 
     var statCards: [StatCardType] {
         [
@@ -51,6 +53,12 @@ struct HomeView: View {
                     .padding(.top, cardSpacing)
                 }
                 .navigationTitle("Home")
+                .fullScreenCover(isPresented: $showingCheckoutScan) {
+                    ScanBookView(scanPurpose: .checkout)
+                }
+                .fullScreenCover(isPresented: $showingReturnScan) {
+                    ScanBookView(scanPurpose: .returnBook)
+                }
             }
         
     }
@@ -82,12 +90,16 @@ extension HomeView {
             }
             .buttonStyle(.plain)
         case .quickCheckout:
-            NavigationLink(destination: ScanBookView(scanPurpose: .checkout)) {
+            Button {
+                showingCheckoutScan = true
+            } label: {
                 StatCard(title: cardType.title, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)
         case .quickReturn:
-            NavigationLink(destination: ScanBookView(scanPurpose: .returnBook)) {
+            Button {
+                showingReturnScan = true
+            } label: {
                 StatCard(title: cardType.title, icon: cardType.icon, color: cardType.color)
             }
             .buttonStyle(.plain)

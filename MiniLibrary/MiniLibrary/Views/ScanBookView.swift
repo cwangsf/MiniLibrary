@@ -17,8 +17,14 @@ struct ScanBookView: View {
     @State private var viewModel = ScanBookViewModel()
     @State private var showingScanResult = false
     @State private var showingCheckoutAfterAdd = false
+    @State private var showingCheckoutExisting = false
+    @State private var showingReturnAfterAdd = false
+    @State private var showingReturnExisting = false
     @State private var showingConfirmation = false
     @State private var bookToCheckout: Book?
+    @State private var bookToReturn: Book?
+    @State private var checkoutCompleted = false
+    @State private var returnCompleted = false
 
     var navigationTitle: String {
         switch viewModel.state {
@@ -109,14 +115,63 @@ struct ScanBookView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingCheckoutAfterAdd) {
+            .sheet(isPresented: $showingCheckoutAfterAdd, onDismiss: {
                 viewModel.reset()
                 bookToCheckout = nil
-            } content: {
+                // After sheet dismisses, check if checkout was completed
+                if checkoutCompleted {
+                    checkoutCompleted = false
+                    dismiss()
+                }
+            }) {
                 if let book = bookToCheckout {
                     CheckoutBookView(book: book) {
-                        viewModel.reset()
-                        dismiss()
+                        checkoutCompleted = true
+                    }
+                }
+            }
+            .sheet(isPresented: $showingCheckoutExisting, onDismiss: {
+                viewModel.reset()
+                bookToCheckout = nil
+                // After sheet dismisses, check if checkout was completed
+                if checkoutCompleted {
+                    checkoutCompleted = false
+                    dismiss()
+                }
+            }) {
+                if let book = bookToCheckout {
+                    CheckoutBookView(book: book) {
+                        checkoutCompleted = true
+                    }
+                }
+            }
+            .sheet(isPresented: $showingReturnAfterAdd, onDismiss: {
+                viewModel.reset()
+                bookToReturn = nil
+                // After sheet dismisses, check if return was completed
+                if returnCompleted {
+                    returnCompleted = false
+                    dismiss()
+                }
+            }) {
+                if let book = bookToReturn {
+                    ReturnBookView(book: book) {
+                        returnCompleted = true
+                    }
+                }
+            }
+            .sheet(isPresented: $showingReturnExisting, onDismiss: {
+                viewModel.reset()
+                bookToReturn = nil
+                // After sheet dismisses, check if return was completed
+                if returnCompleted {
+                    returnCompleted = false
+                    dismiss()
+                }
+            }) {
+                if let book = bookToReturn {
+                    ReturnBookView(book: book) {
+                        returnCompleted = true
                     }
                 }
             }
@@ -395,12 +450,12 @@ struct ScanBookView: View {
                     // Check if book exists in catalog
                     let existingBook = viewModel.existingBook ?? allBooks.first(where: { $0.isbn == book.isbn })
                     
-                    if let bookToCheckout = existingBook {
+                    if let existingBookForCheckout = existingBook {
                         // Book exists - allow checkout
-                        NavigationLink(destination: CheckoutBookView(book: bookToCheckout) {
-                            viewModel.reset()
-                            dismiss()
-                        }) {
+                        Button {
+                            bookToCheckout = existingBookForCheckout
+                            showingCheckoutExisting = true
+                        } label: {
                             HStack {
                                 Image(systemName: "arrow.right.circle.fill")
                                 Text("Proceed to Checkout")
@@ -430,12 +485,12 @@ struct ScanBookView: View {
                     // Check if book exists in catalog
                     let existingBook = viewModel.existingBook ?? allBooks.first(where: { $0.isbn == book.isbn })
                     
-                    if let bookToReturn = existingBook {
+                    if let existingBookForReturn = existingBook {
                         // Book exists - allow return
-                        NavigationLink(destination: ReturnBookView(book: bookToReturn) {
-                            viewModel.reset()
-                            dismiss()
-                        }) {
+                        Button {
+                            bookToReturn = existingBookForReturn
+                            showingReturnExisting = true
+                        } label: {
                             HStack {
                                 Image(systemName: "arrow.uturn.backward.circle.fill")
                                 Text("Proceed to Return")
@@ -598,10 +653,9 @@ struct ScanBookView: View {
         let book = createBookFromViewModel()
         modelContext.insert(book)
         
-        // Note: For return, we can't proceed automatically because the book
-        // was just added and has no checkout records yet. Just dismiss.
-        viewModel.reset()
-        dismiss()
+        // Proceed to return with the newly added book
+        bookToReturn = book
+        showingReturnAfterAdd = true
     }
 }
 
