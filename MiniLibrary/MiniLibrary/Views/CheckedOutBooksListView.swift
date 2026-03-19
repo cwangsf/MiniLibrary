@@ -100,7 +100,7 @@ struct CheckedOutBooksListView: View {
 struct CheckoutDetailRow: View {
     let checkout: CheckoutRecord
     @Environment(\.modelContext) private var modelContext
-    @State private var showingReturnConfirmation = false
+    @State private var checkoutToReturn: CheckoutRecord?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -150,7 +150,7 @@ struct CheckoutDetailRow: View {
 
             // Return Button
             Button {
-                showingReturnConfirmation = true
+                checkoutToReturn = checkout
             } label: {
                 HStack {
                     Image(systemName: "arrow.uturn.left.circle.fill")
@@ -163,13 +163,14 @@ struct CheckoutDetailRow: View {
             .tint(.green)
         }
         .padding(.vertical, 8)
-        .sheet(isPresented: $showingReturnConfirmation) {
+        .sheet(item: $checkoutToReturn) { checkout in
             if let book = checkout.book {
                 ReturnConfirmationView(
                     book: book,
                     checkout: checkout,
                     onConfirm: {
                         returnBook(checkout)
+                        checkoutToReturn = nil
                     }
                 )
             }

@@ -17,7 +17,6 @@ struct ReturnBookView: View {
 
     @Query private var checkouts: [CheckoutRecord]
 
-    @State private var showingReturnConfirmation = false
     @State private var checkoutToReturn: CheckoutRecord?
 
     var activeCheckouts: [CheckoutRecord] {
@@ -50,7 +49,6 @@ struct ReturnBookView: View {
                             return
                         }
                         checkoutToReturn = checkout
-                        showingReturnConfirmation = true
                     } label: {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
@@ -74,27 +72,16 @@ struct ReturnBookView: View {
         }
         .navigationTitle("Return Book")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showingReturnConfirmation) {
-            if let checkout = checkoutToReturn, let book = checkout.book {
-                NavigationStack {
-                    ReturnConfirmationView(
-                        book: book,
-                        checkout: checkout,
-                        onConfirm: {
-                            returnBook(checkout)
-                        }
-                    )
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                showingReturnConfirmation = false
-                            }
-                        }
+        .sheet(item: $checkoutToReturn) { checkout in
+            if let book = checkout.book {
+                ReturnConfirmationView(
+                    book: book,
+                    checkout: checkout,
+                    onConfirm: {
+                        returnBook(checkout)
+                        checkoutToReturn = nil
                     }
-                    .navigationTitle("Return Book")
-                    .navigationBarTitleDisplayMode(.inline)
-                }
-                .presentationDetents([.large])
+                )
             }
         }
     }

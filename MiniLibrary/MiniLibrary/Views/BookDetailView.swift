@@ -22,7 +22,6 @@ struct BookDetailView: View {
     @State private var isEditingCopies = false
     @State private var totalCopiesText = ""
     @State private var availableCopiesText = ""
-    @State private var showingReturnConfirmation = false
     @State private var checkoutToReturn: CheckoutRecord?
     @State private var isFetchingBookInfo = false
     @State private var isEditingInfo = false
@@ -112,7 +111,6 @@ struct BookDetailView: View {
                                     return
                                 }
                                 checkoutToReturn = checkout
-                                showingReturnConfirmation = true
                             } label: {
                                 HStack {
                                     Image(systemName: "arrow.uturn.left.circle.fill")
@@ -313,16 +311,15 @@ struct BookDetailView: View {
                 dismiss()
             })
         }
-        .sheet(isPresented: $showingReturnConfirmation) {
-            if let checkout = checkoutToReturn {
-                ReturnConfirmationView(
-                    book: book,
-                    checkout: checkout,
-                    onConfirm: {
-                        returnBook(checkout)
-                    }
-                )
-            }
+        .sheet(item: $checkoutToReturn) { checkout in
+            ReturnConfirmationView(
+                book: book,
+                checkout: checkout,
+                onConfirm: {
+                    returnBook(checkout)
+                    checkoutToReturn = nil
+                }
+            )
         }
         .onAppear {
             notesText = book.notes ?? ""
