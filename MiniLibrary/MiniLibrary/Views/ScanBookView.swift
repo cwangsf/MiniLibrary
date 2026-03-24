@@ -653,9 +653,9 @@ struct ScanBookView: View {
         let book = createBookFromViewModel()
         modelContext.insert(book)
         
-        // Proceed to return with the newly added book
-        bookToReturn = book
-        showingReturnAfterAdd = true
+        // A newly added book has no checkout records, so there's nothing to return.
+        // Just reset and go back to scanning.
+        viewModel.reset()
     }
 }
 

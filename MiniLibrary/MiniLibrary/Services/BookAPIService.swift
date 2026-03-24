@@ -124,6 +124,7 @@ struct BookAPIService {
         guard let url = buildISBNSearchURL(isbn) else {
             throw BookAPIError.invalidURL
         }
+        logger.info("fetchFromGoogleAPI: (\(url))")
 
         let (data, response) = try await session.data(from: url)
 
