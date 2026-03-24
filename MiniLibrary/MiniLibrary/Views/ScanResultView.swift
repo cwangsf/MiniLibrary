@@ -38,7 +38,7 @@ struct ScanResultView: View {
         case .checkout:
             return String(localized: "Ready to Checkout")
         case .returnBook:
-            return String(localized: "Ready to Return")
+            return hasActiveCheckouts ? String(localized: "Ready to Return") : String(localized: "No Active Checkouts")
         }
     }
 
@@ -209,10 +209,14 @@ struct ScanResultView: View {
                                     }
                                 } else {
                                     VStack(spacing: 4) {
-                                        Text("Status")
+                                        Text("Available Copies")
                                             .labelStyle()
-                                        Text("No active checkouts")
-                                            .valueText()
+                                        HStack {
+                                            Image(systemName: "books.vertical.fill")
+                                                .iconStyle(color: .green)
+                                            Text("\(book.availableCopies) of \(book.totalCopies) available")
+                                                .valueText()
+                                        }
                                     }
                                 }
                             }

@@ -114,6 +114,16 @@
         }
       }
     },
+    "%lld of %lld available" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld available"
+          }
+        }
+      }
+    },
     "%lld selected" : {
       "localizations" : {
         "de" : {
@@ -794,6 +804,9 @@
           }
         }
       }
+    },
+    "Available Copies" : {
+
     },
     "Available:" : {
       "localizations" : {
@@ -2365,6 +2378,7 @@
 
     },
     "No active checkouts" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3373,6 +3387,7 @@
 
     },
     "Status" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
