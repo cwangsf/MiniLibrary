@@ -19,10 +19,11 @@ struct CheckoutBookView: View {
     @Query(sort: \Student.lastName) private var students: [Student]
 
     @AppStorage("maxBooksPerStudent") private var maxBooksAllowed: Int = 3
+    @AppStorage("defaultLoanPeriodDays") private var defaultLoanPeriodDays: Int = 14
 
     @State private var selectedBook: Book?
     @State private var selectedStudent: Student?
-    @State private var dueDate = Date().addingTimeInterval(14 * 24 * 60 * 60) // 2 weeks default
+    @State private var dueDate: Date
     @State private var showingConfirmation = false
     @State private var showingMaxBooksAlert = false
     @State private var showingAddStudent = false
@@ -45,6 +46,9 @@ struct CheckoutBookView: View {
         if let book = book {
             _selectedBook = State(initialValue: book)
         }
+        let days = UserDefaults.standard.integer(forKey: "defaultLoanPeriodDays")
+        let loanDays = days > 0 ? days : 14
+        _dueDate = State(initialValue: Calendar.current.date(byAdding: .day, value: loanDays, to: Date()) ?? Date())
     }
 
     var body: some View {

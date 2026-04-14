@@ -1504,6 +1504,16 @@
     "Danger Zone" : {
 
     },
+    "Default loan period: %lld day%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Default loan period: %1$lld day%2$@"
+          }
+        }
+      }
+    },
     "Delete" : {
       "localizations" : {
         "de" : {
@@ -2359,6 +2369,9 @@
           }
         }
       }
+    },
+    "Loan Period" : {
+
     },
     "Manage Checkouts" : {
       "extractionState" : "stale",
@@ -3542,6 +3555,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Students will not be allowed to check out more than %1$lld book%2$@ at a time."
+          }
+        }
+      }
+    },
+    "The due date will default to %lld day%@ from today when checking out a book." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The due date will default to %1$lld day%2$@ from today when checking out a book."
           }
         }
       }

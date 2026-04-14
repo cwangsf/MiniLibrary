@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage("maxBooksPerStudent") private var maxBooksAllowed: Int = 3
+    @AppStorage("defaultLoanPeriodDays") private var defaultLoanPeriodDays: Int = 14
 
     var body: some View {
         NavigationStack {
@@ -23,6 +24,18 @@ struct SettingsView: View {
                     Text("Borrowing Limits")
                 } footer: {
                     Text("Students will not be allowed to check out more than \(maxBooksAllowed) book\(maxBooksAllowed == 1 ? "" : "s") at a time.")
+                }
+
+                Section {
+                    Stepper(
+                        "Default loan period: \(defaultLoanPeriodDays) day\(defaultLoanPeriodDays == 1 ? "" : "s")",
+                        value: $defaultLoanPeriodDays,
+                        in: 1...365
+                    )
+                } header: {
+                    Text("Loan Period")
+                } footer: {
+                    Text("The due date will default to \(defaultLoanPeriodDays) day\(defaultLoanPeriodDays == 1 ? "" : "s") from today when checking out a book.")
                 }
             }
             .navigationTitle("Settings")
