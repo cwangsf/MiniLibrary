@@ -23,6 +23,8 @@ struct AddView: View {
     @State private var isExportingStudents = false
     @State private var exportCheckoutsFileURL: URL?
     @State private var isExportingCheckouts = false
+    @State private var exportOverdueListFileURL: URL?
+    @State private var isExportingOverdueList = false
     @State private var showingDeleteConfirmation = false
     @State private var showingImportPicker = false
     @State private var importResult: ImportResult?
@@ -157,6 +159,24 @@ struct AddView: View {
                             }
                         )
                         if isExportingCheckouts {
+                            Spacer()
+                            ProgressView()
+                                .scaleEffect(0.8)
+                        }
+                    }
+
+                    // Export Overdue List
+                    HStack {
+                        ExportOverdueListRow(
+                            isExporting: isExportingOverdueList,
+                            exportFileURL: exportOverdueListFileURL,
+                            onExport: {
+                                Task {
+                                    await exportOverdueList()
+                                }
+                            }
+                        )
+                        if isExportingOverdueList {
                             Spacer()
                             ProgressView()
                                 .scaleEffect(0.8)
@@ -336,6 +356,26 @@ struct AddView: View {
 
         exportCheckoutsFileURL = url
         isExportingCheckouts = false
+    }
+
+    private func exportOverdueList() async {
+        isExportingOverdueList = true
+
+        let descriptor = FetchDescriptor<CheckoutRecord>(
+            predicate: #Predicate { $0.returnDate == nil }
+        )
+
+        guard let activeCheckouts = try? modelContext.fetch(descriptor) else {
+            logger.error("Failed to fetch checkouts for overdue list export")
+            isExportingOverdueList = false
+            return
+        }
+
+        let csvContent = CSVExporter.exportOverdueList(activeCheckouts)
+        let url = CSVExporter.saveToTemporaryFile(csvContent, filename: "overdue_list\(dateSuffix()).csv")
+
+        exportOverdueListFileURL = url
+        isExportingOverdueList = false
     }
 
     private func deleteAllData() {

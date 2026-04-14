@@ -661,6 +661,9 @@
         }
       }
     },
+    "All (%lld)" : {
+
+    },
     "All Books" : {
 
     },
@@ -685,6 +688,9 @@
           }
         }
       }
+    },
+    "All checked out books are on time" : {
+
     },
     "App Version" : {
       "localizations" : {
@@ -1860,6 +1866,9 @@
     "Export Data" : {
 
     },
+    "Export Overdue List to CSV" : {
+
+    },
     "Export Reminder" : {
       "localizations" : {
         "de" : {
@@ -2517,6 +2526,9 @@
         }
       }
     },
+    "No Overdue Books" : {
+
+    },
     "No Recent Activity" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2716,6 +2728,9 @@
           }
         }
       }
+    },
+    "Overdue (%lld)" : {
+
     },
     "Point camera at ISBN barcode" : {
       "localizations" : {

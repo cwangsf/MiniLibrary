@@ -87,6 +87,46 @@ struct ExportWishlistRow: View {
     }
 }
 
+// MARK: - Export Overdue List Row
+struct ExportOverdueListRow: View {
+    let isExporting: Bool
+    let exportFileURL: URL?
+    let onExport: () -> Void
+
+    var body: some View {
+        if isExporting {
+            HStack {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                    Text("Export Overdue List to CSV")
+                        .foregroundStyle(.tint)
+                }
+                Spacer()
+                ProgressView()
+            }
+        } else if let url = exportFileURL {
+            ShareLink(item: url) {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                    Text("Export Overdue List to CSV")
+                        .foregroundStyle(.tint)
+                }
+            }
+        } else {
+            Button(action: onExport) {
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                    Text("Export Overdue List to CSV")
+                        .foregroundStyle(.tint)
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Import Catalog Row
 struct ImportCatalogRow: View {
     let onImport: () -> Void

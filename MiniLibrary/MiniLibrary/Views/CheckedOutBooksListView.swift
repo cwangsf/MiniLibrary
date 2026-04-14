@@ -8,24 +8,30 @@
 import SwiftUI
 import SwiftData
 
+enum CheckoutTab {
+    case all, overdue
+}
+
 struct CheckedOutBooksListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(filter: #Predicate<CheckoutRecord> { $0.returnDate == nil },
            sort: \CheckoutRecord.dueDate)
     private var activeCheckouts: [CheckoutRecord]
-    
+
     @State private var searchText = ""
-    
-    // Filter checkouts based on search text
+    @State private var selectedTab: CheckoutTab = .all
+
+    private var overdueCheckouts: [CheckoutRecord] {
+        activeCheckouts.filter { $0.isOverdue }
+    }
+
+    // Filter checkouts based on selected tab and search text
     private var filteredCheckouts: [CheckoutRecord] {
-        if searchText.isEmpty {
-            return activeCheckouts
-        }
-        
-        return activeCheckouts.filter { checkout in
+        let base = selectedTab == .overdue ? overdueCheckouts : activeCheckouts
+        if searchText.isEmpty { return base }
+        return base.filter { checkout in
             let bookTitle = checkout.book?.title ?? ""
             let studentName = checkout.student?.fullName ?? ""
-            
             return bookTitle.localizedCaseInsensitiveContains(searchText) ||
                    studentName.localizedCaseInsensitiveContains(searchText)
         }
@@ -34,28 +40,20 @@ struct CheckedOutBooksListView: View {
     // Group checkouts by student class
     private var groupedCheckouts: [String: [CheckoutRecord]] {
         var grouped: [String: [CheckoutRecord]] = [:]
-
         for checkout in filteredCheckouts {
             if let classCode = checkout.student?.classCode, !classCode.isEmpty {
-                if grouped[classCode] == nil {
-                    grouped[classCode] = []
-                }
+                if grouped[classCode] == nil { grouped[classCode] = [] }
                 grouped[classCode]?.append(checkout)
             } else {
-                // Group checkouts without class under "No Class"
-                if grouped[""] == nil {
-                    grouped[""] = []
-                }
+                if grouped[""] == nil { grouped[""] = [] }
                 grouped[""]?.append(checkout)
             }
         }
-
         return grouped
     }
 
     private var sortedSectionTitles: [String] {
         let titles = groupedCheckouts.keys.filter { !$0.isEmpty }.sorted()
-        // Add "No Class" at the end if there are checkouts without a class
         if groupedCheckouts[""] != nil && !(groupedCheckouts[""]?.isEmpty ?? true) {
             return titles + [""]
         }
@@ -64,11 +62,27 @@ struct CheckedOutBooksListView: View {
 
     var body: some View {
         List {
+            // Segmented control pinned at top
+            Section {
+                Picker("", selection: $selectedTab) {
+                    Text("All (\(activeCheckouts.count))").tag(CheckoutTab.all)
+                    Text("Overdue (\(overdueCheckouts.count))").tag(CheckoutTab.overdue)
+                }
+                .pickerStyle(.segmented)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            }
+
             if activeCheckouts.isEmpty {
                 ContentUnavailableView(
                     "No Checked Out Books",
                     systemImage: "book.closed",
                     description: Text("All books are currently available")
+                )
+            } else if selectedTab == .overdue && overdueCheckouts.isEmpty {
+                ContentUnavailableView(
+                    "No Overdue Books",
+                    systemImage: "checkmark.seal.fill",
+                    description: Text("All checked out books are on time")
                 )
             } else if filteredCheckouts.isEmpty {
                 ContentUnavailableView(
@@ -80,7 +94,11 @@ struct CheckedOutBooksListView: View {
                 ForEach(sortedSectionTitles, id: \.self) { classCode in
                     Section {
                         ForEach(groupedCheckouts[classCode] ?? []) { checkout in
-                            CheckoutDetailRow(checkout: checkout)
+                            if selectedTab == .overdue {
+                                OverdueItemRow(checkout: checkout)
+                            } else {
+                                CheckoutDetailRow(checkout: checkout)
+                            }
                         }
                     } header: {
                         Text(classCode.isEmpty ? "No Class" : classCode)
@@ -179,6 +197,47 @@ struct CheckoutDetailRow: View {
 
     private func returnBook(_ checkout: CheckoutRecord) {
         BookManagementService.returnBook(checkout, modelContext: modelContext)
+    }
+}
+
+struct OverdueItemRow: View {
+    let checkout: CheckoutRecord
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(checkout.student?.fullName ?? "Unknown")
+                .font(.headline)
+
+            HStack {
+                Image(systemName: "book.fill")
+                    .smallIcon(color: .secondary)
+                Text(checkout.book?.title ?? "Unknown Book")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Checked Out")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    Text(checkout.checkoutDate, format: .dateTime.month().day().year())
+                        .font(.caption)
+                }
+
+                Spacer()
+
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("Due Date")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    Text(checkout.dueDate, format: .dateTime.month().day().year())
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .padding(.vertical, 4)
     }
 }
 

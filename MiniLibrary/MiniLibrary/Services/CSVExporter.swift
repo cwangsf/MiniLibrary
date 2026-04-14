@@ -100,6 +100,39 @@ enum CSVExporter {
         return csv
     }
 
+    /// Export overdue checkouts sorted by class, with fields: Class, Student Name, Book Title
+    static func exportOverdueList(_ checkouts: [CheckoutRecord]) -> String {
+        var csv = "Class,Student Name,Book Title\n"
+
+        let overdue = checkouts
+            .filter { $0.isOverdue }
+            .sorted {
+                let class0 = $0.student?.classCode ?? ""
+                let class1 = $1.student?.classCode ?? ""
+                if class0 != class1 { return class0 < class1 }
+                return ($0.student?.fullName ?? "") < ($1.student?.fullName ?? "")
+            }
+
+        if overdue.isEmpty {
+            csv += "No overdue items\n"
+            return csv
+        }
+
+        for checkout in overdue {
+            let classCode = checkout.student?.classCode ?? ""
+            let studentName = checkout.student?.fullName ?? "Unknown"
+            let bookTitle = checkout.book?.title ?? "Unknown"
+            let fields = [
+                escapeCSV(classCode),
+                escapeCSV(studentName),
+                escapeCSV(bookTitle)
+            ]
+            csv += fields.joined(separator: ",") + "\n"
+        }
+
+        return csv
+    }
+
     /// Save CSV string to temporary file and return URL
     static func saveToTemporaryFile(_ csvContent: String, filename: String) -> URL? {
         let temporaryDirectoryURL = FileManager.default.temporaryDirectory
