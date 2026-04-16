@@ -15,28 +15,30 @@ actor ImageCacheService {
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "ImageCacheService")
     private nonisolated(unsafe) let fileManager = FileManager.default
-    private let cacheDirectory: URL?
+    private let cacheDirectory: URL?       // Caches/ — evictable, for API-downloaded covers
+    private let userCoversDirectory: URL?  // Documents/ — persistent, for user-picked covers
 
     private init() {
-        // Initialize cache directory
-        guard let cachesDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first else {
-            self.cacheDirectory = nil
-            return
-        }
-        let bookCoversDirectory = cachesDirectory.appendingPathComponent("BookCovers", isDirectory: true)
-
-        // Create directory if it doesn't exist
-        if !fileManager.fileExists(atPath: bookCoversDirectory.path) {
-            do {
-                try fileManager.createDirectory(at: bookCoversDirectory, withIntermediateDirectories: true)
-                logger.info("Successfully created cache directory at: \(bookCoversDirectory.path)")
-                self.cacheDirectory = bookCoversDirectory
-            } catch {
-                logger.error("Failed to create cache directory: \(error.localizedDescription)")
-                self.cacheDirectory = nil
+        // API cover cache — evictable
+        if let cachesDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first {
+            let dir = cachesDirectory.appendingPathComponent("BookCovers", isDirectory: true)
+            if !fileManager.fileExists(atPath: dir.path) {
+                try? fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
             }
+            self.cacheDirectory = fileManager.fileExists(atPath: dir.path) ? dir : nil
         } else {
-            self.cacheDirectory = bookCoversDirectory
+            self.cacheDirectory = nil
+        }
+
+        // User cover store — persistent, never evicted by the OS
+        if let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let dir = documentsDirectory.appendingPathComponent("UserBookCovers", isDirectory: true)
+            if !fileManager.fileExists(atPath: dir.path) {
+                try? fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
+            }
+            self.userCoversDirectory = fileManager.fileExists(atPath: dir.path) ? dir : nil
+        } else {
+            self.userCoversDirectory = nil
         }
     }
 
@@ -75,35 +77,36 @@ actor ImageCacheService {
         return try saveImageData(data, for: bookId)
     }
 
-    /// Save image data to disk
-    /// Returns the local file path
+    /// Save API-downloaded image data to the evictable cache directory.
+    /// Returns the filename on success.
     func saveImageData(_ data: Data, for bookId: String) throws -> String? {
-        guard let cacheDirectory = cacheDirectory else {
-            return nil
-        }
-
+        guard let cacheDirectory = cacheDirectory else { return nil }
         let filename = "\(bookId).jpg"
-        let fileURL = cacheDirectory.appendingPathComponent(filename)
-
-        try data.write(to: fileURL)
-
-        return filename // Return just the filename, not full path
+        try data.write(to: cacheDirectory.appendingPathComponent(filename))
+        return filename
     }
 
-    /// Get the full file URL for a cached image
+    /// Save a user-picked cover image to the persistent Documents directory.
+    /// Returns the filename (prefixed with "user_") on success.
+    func saveUserImageData(_ data: Data, for bookId: String) throws -> String? {
+        guard let userCoversDirectory = userCoversDirectory else { return nil }
+        let filename = "user_\(bookId).jpg"
+        try data.write(to: userCoversDirectory.appendingPathComponent(filename))
+        return filename
+    }
+
+    /// Get the full file URL for a cached image.
+    /// Checks the user covers directory first (persistent), then the API cache.
     func getImageURL(for filename: String) -> URL? {
-        guard let cacheDirectory = cacheDirectory else {
-            return nil
+        if filename.hasPrefix("user_"), let dir = userCoversDirectory {
+            let url = dir.appendingPathComponent(filename)
+            return fileManager.fileExists(atPath: url.path) ? url : nil
         }
-
-        let fileURL = cacheDirectory.appendingPathComponent(filename)
-
-        // Check if file exists
-        guard fileManager.fileExists(atPath: fileURL.path) else {
-            return nil
+        if let dir = cacheDirectory {
+            let url = dir.appendingPathComponent(filename)
+            return fileManager.fileExists(atPath: url.path) ? url : nil
         }
-
-        return fileURL
+        return nil
     }
 
     /// Load cached image data

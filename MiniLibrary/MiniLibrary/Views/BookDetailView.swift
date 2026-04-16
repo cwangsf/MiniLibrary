@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import UIKit
+import PhotosUI
 import os
 
 private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibrary", category: "BookDetailView")
@@ -24,6 +25,8 @@ struct BookDetailView: View {
     @State private var availableCopiesText = ""
     @State private var checkoutToReturn: CheckoutRecord?
     @State private var isFetchingBookInfo = false
+    @State private var photoPickerItem: PhotosPickerItem?
+    @State private var coverRefreshID = UUID()
     @State private var isEditingInfo = false
     @State private var titleText = ""
     @State private var authorText = ""
@@ -33,8 +36,26 @@ struct BookDetailView: View {
         ScrollView {
             VStack(spacing: 24) {
                 // Book Cover - Use Google Books fallback if no cached cover
-                bookCoverView
-                    .padding(.top, 20)
+                PhotosPicker(selection: $photoPickerItem, matching: .images) {
+                    bookCoverView
+                        .id(coverRefreshID)
+                        .overlay(alignment: .bottomTrailing) {
+                            Image(systemName: "camera.fill")
+                                .font(.system(size: 14))
+                                .foregroundStyle(.white)
+                                .padding(8)
+                                .background(.black.opacity(0.65))
+                                .clipShape(Circle())
+                                .padding(8)
+                        }
+                }
+                .padding(.top, 20)
+                .onChange(of: photoPickerItem) { _, newItem in
+                    guard let newItem else { return }
+                    Task {
+                        await loadAndSaveCoverImage(from: newItem)
+                    }
+                }
                 
                 // Book Info
                 VStack(alignment: .center, spacing: 8) {
@@ -551,6 +572,41 @@ struct BookDetailView: View {
         }
     }
     
+    private func loadAndSaveCoverImage(from item: PhotosPickerItem) async {
+        guard let data = try? await item.loadTransferable(type: Data.self),
+              let original = UIImage(data: data) else {
+            logger.warning("Failed to load selected image for '\(book.title)'")
+            return
+        }
+
+        // Resize: cap longest side at 600px
+        let maxDimension: CGFloat = 600
+        let scale = min(maxDimension / original.size.width, maxDimension / original.size.height, 1)
+        let newSize = CGSize(width: original.size.width * scale, height: original.size.height * scale)
+        let resized = await MainActor.run {
+            UIGraphicsImageRenderer(size: newSize).image { _ in
+                original.draw(in: CGRect(origin: .zero, size: newSize))
+            }
+        }
+
+        guard let jpeg = resized.jpegData(compressionQuality: 0.75) else {
+            logger.warning("Failed to compress image for '\(book.title)'")
+            return
+        }
+
+        do {
+            if let filename = try await ImageCacheService.shared.saveUserImageData(jpeg, for: book.id.uuidString) {
+                await MainActor.run {
+                    book.cachedCoverImage = filename
+                    coverRefreshID = UUID()
+                    logger.info("Saved user cover for '\(book.title)' as '\(filename)'")
+                }
+            }
+        } catch {
+            logger.error("Failed to save user cover for '\(book.title)': \(error.localizedDescription)")
+        }
+    }
+
     private func updateBookMetadata(from fetchedBook: Book) {
         // Update metadata fields, but preserve user data and inventory
         if book.bookDescription == nil || book.bookDescription?.isEmpty == true {

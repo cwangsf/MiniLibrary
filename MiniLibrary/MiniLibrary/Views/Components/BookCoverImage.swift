@@ -14,13 +14,12 @@ struct BookCoverImage: View {
 
     @State private var isLoadingCover = false
     @State private var cachedImage: UIImage?
-    @State private var hasAttemptedLoad = false
 
     var body: some View {
         ZStack {
             // Always show placeholder as background
             placeholderView
-            
+
             // Overlay the actual image if loaded and device supports it
             if DeviceCapability.shared.shouldDisplayCoverImages,
                let cachedImage = cachedImage {
@@ -31,18 +30,13 @@ struct BookCoverImage: View {
         }
         .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .task(priority: .utility) {
-            // Skip loading for wishlist items (no need to fetch covers for books we don't own)
+        // Re-runs whenever cachedCoverImage changes (e.g. user picks a new photo)
+        .task(id: book.cachedCoverImage, priority: .utility) {
             guard !book.isWishlistItem else { return }
-            
-            // Only load images if device supports it
             guard DeviceCapability.shared.shouldDisplayCoverImages else { return }
-            
-            // Only try to load once
-            guard !hasAttemptedLoad else { return }
-            hasAttemptedLoad = true
-            
-            // Use background task with low priority to not block scrolling
+
+            cachedImage = nil  // clear stale image before loading new one
+
             if book.cachedCoverImage != nil {
                 await loadCachedImage()
             } else {
