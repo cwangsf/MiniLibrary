@@ -3679,6 +3679,9 @@
         }
       }
     },
+    "Title and Author will be filled automatically from the ISBN lookup." : {
+
+    },
     "Total" : {
       "localizations" : {
         "de" : {

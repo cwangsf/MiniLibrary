@@ -27,16 +27,25 @@ struct AddBookView: View {
     @State private var showingConfirmation = false
 
     var isButtonEnabled: Bool {
-        // Allow if ISBN is provided, OR if both title and author are provided
         !isbn.isEmpty || (!title.isEmpty && !author.isEmpty)
     }
 
+    private var isbnProvided: Bool { !isbn.isEmpty }
+
     var body: some View {
         Form {
-            Section("Book Information") {
-                TextField("Title", text: $title)
-                TextField("Author", text: $author)
+            Section {
+                TextField(isbnProvided ? "Title (optional)" : "Title", text: $title)
+                TextField(isbnProvided ? "Author (optional)" : "Author", text: $author)
                 TextField("ISBN (optional)", text: $isbn)
+                    .keyboardType(.numberPad)
+            } header: {
+                Text("Book Information")
+            } footer: {
+                if isbnProvided && title.isEmpty {
+                    Text("Title and Author will be filled automatically from the ISBN lookup.")
+                        .font(.caption)
+                }
             }
             
             Section("Copies") {
@@ -131,9 +140,10 @@ struct AddBookView: View {
     }
 
     private func insertBook() {
+        let resolvedTitle = title.isEmpty ? (isbn.isEmpty ? "Unknown Title" : "ISBN: \(isbn)") : title
         let book = Book(
             isbn: isbn.isEmpty ? nil : isbn,
-            title: title,
+            title: resolvedTitle,
             author: author.isEmpty ? nil : author,
             totalCopies: totalCopies,
             availableCopies: totalCopies,
