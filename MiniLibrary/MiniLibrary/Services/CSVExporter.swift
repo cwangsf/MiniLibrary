@@ -120,7 +120,7 @@ enum CSVExporter {
 
         for checkout in overdue {
             let classCode = checkout.student?.classCode ?? ""
-            let studentName = checkout.student?.fullName ?? "Unknown"
+            let studentName = checkout.student?.firstName ?? "Unknown"
             let bookTitle = checkout.book?.title ?? "Unknown"
             let fields = [
                 escapeCSV(classCode),
