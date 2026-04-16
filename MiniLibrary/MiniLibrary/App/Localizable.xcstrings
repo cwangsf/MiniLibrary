@@ -1167,6 +1167,9 @@
     "Checked Out Records" : {
 
     },
+    "CHECKOUT" : {
+
+    },
     "Class Code (optional)" : {
       "localizations" : {
         "de" : {
@@ -3044,6 +3047,9 @@
           }
         }
       }
+    },
+    "RETURN" : {
+
     },
     "Return Book" : {
       "localizations" : {

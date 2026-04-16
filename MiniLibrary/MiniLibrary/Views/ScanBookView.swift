@@ -204,6 +204,23 @@ struct ScanBookView: View {
             VStack(spacing: 0) {
                 // Top instructions
                 VStack(spacing: 12) {
+                    // Intent banner for checkout / return
+                    if scanPurpose == .checkout || scanPurpose == .returnBook {
+                        HStack(spacing: 8) {
+                            Image(systemName: scanPurpose == .checkout ? "arrow.right.circle.fill" : "arrow.uturn.left.circle.fill")
+                                .font(.title2)
+                            Text(scanPurpose == .checkout ? "CHECKOUT" : "RETURN")
+                                .font(.title2)
+                                .fontWeight(.heavy)
+                                .tracking(2)
+                        }
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 8)
+                        .background(scanPurpose == .checkout ? Color.blue : Color.green)
+                        .clipShape(Capsule())
+                    }
+
                     Image(systemName: "barcode.viewfinder")
                         .font(.system(size: 60))
                         .foregroundStyle(.white)
