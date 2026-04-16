@@ -58,6 +58,11 @@ struct CheckoutBookView: View {
                     Section("Book") {
                         Text(selectedBook?.title ?? "")
                             .font(.headline)
+                        if let isbn = selectedBook?.isbn {
+                            Text("ISBN: \(isbn)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 } else {
                     Section("Select Book") {
@@ -66,6 +71,11 @@ struct CheckoutBookView: View {
                             ForEach(availableBooks) { book in
                                 Text("\(book.title) - \(book.availableCopies) available").tag(book as Book?)
                             }
+                        }
+                        if let isbn = selectedBook?.isbn {
+                            Text("ISBN: \(isbn)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
                     }
                 }
