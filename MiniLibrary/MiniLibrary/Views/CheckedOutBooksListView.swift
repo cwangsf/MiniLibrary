@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 enum CheckoutTab {
-    case all, overdue
+    case all, overdue, recent
 }
 
 struct CheckedOutBooksListView: View {
@@ -67,6 +67,7 @@ struct CheckedOutBooksListView: View {
                 Picker("", selection: $selectedTab) {
                     Text("All (\(activeCheckouts.count))").tag(CheckoutTab.all)
                     Text("Overdue (\(overdueCheckouts.count))").tag(CheckoutTab.overdue)
+                    Text("Recent").tag(CheckoutTab.recent)
                 }
                 .pickerStyle(.segmented)
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
@@ -84,6 +85,8 @@ struct CheckedOutBooksListView: View {
                     systemImage: "checkmark.seal.fill",
                     description: Text("All checked out books are on time")
                 )
+            } else if selectedTab == .recent {
+                RecentCheckoutsSection()
             } else if filteredCheckouts.isEmpty {
                 ContentUnavailableView(
                     "No Results",
@@ -197,6 +200,21 @@ struct CheckoutDetailRow: View {
 
     private func returnBook(_ checkout: CheckoutRecord) {
         BookManagementService.returnBook(checkout, modelContext: modelContext)
+    }
+}
+
+struct RecentCheckoutsSection: View {
+    @Query(filter: #Predicate<CheckoutRecord> { $0.returnDate == nil },
+           sort: \CheckoutRecord.checkoutDate,
+           order: .reverse)
+    private var recentCheckouts: [CheckoutRecord]
+
+    var body: some View {
+        Section {
+            ForEach(recentCheckouts) { checkout in
+                CheckoutDetailRow(checkout: checkout)
+            }
+        }
     }
 }
 
