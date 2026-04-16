@@ -207,7 +207,7 @@ struct ScanBookView: View {
                     // Intent banner for checkout / return
                     if scanPurpose == .checkout || scanPurpose == .returnBook {
                         HStack(spacing: 8) {
-                            Image(systemName: scanPurpose == .checkout ? "arrow.right.circle.fill" : "arrow.uturn.left.circle.fill")
+                            Image(systemName: scanPurpose == .checkout ? "tray.and.arrow.up" : "tray.and.arrow.down")
                                 .font(.title2)
                             Text(scanPurpose == .checkout ? "CHECKOUT" : "RETURN")
                                 .font(.title2)
@@ -217,7 +217,7 @@ struct ScanBookView: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 8)
-                        .background(scanPurpose == .checkout ? Color.blue : Color.green)
+                        .background(scanPurpose == .checkout ? Color.purple : Color.teal)
                         .clipShape(Capsule())
                     }
 
