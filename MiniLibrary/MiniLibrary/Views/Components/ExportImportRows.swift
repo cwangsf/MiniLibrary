@@ -18,7 +18,7 @@ struct ExportCatalogRow: View {
             HStack {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.purple)
+                        .foregroundStyle(.blue)
                     Text("Export Catalog to CSV")
                         .foregroundStyle(.tint)
                 }
@@ -29,7 +29,7 @@ struct ExportCatalogRow: View {
             ShareLink(item: url) {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.purple)
+                        .foregroundStyle(.blue)
                     Text("Export Catalog to CSV")
                         .foregroundStyle(.tint)
                 }
@@ -38,7 +38,7 @@ struct ExportCatalogRow: View {
             Button(action: onExport) {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.purple)
+                        .foregroundStyle(.blue)
                     Text("Export Catalog to CSV")
                         .foregroundStyle(.tint)
                 }
@@ -58,7 +58,7 @@ struct ExportWishlistRow: View {
             HStack {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.purple)
+                        .foregroundStyle(.green)
                     Text("Export Wishlist to CSV")
                         .foregroundStyle(.tint)
                 }
@@ -69,7 +69,7 @@ struct ExportWishlistRow: View {
             ShareLink(item: url) {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.purple)
+                        .foregroundStyle(.green)
                     Text("Export Wishlist to CSV")
                         .foregroundStyle(.tint)
                 }
@@ -78,7 +78,7 @@ struct ExportWishlistRow: View {
             Button(action: onExport) {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.purple)
+                        .foregroundStyle(.green)
                     Text("Export Wishlist to CSV")
                         .foregroundStyle(.tint)
                 }
@@ -97,7 +97,7 @@ struct ExportOverdueListRow: View {
         if isExporting {
             HStack {
                 HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
+                    Image(systemName: "square.and.arrow.up")
                         .foregroundStyle(.red)
                     Text("Export Overdue List to CSV")
                         .foregroundStyle(.tint)
@@ -108,7 +108,7 @@ struct ExportOverdueListRow: View {
         } else if let url = exportFileURL {
             ShareLink(item: url) {
                 HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
+                    Image(systemName: "square.and.arrow.up")
                         .foregroundStyle(.red)
                     Text("Export Overdue List to CSV")
                         .foregroundStyle(.tint)
@@ -117,7 +117,7 @@ struct ExportOverdueListRow: View {
         } else {
             Button(action: onExport) {
                 HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
+                    Image(systemName: "square.and.arrow.up")
                         .foregroundStyle(.red)
                     Text("Export Overdue List to CSV")
                         .foregroundStyle(.tint)
@@ -196,7 +196,7 @@ struct ExportStudentsRow: View {
             HStack {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.purple)
+                        .foregroundStyle(.orange)
                     Text("Export Students to CSV")
                         .foregroundStyle(.tint)
                 }
@@ -207,7 +207,7 @@ struct ExportStudentsRow: View {
             ShareLink(item: url) {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.purple)
+                        .foregroundStyle(.orange)
                     Text("Export Students to CSV")
                         .foregroundStyle(.tint)
                 }
@@ -216,7 +216,7 @@ struct ExportStudentsRow: View {
             Button(action: onExport) {
                 HStack {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundStyle(.purple)
+                        .foregroundStyle(.orange)
                     Text("Export Students to CSV")
                         .foregroundStyle(.tint)
                 }
