@@ -25,6 +25,7 @@ struct AddView: View {
     @State private var isExportingCheckouts = false
     @State private var exportOverdueListFileURL: URL?
     @State private var isExportingOverdueList = false
+    @State private var showingScan = false
     @State private var showingDeleteConfirmation = false
     @State private var showingImportPicker = false
     @State private var importResult: ImportResult?
@@ -36,7 +37,9 @@ struct AddView: View {
             List {
                 // Quick Scan - Prominent Section
                 Section {
-                    NavigationLink(destination: ScanBookView(scanPurpose: .addBook)) {
+                    Button {
+                        showingScan = true
+                    } label: {
                         HStack(spacing: 16) {
                             Image(systemName: "barcode.viewfinder")
                                 .font(.system(size: 32))
@@ -57,6 +60,7 @@ struct AddView: View {
                         }
                         .padding(.vertical, 8)
                     }
+                    .buttonStyle(.plain)
                 } header: {
                     Text("Quick Actions")
                 }
@@ -240,6 +244,9 @@ struct AddView: View {
                 }
             }
             .navigationTitle("Add")
+            .fullScreenCover(isPresented: $showingScan) {
+                ScanBookView(scanPurpose: .addBook)
+            }
             .alert("Delete All Data?", isPresented: $showingDeleteConfirmation) {
                 Button("Cancel", role: .cancel) { }
                 Button("Delete All", role: .destructive) {

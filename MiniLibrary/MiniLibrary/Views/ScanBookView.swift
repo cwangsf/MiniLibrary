@@ -204,22 +204,38 @@ struct ScanBookView: View {
             VStack(spacing: 0) {
                 // Top instructions
                 VStack(spacing: 12) {
-                    // Intent banner for checkout / return
-                    if scanPurpose == .checkout || scanPurpose == .returnBook {
-                        HStack(spacing: 8) {
-                            Image(systemName: scanPurpose == .checkout ? "tray.and.arrow.up" : "tray.and.arrow.down")
-                                .font(.title2)
-                            Text(scanPurpose == .checkout ? "CHECKOUT" : "RETURN")
-                                .font(.title2)
-                                .fontWeight(.heavy)
-                                .tracking(2)
-                        }
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 8)
-                        .background(scanPurpose == .checkout ? Color.purple : Color.teal)
-                        .clipShape(Capsule())
+                    // Intent banner
+                    HStack(spacing: 8) {
+                        Image(systemName: {
+                            switch scanPurpose {
+                            case .addBook: return "plus.circle.fill"
+                            case .checkout: return "tray.and.arrow.up"
+                            case .returnBook: return "tray.and.arrow.down"
+                            }
+                        }())
+                        .font(.title2)
+                        Text({
+                            switch scanPurpose {
+                            case .addBook: return "ADD BOOK"
+                            case .checkout: return "CHECKOUT"
+                            case .returnBook: return "RETURN"
+                            }
+                        }())
+                        .font(.title2)
+                        .fontWeight(.heavy)
+                        .tracking(2)
                     }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 8)
+                    .background({
+                        switch scanPurpose {
+                        case .addBook: return Color.blue
+                        case .checkout: return Color.purple
+                        case .returnBook: return Color.teal
+                        }
+                    }())
+                    .clipShape(Capsule())
 
                     Image(systemName: "barcode.viewfinder")
                         .font(.system(size: 60))
