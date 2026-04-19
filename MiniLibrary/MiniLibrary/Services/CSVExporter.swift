@@ -13,7 +13,10 @@ private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "MiniLibr
 enum CSVExporter {
     /// Export books to CSV format
     static func exportBooks(_ books: [Book]) -> String {
-        var csv = "ISBN,Title,Author,Total Copies,Available Copies,Language,Publisher,Published Date,Page Count,Notes\n"
+        var csv = "ISBN,Title,Author,Total Copies,Available Copies,Language,Publisher,Published Date,Page Count,Notes,Date Added\n"
+
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withFullDate]
 
         for book in books {
             let fields = [
@@ -26,7 +29,8 @@ enum CSVExporter {
                 escapeCSV(book.publisher ?? ""),
                 escapeCSV(book.publishedDate ?? ""),
                 book.pageCount != nil ? String(book.pageCount!) : "",
-                escapeCSV(book.notes ?? "")
+                escapeCSV(book.notes ?? ""),
+                dateFormatter.string(from: book.createdAt)
             ]
 
             csv += fields.joined(separator: ",") + "\n"

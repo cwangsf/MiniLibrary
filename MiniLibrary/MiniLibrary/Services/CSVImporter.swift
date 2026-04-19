@@ -168,12 +168,20 @@ struct CSVImporter {
         let pageCount = csvRow["Page Count"].flatMap { Int($0.trimmed) }
         let notes = csvRow["Notes"]?.trimmedOrNil
 
+        var createdAt = Date()
+        if let dateStr = csvRow["Date Added"]?.trimmed, !dateStr.isEmpty {
+            let iso = ISO8601DateFormatter()
+            iso.formatOptions = [.withFullDate]
+            createdAt = iso.date(from: dateStr) ?? Date()
+        }
+
         let book = Book(
             isbn: isbn,
             title: title,
             author: author,
             totalCopies: totalCopies,
             availableCopies: availableCopies,
+            createdAt: createdAt,
             bookDescription: nil,
             pageCount: pageCount,
             publishedDate: publishedDate.flatMap { $0.isEmpty ? nil : $0 },
