@@ -26,6 +26,15 @@ struct ScanBookView: View {
     @State private var checkoutCompleted = false
     @State private var returnCompleted = false
 
+    // Form-level state for the manual editing screen
+    @State private var formNotes = ""
+    @State private var formBookDescription: String?
+    @State private var formPageCount: Int?
+    @State private var formPublishedDate: String?
+    @State private var formPublisher: String?
+    @State private var formLanguageCode: String?
+    @State private var formCoverImageURL: String?
+
     var navigationTitle: String {
         switch viewModel.state {
         case .confirming:
@@ -569,42 +578,28 @@ struct ScanBookView: View {
 
     // MARK: - Book Form View
     private var bookFormView: some View {
-        Form {
-            if case .error(let message) = viewModel.state {
-                Section {
-                    HStack {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .foregroundStyle(.orange)
-                        Text(message)
-                            .font(.caption)
-                    }
-                }
-            }
+        let errorMessage: String? = {
+            if case .error(let message) = viewModel.state { return message }
+            return nil
+        }()
 
-            Section("Book Information") {
-                TextField("Title", text: $viewModel.title)
-                TextField("Author", text: $viewModel.author)
-                TextField("ISBN", text: $viewModel.isbn)
+        return BookFormView(
+            title: $viewModel.title,
+            author: $viewModel.author,
+            isbn: $viewModel.isbn,
+            totalCopies: $viewModel.totalCopies,
+            notes: $formNotes,
+            errorMessage: errorMessage,
+            onAdd: addBook,
+            onMetadataFetched: { fetched in
+                formBookDescription = fetched.bookDescription
+                formPageCount = fetched.pageCount
+                formPublishedDate = fetched.publishedDate
+                formPublisher = fetched.publisher
+                formLanguageCode = fetched.languageCode
+                formCoverImageURL = fetched.coverImageURL
             }
-
-            Section("Copies") {
-                Stepper("Total Copies: \(viewModel.totalCopies)", value: $viewModel.totalCopies, in: 1...99)
-            }
-        }
-        .safeAreaInset(edge: .bottom) {
-            Button {
-                addBook()
-            } label: {
-                HStack {
-                    Image(systemName: "plus.circle.fill")
-                    Text("Add Book")
-                }
-                .prominentButton(color: (viewModel.title.isEmpty || viewModel.author.isEmpty) ? .gray : .blue)
-            }
-            .disabled(viewModel.title.isEmpty || viewModel.author.isEmpty)
-            .padding()
-            .background(Color(.systemBackground).opacity(0.95))
-        }
+        )
     }
 
     // MARK: - Actions
@@ -631,7 +626,7 @@ struct ScanBookView: View {
                     coverImageURL: scannedBook.coverImageURL
                 )
             } else {
-                // Editing mode: use edited values from viewModel, preserve scanned metadata
+                // Editing mode: use edited values from viewModel, preserve scanned metadata + form notes
                 return Book(
                     isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
                     title: viewModel.title,
@@ -643,25 +638,44 @@ struct ScanBookView: View {
                     publishedDate: scannedBook.publishedDate,
                     publisher: scannedBook.publisher,
                     languageCode: scannedBook.languageCode,
-                    coverImageURL: scannedBook.coverImageURL
+                    coverImageURL: scannedBook.coverImageURL,
+                    notes: formNotes.isEmpty ? nil : formNotes
                 )
             }
         } else {
-            // Manual entry: create book from form fields only (no scanned data)
+            // Manual entry: form fields + any metadata fetched via ISBN lookup in the form
             return Book(
                 isbn: viewModel.isbn.isEmpty ? nil : viewModel.isbn,
                 title: viewModel.title,
                 author: viewModel.author,
                 totalCopies: viewModel.totalCopies,
-                availableCopies: viewModel.totalCopies
+                availableCopies: viewModel.totalCopies,
+                bookDescription: formBookDescription,
+                pageCount: formPageCount,
+                publishedDate: formPublishedDate,
+                publisher: formPublisher,
+                languageCode: formLanguageCode,
+                coverImageURL: formCoverImageURL,
+                notes: formNotes.isEmpty ? nil : formNotes
             )
         }
+    }
+
+    private func resetFormState() {
+        formNotes = ""
+        formBookDescription = nil
+        formPageCount = nil
+        formPublishedDate = nil
+        formPublisher = nil
+        formLanguageCode = nil
+        formCoverImageURL = nil
     }
     
     private func addBook() {
         let book = createBookFromViewModel()
         modelContext.insert(book)
         viewModel.reset()
+        resetFormState()
         dismiss()
     }
 

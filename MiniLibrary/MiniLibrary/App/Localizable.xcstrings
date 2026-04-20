@@ -2450,6 +2450,9 @@
         }
       }
     },
+    "No book found for this ISBN. Fill in details manually." : {
+
+    },
     "No Books in Catalog" : {
 
     },
@@ -3571,6 +3574,9 @@
         }
       }
     },
+    "Tap %@ to look up book info by ISBN." : {
+
+    },
     "The due date will default to %lld day%@ from today when checking out a book." : {
       "localizations" : {
         "en" : {
@@ -3678,9 +3684,6 @@
           }
         }
       }
-    },
-    "Title and Author will be filled automatically from the ISBN lookup." : {
-
     },
     "Total" : {
       "localizations" : {

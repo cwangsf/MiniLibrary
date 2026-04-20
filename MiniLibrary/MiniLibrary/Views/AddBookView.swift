@@ -17,80 +17,36 @@ struct AddBookView: View {
     @State private var isbn = ""
     @State private var totalCopies = 1
     @State private var notes = ""
-    @State private var isSearching = false
+    @State private var showingConfirmation = false
+
+    // Metadata populated by ISBN lookup or carried through to the inserted book
     @State private var bookDescription: String?
     @State private var pageCount: Int?
     @State private var publishedDate: String?
     @State private var publisher: String?
     @State private var languageCode: String?
     @State private var coverImageURL: String?
-    @State private var showingConfirmation = false
-
-    var isButtonEnabled: Bool {
-        !isbn.isEmpty || (!title.isEmpty && !author.isEmpty)
-    }
-
-    private var isbnProvided: Bool { !isbn.isEmpty }
 
     var body: some View {
-        Form {
-            Section {
-                TextField(isbnProvided ? "Title (optional)" : "Title", text: $title)
-                TextField(isbnProvided ? "Author (optional)" : "Author", text: $author)
-                TextField("ISBN (optional)", text: $isbn)
-                    .keyboardType(.numberPad)
-            } header: {
-                Text("Book Information")
-            } footer: {
-                if isbnProvided && title.isEmpty {
-                    Text("Title and Author will be filled automatically from the ISBN lookup.")
-                        .font(.caption)
-                }
+        BookFormView(
+            title: $title,
+            author: $author,
+            isbn: $isbn,
+            totalCopies: $totalCopies,
+            notes: $notes,
+            onAdd: { showingConfirmation = true },
+            onMetadataFetched: { fetched in
+                bookDescription = fetched.bookDescription
+                pageCount = fetched.pageCount
+                publishedDate = fetched.publishedDate
+                publisher = fetched.publisher
+                languageCode = fetched.languageCode
+                coverImageURL = fetched.coverImageURL
             }
-            
-            Section("Copies") {
-                Stepper("Total Copies: \(totalCopies)", value: $totalCopies, in: 1...99)
-            }
-            
-            Section("Notes") {
-                TextEditor(text: $notes)
-                    .frame(minHeight: 100)
-            }
-        }
+        )
         .navigationTitle("Add New Book")
         .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom) {
-            Button {
-                if !isbn.isEmpty {
-                    // If ISBN provided, search first then show confirmation
-                    addBook()
-                } else {
-                    // If no ISBN, show confirmation directly
-                    showingConfirmation = true
-                }
-            } label: {
-                HStack {
-                    if isSearching {
-                        ProgressView()
-                            .scaleEffect(0.8)
-                    } else {
-                        Image(systemName: "plus.circle.fill")
-                    }
-                    Text(isSearching ? "Searching..." : "Add Book")
-                }
-                .font(.headline)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(isButtonEnabled ? .blue : .gray)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .disabled(!isButtonEnabled || isSearching)
-            .padding()
-            .background(Color(.systemBackground).opacity(0.95))
-        }
         .sheet(isPresented: $showingConfirmation) {
-
             AddBookConfirmationView(
                 title: title,
                 author: author,
@@ -99,43 +55,6 @@ struct AddBookView: View {
                 notes: notes,
                 onConfirm: insertBook
             )
-        }
-    }
-
-    private func addBook() {
-        // If ISBN is provided, search for book info first
-        if !isbn.isEmpty {
-            isSearching = true
-            Task {
-                do {
-                    let fetchedBook = try await BookAPIService.shared.fetchBookInfoFromGoogle(isbn: isbn)
-
-                    // Update fields with fetched information
-                    await MainActor.run {
-                        if title.isEmpty {
-                            title = fetchedBook.title
-                        }
-                        if author.isEmpty, let fetchedAuthor = fetchedBook.author {
-                            author = fetchedAuthor
-                        }
-                        bookDescription = fetchedBook.bookDescription
-                        pageCount = fetchedBook.pageCount
-                        publishedDate = fetchedBook.publishedDate
-                        publisher = fetchedBook.publisher
-                        languageCode = fetchedBook.languageCode
-                        coverImageURL = fetchedBook.coverImageURL
-
-                        isSearching = false
-                        showingConfirmation = true
-                    }
-                } catch {
-                    await MainActor.run {
-                        isSearching = false
-                        // If search fails, still show confirmation with manual info
-                        showingConfirmation = true
-                    }
-                }
-            }
         }
     }
 
@@ -155,9 +74,7 @@ struct AddBookView: View {
             coverImageURL: coverImageURL,
             notes: notes.isEmpty ? nil : notes
         )
-
         modelContext.insert(book)
-
         dismiss()
     }
 }
