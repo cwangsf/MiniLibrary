@@ -17,12 +17,11 @@ struct BookManagementService {
     ///   - checkout: The checkout record to mark as returned
     ///   - modelContext: The SwiftData model context
     static func returnBook(_ checkout: CheckoutRecord, modelContext: ModelContext) {
-        // Mark the checkout as returned
-        checkout.returnDate = Date()
-
-        // Update book availability
+        // Update book availability before deleting the record
         if let book = checkout.book {
             book.availableCopies += 1
         }
+
+        modelContext.delete(checkout)
     }
 }

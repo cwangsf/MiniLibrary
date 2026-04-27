@@ -348,8 +348,10 @@ struct AddView: View {
     private func exportCheckouts() async {
         isExportingCheckouts = true
 
-        // Fetch checkouts on-demand (lazy loading)
-        let descriptor = FetchDescriptor<CheckoutRecord>()
+        // Fetch checkouts on-demand (lazy loading), excluding returned books
+        let descriptor = FetchDescriptor<CheckoutRecord>(
+            predicate: #Predicate { $0.returnDate == nil }
+        )
         
         guard let checkoutList = try? modelContext.fetch(descriptor) else {
             logger.error("Failed to fetch checkouts for export")
