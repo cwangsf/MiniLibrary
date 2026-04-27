@@ -20,16 +20,24 @@ struct CheckedOutBooksListView: View {
 
     @State private var searchText = ""
     @State private var selectedTab: CheckoutTab = .all
+    @State private var selectedClass: String = "All"
 
     private var overdueCheckouts: [CheckoutRecord] {
         activeCheckouts.filter { $0.isOverdue }
     }
 
-    // Filter checkouts based on selected tab and search text
+    private var availableClasses: [String] {
+        let base = selectedTab == .overdue ? overdueCheckouts : activeCheckouts
+        let codes = Set(base.compactMap { $0.student?.classCode }.filter { !$0.isEmpty })
+        return ["All"] + codes.sorted()
+    }
+
+    // Filter checkouts based on selected tab, class filter, and search text
     private var filteredCheckouts: [CheckoutRecord] {
         let base = selectedTab == .overdue ? overdueCheckouts : activeCheckouts
-        if searchText.isEmpty { return base }
-        return base.filter { checkout in
+        let classFiltered = selectedClass == "All" ? base : base.filter { $0.student?.classCode == selectedClass }
+        if searchText.isEmpty { return classFiltered }
+        return classFiltered.filter { checkout in
             let bookTitle = checkout.book?.title ?? ""
             let studentName = checkout.student?.fullName ?? ""
             return bookTitle.localizedCaseInsensitiveContains(searchText) ||
@@ -71,6 +79,25 @@ struct CheckedOutBooksListView: View {
                 }
                 .pickerStyle(.segmented)
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                .onChange(of: selectedTab) { selectedClass = "All" }
+
+                if selectedTab != .recent {
+                    Menu {
+                        ForEach(availableClasses, id: \.self) { classCode in
+                            Button(classCode) { selectedClass = classCode }
+                        }
+                    } label: {
+                        HStack {
+                            Label(selectedClass == "All" ? "All Classes" : selectedClass,
+                                  systemImage: "line.3.horizontal.decrease.circle")
+                            Spacer()
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                }
             }
 
             if activeCheckouts.isEmpty {
