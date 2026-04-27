@@ -102,20 +102,17 @@ struct BookAPIService {
         return buildOpenLibraryCoverURL(isbn)?.absoluteString
     }
 
-    /// Fetch book info from Google Books API by ISBN
-    /// Falls back to Open Library if Google fails (e.g., rate limiting with 429 error)
+    /// Fetch book info by ISBN.
+    /// Tries Open Library first, falls back to Google Books if Open Library fails.
     func fetchBookInfoFromGoogle(isbn: String) async throws -> Book {
         do {
-            // Try Google Books API first
-            return try await fetchFromGoogleAPI(isbn: isbn)
+            return try await fetchFromOpenLibrary(isbn: isbn)
         } catch let error as BookAPIError {
-            // If Google fails with rate limiting or other errors, try Open Library as fallback
-            logger.warning("Google Books API failed (\(error.errorDescription ?? "unknown error")), trying Open Library as fallback")
-            return try await fetchFromOpenLibrary(isbn: isbn)
+            logger.warning("Open Library API failed (\(error.errorDescription ?? "unknown error")), trying Google Books as fallback")
+            return try await fetchFromGoogleAPI(isbn: isbn)
         } catch {
-            // For non-BookAPIError errors, also try fallback
-            logger.warning("Google Books API failed (\(error.localizedDescription)), trying Open Library as fallback")
-            return try await fetchFromOpenLibrary(isbn: isbn)
+            logger.warning("Open Library API failed (\(error.localizedDescription)), trying Google Books as fallback")
+            return try await fetchFromGoogleAPI(isbn: isbn)
         }
     }
     
